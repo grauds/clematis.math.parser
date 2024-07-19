@@ -1,0 +1,571 @@
+/***************************************************************
+String Mathematics Parser Grammar
+
+@author Anton Troshin
+***************************************************************/
+options
+{
+    NODE_FACTORY = true;
+    NODE_USES_PARSER = true;
+    NODE_DEFAULT_VOID = true;
+    NODE_PREFIX = "";
+    STATIC = false;
+    USER_CHAR_STREAM = false;
+    USER_TOKEN_MANAGER = false;
+    FORCE_LA_CHECK=true;
+    NODE_PACKAGE="org.clematis.math.parsers";
+    OUTPUT_DIRECTORY="../";
+}
+PARSER_BEGIN(StringMathParser)
+
+package org.clematis.math.parsers.string;
+
+/***************************************************************
+String Mathematics Parser
+
+This parser built on grammar with following features.
+
+The precedence of operators is very important. Since this is a
+recursive descent parser, it is easy to see which operators have
+higher order of precedence. The following table outlines the
+order incorporated in this grammar.
+
+Order of precedence (from lowest to highest):
+
+   +   -            addition, subtraction
+   *   /            multiplication, division
+   +   -            unary +/-
+   ^                power
+
+Parser supports injection of variable parameters into string maths,
+annotated with $ sign. Parameters may be of following types:
+
+  $a, $a_j12, $acv, ${acv}
+
+Two last parameter notations are eqivalent, in fact it is not reflected
+by the grammar, but by evaluation procedure.
+
+Simple variable may be of only one letter: x, y, z, a, b, c.
+
+Variables and expressions may have indexes: x_2, y_i, z_(k), z_(betta).
+If index contains only one letter it may not have brackets.
+
+@author Anton Troshin
+***************************************************************/
+import java.io.StringReader;
+import org.clematis.math.*;
+import org.clematis.math.parsers.*;
+import org.clematis.math.algorithm.*;
+/**
+ * Class for parsing calculator notation maths.
+ */
+public class StringMathParser
+{
+     /**
+      * Instance of parameter provider
+      */
+     private iSimpleParameterProvider parameterProvider = null;
+     /**
+      * Instance of variable provider
+      */
+     private iVariableProvider variableProvider = null;
+     /**
+      * Instance of function provider
+      */
+     private iFunctionProvider functionProvider = new FunctionFactory(); 
+     /**
+      * Parse expression and print to webtex
+      */
+     public static String printToWebTex(String expr)throws ParseException
+     {
+        StringMathParser parser = new StringMathParser(new StringReader(expr));
+        SimpleNode n = parser.Start();
+        StringBuilder sb = new StringBuilder();
+        WebTexPrinter.print(n, sb);
+        return sb.toString();
+     }
+     /**
+      * Return an instance of parameter provider
+      */
+     public iSimpleParameterProvider getParameterProvider()
+     {
+         return parameterProvider;
+     }
+     /**
+      * Sets an instance of parameter provider parser
+      */
+     public void setParameterProvider(iSimpleParameterProvider parameterProvider)
+     {
+         this.parameterProvider = parameterProvider;
+     }
+     /**
+      * Return an instance of variable provider
+      */
+     public iVariableProvider getVariableProvider()
+     {
+         return variableProvider;
+     }
+     /**
+      * Sets an instance of variable provider parser
+      */
+     public void setVariableProvider(iVariableProvider variableProvider)
+     {
+         this.variableProvider = variableProvider;
+     }
+     /**
+      * Return an instance of function provider
+      */
+     public iFunctionProvider getFunctionProvider()
+     {
+         return functionProvider;
+     }
+     /**
+      * Sets an instance of function provider parser
+      */
+     public void setFunctionProvider(iFunctionProvider functionProvider)
+     {
+         this.functionProvider = functionProvider;
+     }
+     /**
+      * Returns true if one next token is a function name
+      */
+     public boolean isFunctionAhead()
+     {
+     	StringBuffer buffer = new StringBuffer();
+     	int i = 1;
+     	if ( getToken(1).kind == IDENTIFIER || getToken(1).kind == EXP_E )
+     	{
+            while ( getToken(i).kind == IDENTIFIER ||
+                    getToken(i).kind == NUMBER || getToken(i).kind == EXP_E )
+            {
+                buffer.append( getToken(i).image );
+                i++;
+                if ( functionProvider.hasFunction(buffer.toString()) )
+                {
+                    return true;
+                }
+            }
+         }
+        return false;
+     }
+}
+
+PARSER_END(StringMathParser)
+
+SKIP :
+{
+      " "
+    | "\t"
+    | "\n"
+    | "\r"
+    | <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+    | <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/" >
+}
+
+TOKEN :
+{
+      < NUMBER: <INTEGER> | <FLOAT> >
+    |
+      < #INTEGER: ["1"-"9"] (["0"-"9"])* >
+    |
+      < #FLOAT: //comment: (<INTEGER>)? "." <INTEGER>] (<EXPONENT>)?>
+            (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)?
+          | "." (["0"-"9"])+ (<EXPONENT>)?
+          | (["0"-"9"])+ <EXPONENT>
+          | (["0"-"9"])+ (<EXPONENT>)? >
+     |
+     < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+}
+
+TOKEN :
+{
+  < IDENTIFIER:  <LETTER>  >
+ |
+  < #LETTER: ["a"-"d","f"-"z","A"-"Z"]
+    | "\\alpha"
+    | "\\beta"
+    | "\\gamma"
+    | "\\delta"
+    | "\\epsilon"
+    | "\\varepsilon"
+    | "\\zeta"
+    | "\\eta"
+    | "\\theta"
+    | "\\vartheta"
+    | "\\iota"
+    | "\\kappa"
+    | "\\lambda"
+    | "\\mu"
+    | "\\nu"
+    | "\\xi"
+    | "\\varpi"
+    | "\\rho"
+    | "\\varrho"
+    | "\\sigma"
+    | "\\tau"
+    | "\\upsilon"
+    | "\\phi"
+    | "\\varphi"
+    | "\\chi"
+    | "\\psi"
+    | "\\omega"
+    | "\\Delta"
+    | "\\Gamma"
+    | "\\Lambda"
+    | "\\Omega"
+    | "\\Phi"
+    | "\\Pi"
+    | "\\Psi"
+    | "\\Sigma"
+    | "\\Theta"
+    | "\\Xi"
+    | "\\Upsilon"
+ >
+}
+
+TOKEN :
+{
+   < VARIABLE: 
+            "$"
+	           ("{")?
+	              ( (<LETTER>|"e") ( (<LETTER>|"e") | <NUMBER> )*  (<UNDERLINE> ( (<LETTER>|"e") | <NUMBER> ))* )
+	           ("}")?	    
+   >	
+|
+   < STRING:
+        "\""
+         (   (~["\"","\\","\n","\r"])
+             | ("\\" ( ["n","t","b","r","f","\\","'","\""]
+                  | ["0"-"7"] ( ["0"-"7"] )?
+                  | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+                     )
+               )
+      )*
+      "\""
+  >	
+|
+   < EXP_E: "e" >
+|
+   < PI: "\\pi" | "pi" | "\\PI" | "PI" >
+|
+   < MULT: "*" | "\\times" | "\\cdot">
+|
+   < DIV: "/" | "\\div" >
+|
+   < PLUS: "+" >
+|
+   < MINUS: "-" >
+|
+   < EQUALS: "=" >
+|
+   < POWER: "^"  >
+|
+   < DELTA: "\\delt" | "delt"  >
+|
+   < HAT: "\\hat" | "hat" >
+|
+   < OPEN_BR: "(" | "[" | "{" >
+|
+   < CLOSE_BR: ")" | "]" | "}" >
+|
+   < UNDERLINE: "_"  >      
+}
+
+SimpleNode Start() : {}
+{
+  (  Expression() <EOF> { return jjtThis; } )  #EXPR
+  |  <EOF>
+	{
+		throw new ParseException("Empty expression");
+		return null;
+	}  
+}
+
+void Expression() : {}
+{
+    EqualsExpression()
+}
+
+void EqualsExpression() #EQUALS_EXPR (>1):
+{
+    String name=null;
+    Token t;
+}
+{
+  (
+     PlusExpression() ( ( t=<EQUALS>{name=t.image;} ) PlusExpression() )*
+  )
+  {
+     jjtThis.setTokenName(name);
+  }
+}
+
+void PlusExpression()  #PLUS_EXPR (>1):
+{
+    Token t;
+}
+{
+ (
+    (MinusExpression() (  (( t=<PLUS>){jjtThis.setTokenName(t.image);} MinusExpression()))*)
+ )
+}
+
+void MinusExpression()  #MINUS_EXPR (>1):
+{
+    Token t;
+}
+{
+ (
+    (MultExpression() (  (( t=<MINUS> ){jjtThis.setTokenName(t.image);} MultExpression()))*)
+ )
+}
+
+void MultExpression()  #MULT_EXPR (>1):
+{
+    Token t;
+}
+{
+ (
+    DivExpressionMinus() ( ( t=<MULT> {jjtThis.setTokenName(t.image);}  DivExpressionMinus()) | {jjtThis.setTokenName("*");}DivExpression())*
+ )
+}
+
+//divide expression without unary minus
+void DivExpression()  #DIV_EXPR (>1):
+{
+    Token t;
+}
+{
+  (
+     (PowerExpression() (  ( t=<DIV> ){jjtThis.setTokenName(t.image);} PowerExpression()) *)
+  )
+}
+
+//divide expression with unary minus
+void DivExpressionMinus()  #DIV_EXPR (>1):
+{
+    Token t;
+}
+{
+  (
+     (NegativeExpr() (  ( t=<DIV> ){jjtThis.setTokenName(t.image);} NegativeExpr()) *)
+  )
+}
+
+void NegativeExpr() :
+{
+}
+{
+    (<MINUS> PositiveExpr() )#UNARY_MINUS | PositiveExpr()
+}
+
+void PositiveExpr() :
+{
+}
+{
+    (<PLUS> PowerExpression() )#UNARY_PLUS | PowerExpression()
+}
+
+void PowerExpression() #POWER_EXPR (>1) :
+{
+    Token t;
+}
+{
+   (
+        IndexExpression() ( t=<POWER> {jjtThis.setTokenName(t.image);} IndexExpression() )*
+   )
+}
+
+void IndexExpression() #INDEX_EXPR (>1) :
+{
+    Token t;
+}
+{
+   (
+        UnaryExpression() ( t=<UNDERLINE> {jjtThis.setTokenName(t.image);} Index()  )*
+   )
+}
+
+void UnaryExpression() : {}
+{
+ (
+ // this construction gives warning due to FORCE_LA_CHECK=true, though it works correctly
+	( LOOKAHEAD( { isFunctionAhead() } )  Function()
+		|
+        Identifier()
+        |
+        Constant()     
+	)
+   | <OPEN_BR> Expression() <CLOSE_BR>
+   | Variable()
+   | Number()
+   | VectorExpression()
+   | DeltaExpression()
+   | HatExpression()
+   | String()
+ )
+}
+
+void Index() #INDEX:
+{
+    Token t;
+    StringBuffer index = new StringBuffer();
+}
+{
+ (
+     <OPEN_BR>
+          ( (t=<IDENTIFIER> | t=<NUMBER> | t=<EXP_E>) { index.append(t.image); } )+
+          { jjtThis.setTokenName(index.toString()); }
+     <CLOSE_BR>
+   | Identifier()
+   | Number()
+   | Constant()
+ )
+}
+
+Token String() #STRING :
+{
+   Token t;
+}
+{
+ (
+   t=<STRING>
+ )
+ {
+   jjtThis.setTokenName(t.image);
+   return t;
+ }
+}
+
+Token Variable() #VAR :
+{
+   Token t;
+}
+{
+ (
+    (t= <VARIABLE>
+        {
+           /**
+            * Provided name of variable parameter, we can search for constant
+            * result in parameter provider
+            */
+           String name = t.image;
+           if ( getParameterProvider() != null )
+           {
+               AbstractConstant constant = getParameterProvider().getParameterConstant(name);
+               if ( constant != null && (jjtThis instanceof SimpleParameter) )
+               {
+                   // set current result
+                   ((SimpleParameter) jjtThis).setCurrentResult(constant.copy());
+               }
+           }
+           jjtThis.setTokenName(name);
+        }
+    )
+ )
+ {
+   return t;
+ }
+}
+
+Token Number() #NUMBER :
+{
+   Token t;
+}
+{
+ (
+   t=<NUMBER>
+ )
+ {
+   jjtThis.setTokenName(t.image);
+   return t;
+ }
+}
+
+Token Identifier() #IDENTIFIER :
+{
+   Token t;
+}
+{
+ (
+   t=<IDENTIFIER>
+        {
+           /**
+            * Provided name of identifier, we can search for constant result in variable provider
+            */
+           String name = t.image;
+           if ( getVariableProvider() != null )
+           {
+               AbstractConstant constant = getVariableProvider().getVariableConstant(name);
+               if ( constant != null && (jjtThis instanceof Variable) )
+               {
+                   // set current result
+                   ((Variable) jjtThis).setCurrentResult(constant.copy());
+               }
+           }
+           jjtThis.setTokenName(name);
+        }
+ )
+ {
+   return t;
+ }
+}
+
+Token Constant() #CONSTANT :
+{
+   Token t;
+}
+{
+ (
+     t=<EXP_E> | t=<PI>
+ )
+ {
+     jjtThis.setTokenName(t.image);
+     jjtThis.setTokenKind(t.kind);
+     return t;
+ }
+}
+
+void DeltaExpression() #DELTA_EXPR :
+{
+    Token t;
+}
+{
+   (
+       t=<DELTA> {jjtThis.setTokenName(t.image);}
+       UnaryExpression()
+   )
+}
+
+void HatExpression() #HAT_EXPR :
+{
+    Token t;
+}
+{
+   (
+       t=<HAT> {jjtThis.setTokenName(t.image);}
+       UnaryExpression()
+   )
+}
+
+void VectorExpression() #VECTOR_EXPR :
+{
+}
+{
+    "vec" {jjtThis.setTokenName("vec");}
+    UnaryExpression()
+}
+
+void Function() #FUNCTION :
+{
+    Token t;
+    StringBuffer signature = new StringBuffer();
+}
+{
+    (t=<IDENTIFIER>|t=<EXP_E>) { signature.append(t.image); }
+    ( (t=<IDENTIFIER>|t=<NUMBER>|t=<EXP_E>) { signature.append(t.image); } )*
+    {
+        jjtThis.setTokenName(signature.toString());
+    }
+    <OPEN_BR> Expression() (","  Expression() )* <CLOSE_BR>
+}

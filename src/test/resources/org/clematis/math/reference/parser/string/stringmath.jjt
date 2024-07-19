@@ -1,0 +1,675 @@
+
+options
+{
+	NODE_DEFAULT_VOID = true;
+	NODE_PREFIX = "";
+	STATIC = false;
+	USER_CHAR_STREAM = false;
+	USER_TOKEN_MANAGER = false;
+	FORCE_LA_CHECK=true;
+}
+
+PARSER_BEGIN(StringMathParser)
+
+package org.clematis.math.reference.parser.string;
+
+import java.io.StringReader;
+
+public class StringMathParser
+{
+  public static String parse(String expr)
+  {
+    StringMathParser parser = new StringMathParser(new StringReader(expr));
+
+    try
+    {
+      SimpleNode n = parser.Start();
+      StringBuilder sb = new StringBuilder();
+      WebTexPrinter.print(n, sb);
+      return sb.toString();
+    }
+    catch (Exception e)
+    {
+       e.printStackTrace();
+    }
+    
+    return null;
+  }
+
+  public static void main(String args[])
+  {
+    //System.out.println("Reading from standard input...");
+    //StringMathParser parser = new StringMathParser(System.in);
+
+    //String expr = "sin(3)";
+    //String expr = "x+(sin(${x}/2)+a_2/9 * x ^ 3)";
+    //String expr = "$b3*(x$x0_rsgn$x0_abs)*(x$x1_rsgn$x1_abs)*(x$x2_rsgn$x2_abs)" +
+     //       "+$b2*(x$x0_rsgn$x0_abs)*(x$x1_rsgn$x1_abs)+$b1*(x$x0_rsgn$x0_abs)+$b0+sin(x)";
+   // String expr = "-ln($a)*pi/(x*(ln(x)^2)) + (1 - 8 )";
+    //String expr = "-ln(((($a+1)*($k-9))))*pi/(x*(ln(x)^2))-(x-y)";
+    //String expr = "-ln($a+cos($k*x))/$k + sinx";
+    String expr = "1/(2*(x+1)^(0.5))";
+    StringMathParser parser = new StringMathParser(new StringReader(expr));
+
+    try
+    {
+      SimpleNode n = parser.Start();
+      n.dump(" ");
+      System.out.println( expr );
+      StringBuilder sb = new StringBuilder();
+      WebTexPrinter.print(n, sb);
+      System.out.println("------------");
+      System.out.println(sb.toString());
+    }
+    catch (Exception e)
+    {
+       e.printStackTrace();
+    }
+  }
+}
+
+PARSER_END(StringMathParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/" >
+}
+
+TOKEN : /* LITERALS */
+{
+  < NUMBER: <INTEGER> | <FLOAT> >
+|
+  < #INTEGER: ["1"-"9"] (["0"-"9"])* >
+|
+  < #FLOAT: // comment: (<INTEGER>)? "." <INTEGER>] (<EXPONENT>)?>
+
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)?
+      | "." (["0"-"9"])+ (<EXPONENT>)?
+      | (["0"-"9"])+ <EXPONENT>
+      | (["0"-"9"])+ (<EXPONENT>)? >
+  |
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+}
+
+TOKEN : /* IDENTIFIERS */
+{
+  < IDENTIFIER:
+                 <LETTER> | <LETTER> ("_" <LETTER>)+ | <LETTER> ("_")? <NUMBER>
+  >
+|
+  < #LETTER: ["a"-"z","A"-"Z"] >
+}
+
+TOKEN:
+{
+  < VARIABLE: "$" ("{")?
+                    <LETTER> ( <LETTER> | <NUMBER> )* ("_")? ( <LETTER> | <NUMBER> )*
+                  ("}")?
+  >
+}
+
+/* CONSTANTS */
+TOKEN :
+{
+   <  PI: "pi">
+}
+
+TOKEN :
+{
+    < MULT: "*" >
+}
+
+TOKEN :
+{
+    < DIV: "/" >
+}
+
+TOKEN :
+{
+    < PLUS: "+" >
+}
+
+TOKEN :
+{
+    < MINUS: "-" >
+}
+
+TOKEN :
+{
+    < EQUALS: "=" >
+}
+
+TOKEN :
+{
+    < POWER: "^" >
+}
+
+TOKEN :
+{
+    < OPEN_BR: "(" | "[" | "{" >
+}
+
+TOKEN :
+{
+    < CLOSE_BR: ")" | "]" | "}" >
+}
+
+SimpleNode Start() : {}
+{
+  (
+     Expression()<EOF>
+     { return jjtThis; }
+  ) #EXPR
+}
+
+
+void Expression() #EXPR (>1):
+{
+  Token t;
+}
+{
+  (
+    (PlusExpression() ( (( t=<EQUALS> ){jjtThis.setTokenName(t.image);} PlusExpression()))*)
+  )
+}
+
+/*void NegativeExpr() :
+{
+}
+{
+  (
+      <MINUS> PlusExpression()
+  )
+  #UNARY_MINUS  |  PlusExpression()
+}*/
+
+void PlusExpression()  #PLUS_EXPR (>1):
+{
+   Token t;
+}
+{
+  (
+     (MinusExpression() (  (( t=<PLUS> ){jjtThis.setTokenName(t.image);} MinusExpression()))*)
+  )
+}
+
+void MinusExpression()  #MINUS_EXPR (>1):
+{
+  Token t;
+}
+{
+  (
+     (MultExpression() (  (( t=<MINUS> ){jjtThis.setTokenName(t.image);} MultExpression()))*)
+  )
+}
+
+void MultExpression()  #MULT_EXPR (>1):
+{
+  Token t;
+}
+{
+  (
+     DivExpression() ( ( t=<MULT> {jjtThis.setTokenName(t.image);}  DivExpression())  )*
+  )
+}
+
+void DivExpression()  #DIV_EXPR (>1):
+{
+    Token t;
+}
+{
+  (
+    (NegativeExpr() (  ( t=<DIV> ){jjtThis.setTokenName(t.image);} NegativeExpr()) *)
+  )
+}
+
+void NegativeExpr() :
+{
+}
+{
+     (<MINUS> PowerExpression() )#UNARY_MINUS  | PowerExpression()
+}
+
+void PowerExpression() #POWER_EXPR (>1) :
+{
+    Token t;
+}
+{
+  (
+     UnaryExpression() ( ( t=<POWER> ){jjtThis.setTokenName(t.image);} UnaryExpression() )*
+  )
+}
+
+void UnaryExpression() :
+{
+}
+{
+  (
+      BrExpression()
+    | Variable()
+    | Number()
+    | Identifier()
+    | LOOKAHEAD(2) Function()  //look-ahead "e ^ x" and "e + expression"
+    | PI()
+  )
+}
+
+void BrExpression() #BR_EXPR:
+{
+}
+{
+  (
+    OpenBr() Expression() CloseBr()
+  )
+}
+
+
+Token Variable() #VAR :
+{
+    Token t;
+}
+{
+  (
+    t=<VARIABLE>
+  )
+  {
+    jjtThis.setTokenName(t.image);
+    return t;
+  }
+}
+
+Token Number() #NUMBER :
+{
+    Token t;
+}
+{
+  (
+    t=<NUMBER>
+  )
+  {
+    jjtThis.setTokenName(t.image);
+    return t;
+  }
+}
+
+Token Identifier() #IDENTIFIER :
+{
+    Token t;
+}
+{
+  (
+    t=<IDENTIFIER>
+  )
+  {
+    jjtThis.setTokenName(t.image);
+    return t;
+  }
+}
+
+Token PI() #PI :
+{
+   Token t;
+}
+{
+ (
+   t=<PI>
+ )
+ {
+     jjtThis.setTokenName("\\" + t.image);
+     return t;
+ }
+}
+
+Token OpenBr() #OPEN_BR :
+{
+   Token t;
+}
+{
+ (
+   t=<OPEN_BR>
+ )
+ {
+     jjtThis.setTokenName(t.image);
+     return t;
+ }
+}
+
+Token CloseBr() #CLOSE_BR :
+{
+   Token t;
+}
+{
+ (
+   t=<CLOSE_BR>
+ )
+ {
+     jjtThis.setTokenName(t.image);
+     return t;
+ }
+}
+
+void Function() #FUNCTION :
+{
+}
+{
+  (
+    FunctionSin(jjtThis)
+    |
+    FunctionASin(jjtThis)
+    |
+    FunctionCos(jjtThis)
+    |
+    FunctionACos(jjtThis)
+    |
+    FunctionTan(jjtThis)
+    |
+    FunctionATan(jjtThis)
+    |
+    FunctionSec(jjtThis)
+    |
+    FunctionCsc(jjtThis)
+    |
+    FunctionCot(jjtThis)
+    |
+    FunctionExp(jjtThis)
+    |
+    FunctionSqrt(jjtThis)
+    |
+    FunctionLn(jjtThis)
+    |
+    FunctionLg(jjtThis)
+    |
+    FunctionLog(jjtThis)
+    |
+    FunctionFact(jjtThis)
+    |
+    FunctionACot(jjtThis)
+    |
+    FunctionASec(jjtThis)
+    |
+    FunctionACsc(jjtThis)
+    |
+    FunctionAbs(jjtThis)
+    |
+    FunctionSinh(jjtThis)
+    |
+    FunctionASinh(jjtThis)
+    |
+    FunctionCosh(jjtThis)
+    |
+    FunctionACosh(jjtThis)
+    |
+    FunctionTanh(jjtThis)
+    |
+    FunctionATanh(jjtThis)
+    |
+    FunctionCoth(jjtThis)
+    |
+    FunctionACoth(jjtThis)
+    |
+    FunctionSech(jjtThis)
+    |
+    FunctionASech(jjtThis)
+    |
+    FunctionCsch(jjtThis)
+    |
+    FunctionACsch(jjtThis)
+  )
+}
+
+void FunctionSin(SimpleNode function) :
+{
+}
+{
+  "sin" {function.setTokenName("sin");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionASin(SimpleNode function) :
+{
+}
+{
+  "arcsin" {function.setTokenName("arcsin");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionCos(SimpleNode function) :
+{
+}
+{
+  "cos" {function.setTokenName("cos");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionACos(SimpleNode function) :
+{
+}
+{
+  "arccos" {function.setTokenName("arccos");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionTan(SimpleNode function) :
+{
+}
+{
+  "tan" {function.setTokenName("tan");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionATan(SimpleNode function) :
+{
+}
+{
+  "arctan" {function.setTokenName("arctan");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionSec(SimpleNode function) :
+{
+}
+{
+  "sec" {function.setTokenName("sec");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionCsc(SimpleNode function) :
+{
+}
+{
+  "csc" {function.setTokenName("csc");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionCot(SimpleNode function) :
+{
+}
+{
+  "cot" {function.setTokenName("cot");}
+  UnaryExpression()  #ARG
+}
+
+void FunctionExp(SimpleNode function) :
+{
+}
+{
+   "exp" {function.setTokenName("exp");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionSqrt(SimpleNode function) :
+{
+}
+{
+   "sqrt" {function.setTokenName("sqrt");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionLn(SimpleNode function) :
+{
+}
+{
+   "ln" {function.setTokenName("ln");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionLg(SimpleNode function) :
+{
+}
+{
+   "lg" {function.setTokenName("lg");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionLog(SimpleNode function) :
+{
+}
+{
+   "log" {function.setTokenName("log");}
+   UnaryExpression()  #ARG
+   UnaryExpression()  #ARG
+}
+
+void FunctionFact(SimpleNode function) :
+{
+}
+{
+   "fact" {function.setTokenName("fact");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionACot(SimpleNode function) :
+{
+}
+{
+   "arccot" {function.setTokenName("arccot");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionASec(SimpleNode function) :
+{
+}
+{
+   "arcsec" {function.setTokenName("arcsec");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionACsc(SimpleNode function) :
+{
+}
+{
+   "arccsc" {function.setTokenName("arccsc");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionAbs(SimpleNode function) :
+{
+}
+{
+   "abs" {function.setTokenName("abs");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionSinh(SimpleNode function) :
+{
+}
+{
+   "sinh" {function.setTokenName("sinh");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionASinh(SimpleNode function) :
+{
+}
+{
+   "arcsinh" {function.setTokenName("arcsinh");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionCosh(SimpleNode function) :
+{
+}
+{
+   "cosh" {function.setTokenName("cosh");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionACosh(SimpleNode function) :
+{
+}
+{
+   "arccosh" {function.setTokenName("arccosh");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionTanh(SimpleNode function) :
+{
+}
+{
+   "tanh" {function.setTokenName("tanh");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionATanh(SimpleNode function) :
+{
+}
+{
+   "arctanh" {function.setTokenName("arctanh");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionCoth(SimpleNode function) :
+{
+}
+{
+   "coth" {function.setTokenName("coth");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionACoth(SimpleNode function) :
+{
+}
+{
+   "arccoth" {function.setTokenName("arccoth");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionSech(SimpleNode function) :
+{
+}
+{
+   "sech" {function.setTokenName("sech");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionASech(SimpleNode function) :
+{
+}
+{
+   "arcsech" {function.setTokenName("arcsech");}
+   UnaryExpression()  #ARG
+}
+
+void FunctionCsch(SimpleNode function) :
+{
+}
+{
+   "csch" {function.setTokenName("csch");}
+   UnaryExpression()  #ARG
+}
+
+
+void FunctionACsch(SimpleNode function) :
+{
+}
+{
+   "arccsch" {function.setTokenName("arccsch");}
+   UnaryExpression()  #ARG
+}
+
+
