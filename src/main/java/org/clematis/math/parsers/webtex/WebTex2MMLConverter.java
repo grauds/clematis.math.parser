@@ -245,7 +245,7 @@ public class WebTex2MMLConverter {
         apply.addContent(new Element("times"));
         apply.addContent(new Element("cn").addContent("1.0"));
 
-        if (parserNode != null) {
+        if (parserNode != null && parserNode.getChildren() != null) {
             SimpleNode arg = (SimpleNode) parserNode.getChildren()[0];
 
             if (arg.getChildren() != null && arg.getChildren().length > 0) {

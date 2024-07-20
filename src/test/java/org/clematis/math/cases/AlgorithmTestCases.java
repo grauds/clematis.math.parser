@@ -2,12 +2,12 @@
 package org.clematis.math.cases;
 
 /**
- * Common interface to groups of algorithm test cases 
+ * Common interface to groups of algorithm test cases
  */
-public abstract class AlgorithmTestCases
-{
+public abstract class AlgorithmTestCases {
     /**
      * Return test cases, i.e. algorithms, that sre for this algorithm test cases set
+     *
      * @return test cases, i.e. algorithms, that sre for this algorithm test cases set
      */
     public abstract String[] getTests();

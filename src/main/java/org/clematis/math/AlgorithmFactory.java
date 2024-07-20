@@ -239,7 +239,7 @@ public class AlgorithmFactory {
 
             Element root2 = null;
 
-            if (algorithmResultsXML != null && !algorithmResultsXML.trim().equals("")) {
+            if (algorithmResultsXML != null && !algorithmResultsXML.trim().isEmpty()) {
                 doc = load(new StringReader(algorithmResultsXML));
                 root2 = doc.getRootElement();
             }

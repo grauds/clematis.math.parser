@@ -14,7 +14,7 @@ options {
 PARSER_BEGIN(WebTexParser)
 
 package org.clematis.math.reference.parser.webtex;
-import java.io.StringReader;
+import java.io.StringReader;import org.clematis.math.v1.parser.webtex.Token;
 
 public class WebTexParser {
   public static void main(String args[]) {
@@ -36,6 +36,8 @@ public class WebTexParser {
       e.printStackTrace();
     }
   }
+}}
+}}
 }
 
 PARSER_END(WebTexParser)

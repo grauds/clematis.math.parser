@@ -104,18 +104,18 @@ public class Parameter extends SimpleParameter {
      */
     void calculate(Algorithm parameterProvider, int currentLine) throws AlgorithmException {
         Node result = null;
-        /**
+        /*
          * If code is not null, parameter is mutable, if null - immutable via calculation
          */
         if (code != null) {
             try {
-                /** parse processed code string */
+                /* parse processed code string */
                 StringMathParser parser = new StringMathParser(new StringReader(code));
-                /** inherit parameters declared earlier */
+                /* inherit parameters declared earlier */
                 parser.setParameterProvider(parameterProvider);
-                /** inherit functions stl and declared earlier */
+                /* inherit functions stl and declared earlier */
                 parser.setFunctionProvider(parameterProvider);
-                /** start parsing */
+                /* start parsing */
                 expressionRoot = parser.Start();
                 //** calculate expression root */
                 if (expressionRoot != null) {

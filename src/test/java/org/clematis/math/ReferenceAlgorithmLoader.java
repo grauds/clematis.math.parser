@@ -1,53 +1,45 @@
 // Created: 05.12.2006 T 16:02:35
 package org.clematis.math;
 
+import org.clematis.math.v1.OutputFormatSettings;
+import org.clematis.math.v1.algorithm.Algorithm;
+import org.clematis.math.v1.algorithm.AlgorithmFactory;
+
 /**
  * Load reference algorithms
  */
-public class ReferenceAlgorithmLoader
-{
+public class ReferenceAlgorithmLoader {
     /**
      * Reference
      */
-    private org.clematis.math.reference.algorithm.Algorithm algorithm = null;
+    private Algorithm algorithm = null;
 
-    private org.clematis.math.reference.algorithm.AlgorithmFactory loadReference()
-    {
-        try
-        {
-            Class<org.clematis.math.reference.algorithm.AlgorithmFactory> clazz =
-                    (Class<org.clematis.math.reference.algorithm.AlgorithmFactory>)
+    private AlgorithmFactory loadReference() {
+        try {
+            Class<AlgorithmFactory> clazz =
+                (Class<AlgorithmFactory>)
                     Class.forName("org.clematis.math.algorithm.AlgorithmFactory");
             return clazz.newInstance();
-        }
-        catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
-        catch (InstantiationException e)
-        {
+        } catch (InstantiationException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public org.clematis.math.reference.algorithm.Algorithm getAlgorithmReference(String sAlg, String initialConditions)
-            throws Exception
-    {
-        if ( algorithm == null )
-        {
-            algorithm = (org.clematis.math.reference.algorithm.Algorithm)
-                org.clematis.math.reference.algorithm.AlgorithmFactory.loadAlgorithm(sAlg, initialConditions);
+    public Algorithm getAlgorithmReference(String sAlg, String initialConditions)
+        throws Exception {
+        if (algorithm == null) {
+            algorithm = (Algorithm)
+                AlgorithmFactory.loadAlgorithm(sAlg, initialConditions);
         }
         return algorithm;
     }
 
-    public org.clematis.math.reference.OutputFormatSettings getOutputFormatSettings()
-    {
-        return new org.clematis.math.reference.OutputFormatSettings();
+    public OutputFormatSettings getOutputFormatSettings() {
+        return new OutputFormatSettings();
     }
 }

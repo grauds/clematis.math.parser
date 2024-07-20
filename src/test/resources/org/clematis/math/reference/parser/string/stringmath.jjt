@@ -19,7 +19,7 @@ public class StringMathParser
 {
   public static String parse(String expr)
   {
-    StringMathParser parser = new StringMathParser(new StringReader(expr));
+    org.clematis.math.v1.reference.parser.string.StringMathParser parser = new StringMathParser(new StringReader(expr));
 
     try
     {
@@ -32,7 +32,7 @@ public class StringMathParser
     {
        e.printStackTrace();
     }
-    
+
     return null;
   }
 
@@ -66,6 +66,7 @@ public class StringMathParser
        e.printStackTrace();
     }
   }
+}}
 }
 
 PARSER_END(StringMathParser)

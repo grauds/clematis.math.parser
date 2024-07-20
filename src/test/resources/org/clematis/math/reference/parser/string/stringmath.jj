@@ -12,7 +12,7 @@ PARSER_BEGIN(StringMathParser)
 
 package org.clematis.math.reference.parser.string;
 
-import java.io.StringReader;
+import java.io.StringReader;import org.clematis.math.v1.parser.string.JJTStringMathParserState;import org.clematis.math.v1.reference.parser.string.StringMathParserTreeConstants;
 
 public class StringMathParser/*@bgen(jjtree)*/implements StringMathParserTreeConstants/*@egen*/
 {/*@bgen(jjtree)*/
@@ -21,7 +21,7 @@ public class StringMathParser/*@bgen(jjtree)*/implements StringMathParserTreeCon
 /*@egen*/
   public static String parse(String expr)
   {
-    StringMathParser parser = new StringMathParser(new StringReader(expr));
+    org.clematis.math.v1.reference.parser.string.StringMathParser parser = new StringMathParser(new StringReader(expr));
 
     try
     {
@@ -34,7 +34,7 @@ public class StringMathParser/*@bgen(jjtree)*/implements StringMathParserTreeCon
     {
        e.printStackTrace();
     }
-    
+
     return null;
   }
 
@@ -68,6 +68,8 @@ public class StringMathParser/*@bgen(jjtree)*/implements StringMathParserTreeCon
        e.printStackTrace();
     }
   }
+}}
+}}
 }
 
 PARSER_END(StringMathParser)

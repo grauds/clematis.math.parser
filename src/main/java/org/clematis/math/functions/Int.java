@@ -32,7 +32,8 @@ public class Int extends aFunction2 {
             }
 
             Constant c1 = AlgorithmUtils.getNumericArgument(a1);
-            return new Constant(new Double(c1.getNumber()).intValue());
+            assert c1 != null;
+            return new Constant(c1.getNumber());
         } catch (AlgorithmException ex) {
             throw ex;
         } catch (Exception ex) {

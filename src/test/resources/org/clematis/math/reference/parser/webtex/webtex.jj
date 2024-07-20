@@ -13,7 +13,7 @@ options {
 PARSER_BEGIN(WebTexParser)
 
 package org.clematis.math.reference.parser.webtex;
-import java.io.StringReader;
+import java.io.StringReader;import org.clematis.math.v1.parser.webtex.Token;
 
 public class WebTexParser/*@bgen(jjtree)*/implements WebTexParserTreeConstants/*@egen*/ {/*@bgen(jjtree)*/
   protected JJTWebTexParserState jjtree = new JJTWebTexParserState();public WebTexParser() {
@@ -39,6 +39,8 @@ public class WebTexParser/*@bgen(jjtree)*/implements WebTexParserTreeConstants/*
       e.printStackTrace();
     }
   }
+}}
+}}
 }}
 }
 

@@ -1,6 +1,14 @@
 // Created: 01.12.2003 T 11:57:27
 package org.clematis.math.algorithm;
 
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.clematis.math.AbstractConstant;
 import org.clematis.math.FunctionFactory;
 import org.clematis.math.SimpleParameter;
@@ -9,11 +17,6 @@ import org.clematis.math.functions.generic;
 import org.clematis.math.iValue;
 import org.clematis.math.io.AbstractParameterFormatter;
 import org.clematis.math.utils.StringUtils;
-
-import java.io.PrintStream;
-import java.io.Serializable;
-import java.util.*;
-
 /**
  * Default parameter provider is used to provide generic
  * parameters to expression tree.
@@ -30,25 +33,25 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * parameterId
      * functionIds
      */
-    protected ArrayList<Key> lines = new ArrayList<Key>();
+    protected ArrayList<Key> lines = new ArrayList<>();
     /**
      * List of parameters.
      * <p>
      * parameterId -> parameter
      */
-    protected HashMap<Key, Parameter> parameters = new HashMap<Key, Parameter>();
+    protected HashMap<Key, Parameter> parameters = new HashMap<>();
     /**
      * List of parameters currently in use
      * <p>
      * parameternam -> parameter
      */
-    private HashMap<String, Parameter> parameters_in_use = new HashMap<String, Parameter>();
+    private HashMap<String, Parameter> parameters_in_use = new HashMap<>();
     /**
      * List of answer idents - ids of parameters
      * <p>
      * answerIdent -> parameterId
      */
-    protected HashMap<String, Key> idents = new HashMap<String, Key>();
+    protected HashMap<String, Key> idents = new HashMap<>();
     /**
      * Function factory
      */
@@ -77,15 +80,15 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      */
     public void addParameter(Parameter p) throws AlgorithmException {
         if (p != null) {
-            /**
+            /*
              * Create normalized token without braces
              */
             Key key = Key.create(p.getName());
-            /**
+            /*
              * Set new token to parameter
              */
             p.setName(key.getName());
-            /**
+            /*
              * Find similar parameter
              */
             Key prevKey = null;
@@ -93,18 +96,18 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
                 prevKey = new Key(key);
                 key.setNo(key.getNo() + 1);
             }
-            /**
+            /*
              * Put parameter
              */
             parameters.put(key, p);
             if (p.getCorrectAnswerIdent() != null) {
                 idents.put(p.getCorrectAnswerIdent(), key);
             }
-            /**
+            /*
              * Add key 
              */
             addKey(key);
-            /**
+            /*
              * Copy declared line number from the previously found key
              */
             if (prevKey != null) {
@@ -122,7 +125,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
         if (f != null) {
             Key key = new Key(f.getSignature());
             key.setFunction(true);
-            /**
+            /*
              * Find similar function
              */
             while (this.functionFactory.hasFunction(key)) {
@@ -643,20 +646,17 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             return this;
         }
 
-        Iterator<iParameterProvider> it = children.iterator();
-        while (it.hasNext()) {
-            ret = it.next().getAlgorithm(key);
+        for (iParameterProvider child : children) {
+            ret = child.getAlgorithm(key);
             if (ret != null) {
                 return ret;
             }
         }
 
-        if (ret == null) {
-            if (getParent() != null && getParent().getIdent() == null) {
-                return this;
-            } else if (getParent() == null) {
-                return this;
-            }
+        if (getParent() != null && getParent().getIdent() == null) {
+            return this;
+        } else if (getParent() == null) {
+            return this;
         }
 
         return ret;
@@ -675,9 +675,8 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             return this;
         }
 
-        Iterator<iParameterProvider> it = children.iterator();
-        while (it.hasNext()) {
-            ret = it.next().getAlgorithm(key);
+        for (iParameterProvider child : children) {
+            ret = child.getAlgorithm(key);
             if (ret != null) {
                 return ret;
             }
