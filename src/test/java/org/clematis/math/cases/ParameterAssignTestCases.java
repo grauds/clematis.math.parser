@@ -31,10 +31,10 @@ public class ParameterAssignTestCases extends AlgorithmTestCases {
                 "$global_c=int(rand(1,10));" +
                 "$global_dc=if(eq($global_c,1),\"\",\"$global_c\");" +
                 "$global_n=int(rand(3,7));" +
-                "$global_nb=int($global_n*$global_b);" +
-                "$global_n1=int($global_n - 1);" +
-                "$global_n2=int($global_n - 2);" +
-                "$global_exp=if(eq($global_n2,1),\"\",\"^$global_n2\");" +
-                "$global_nn1b=int($global_nb*$global_n1);"
+                "$globalnb=int($global_n*$global_b);" +
+                "$globalna=int($global_n - 1);" +
+                "$global_nc=int($global_n - 2);" +
+                "$global_exp=if(eq($global_nc,1),\"\",\"^$global_nc\");" +
+                "$global_nn1b=int($globalnb*$globalna);"
         };
 }
