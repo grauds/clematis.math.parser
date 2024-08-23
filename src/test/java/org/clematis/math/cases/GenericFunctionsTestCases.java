@@ -115,7 +115,7 @@ public class GenericFunctionsTestCases extends AlgorithmTestCases {
                 "$g5  = decimal(2,G($b5,$a,$q))",*/
 
             "function: gggg($a) = switch($a, 0.10, 0.05, 0.025, 0.01, 0.005, 0.001);" +
-                "function: t_dist($a) = switch($a, 1.356, 1.782, 2.179, 2.681, 3.055, 3.930);" +
+                "function: tdist($a) = switch($a, 1.356, 1.782, 2.179, 2.681, 3.055, 3.930);" +
                 "$n=14;" +
                 "$xav=43; " +
                 "$x2av=157.42;" +
@@ -136,7 +136,7 @@ public class GenericFunctionsTestCases extends AlgorithmTestCases {
                 "$index1=1;" +
                 "$index2=$index1+1;" +
                 "$arg=gggg($index1);" +
-                "$t=t_dist($index2);" +
+                "$t=tdist($index2);" +
                 "$a1=decimal(3,$s2);" +
                 "$a2=decimal(3,$seb0);" +
                 "$a3=decimal(3,$seb1);" +
