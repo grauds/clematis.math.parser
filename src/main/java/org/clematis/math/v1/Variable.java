@@ -10,7 +10,7 @@ import org.clematis.math.v1.algorithm.iParameterProvider;
 import org.clematis.math.v1.algorithm.iVariableProvider;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
-import org.clematis.math.utils.StringUtils;
+import org.clematis.math.v2.utils.StringUtils;
 import org.jdom2.Element;
 
 /**

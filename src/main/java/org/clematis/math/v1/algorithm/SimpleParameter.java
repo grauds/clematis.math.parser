@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.utils.StringUtils;
+import org.clematis.math.v2.utils.StringUtils;
 
 /**
  * Simple parameter - the holder for value and

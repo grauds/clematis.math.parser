@@ -8,7 +8,7 @@ import org.clematis.math.v1.ExpressionParser;
 import org.clematis.math.v1.OutputFormatSettings;
 import org.clematis.math.v1.iExpressionItem;
 import org.clematis.math.v1.operations.SimpleFraction;
-import org.clematis.math.utils.StringUtils;
+import org.clematis.math.v2.utils.StringUtils;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 

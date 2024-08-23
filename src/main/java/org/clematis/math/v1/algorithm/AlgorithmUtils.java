@@ -13,7 +13,7 @@ import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.iExpressionItem;
 import org.clematis.math.v1.iMultivariantLogic;
 import org.clematis.math.v1.operations.SimpleFraction;
-import org.clematis.math.utils.StringUtils;
+import org.clematis.math.v2.utils.StringUtils;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;

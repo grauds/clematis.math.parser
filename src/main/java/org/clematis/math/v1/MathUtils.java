@@ -3,7 +3,7 @@
 
 package org.clematis.math.v1;
 
-import org.clematis.math.io.InputFormatSettings;
+import org.clematis.math.v2.io.InputFormatSettings;
 
 import java.text.NumberFormat;
 import java.util.Locale;
