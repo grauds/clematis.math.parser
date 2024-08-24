@@ -20,20 +20,15 @@ import org.clematis.math.v1.iValue;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 
+import lombok.Getter;
+import lombok.Setter;
 /**
  * A representation of algorithm in question. This is
  * a formula for obtaining random variables values
  * for a question.
  */
+@Getter
 public class Algorithm extends DefaultParameterProvider {
-    /**
-     * Parent algorithm
-     */
-    private Algorithm parent = null;
-    /**
-     * Collection of algorithmic parts.
-     */
-    protected ArrayList<Algorithm> children = new ArrayList<Algorithm>();
     /**
      * Maximum number of algorithm iterations
      */
@@ -42,40 +37,24 @@ public class Algorithm extends DefaultParameterProvider {
      * Maximum number of algorithm iterations
      */
     protected static final int MAXIMUM_CONDITION_CHECKS = 100;
-//************************ GETTERS AND SETTERS ********************************
-
     /**
-     * Returns parent algorithm
-     *
-     * @return parent algorithm
+     * Parent algorithm
      */
-    public Algorithm getParent() {
-        return parent;
-    }
-
+    @Setter
+    protected Algorithm parent = null;
     /**
-     * Sets parent algorithm
-     *
-     * @param parent algorithm
+     * Collection of algorithmic parts.
      */
-    public void setParent(Algorithm parent) {
-        this.parent = parent;
-    }
-
+    protected ArrayList<Algorithm> children = new ArrayList<Algorithm>();
     /**
      * Sets format settings for this algorithm
      */
     public void setFormatSettings(OutputFormatSettings fs) {
         super.setFormatSettings(fs);
-        //Set format settings for children algorithms
-        Iterator<Algorithm> it = children.iterator();
-        while (it.hasNext()) {
-            Algorithm algorithm = it.next();
+        for (Algorithm algorithm : children) {
             algorithm.setFormatSettings(fs);
         }
     }
-//************************ ADD, FIND OR REMOVE PARAMETERS ************************
-
     /**
      * Adds parameter and sets itself as parameter container.
      *
@@ -85,7 +64,6 @@ public class Algorithm extends DefaultParameterProvider {
         super.addParameter(p);
         p.setContainer(this);
     }
-
     /**
      * Returns parameter, found by its name
      *
@@ -93,13 +71,13 @@ public class Algorithm extends DefaultParameterProvider {
      */
     public Parameter getParameter(String name) {
         Parameter param = super.getParameter(name);
-        /**
+        /*
          * Look for parameter in parent algorithm
          */
         if (param == null && getParent() != null) {
             param = getParent().getParameter(name);
         }
-        /**
+        /*
          * Return parameter may be null
          */
         return param;
@@ -113,13 +91,13 @@ public class Algorithm extends DefaultParameterProvider {
      */
     public Parameter getParameterByCustomIdent(String answerIdent) {
         Parameter param = super.getParameterByCustomIdent(answerIdent);
-        /**
+        /*
          * Look for parameter in parent algorithm
          */
         if (param == null && getParent() != null) {
             param = getParent().getParameterByCustomIdent(answerIdent);
         }
-        /**
+        /*
          * Return parameter may be null
          */
         return param;
@@ -133,14 +111,13 @@ public class Algorithm extends DefaultParameterProvider {
     public void printParameters(PrintStream ps) {
         ps.println("Algorithm ( ident='" + getIdent() + "' ) parameters:");
 
-        Iterator<Key> it = lines.iterator();
-        while (it.hasNext()) {
-            /**
+        /* Get instance of parameter */
+        for (Key key : lines) {
+            /*
              * Get instance of parameter
              */
-            Key key = it.next();
             if (!key.isFunction()) {
-                /** directly get parameter */
+                /* directly get parameter */
                 Parameter param = getParameter(key);
                 ps.println(param.getName() + " = " + param.getOutputValue(true));
             } else {
@@ -148,7 +125,7 @@ public class Algorithm extends DefaultParameterProvider {
             }
         }
 
-        if (getParent() != null && getParent().parameters.size() > 0) {
+        if (getParent() != null && !getParent().parameters.isEmpty()) {
             ps.println("Parent parameters:");
             getParent().printParameters(ps);
         }
@@ -176,15 +153,6 @@ public class Algorithm extends DefaultParameterProvider {
          * Store algorithm
          */
         children.add(algorithm);
-    }
-
-    /**
-     * Returns algorithm children
-     *
-     * @return algorithm children
-     */
-    public ArrayList<Algorithm> getChildren() {
-        return children;
     }
 
     /**
@@ -575,7 +543,9 @@ public class Algorithm extends DefaultParameterProvider {
      */
     static Algorithm createFromAlgorithm(iParameterProvider qalg, HashMap<Key, iValue> params)
         throws AlgorithmException {
-        if (qalg != null && qalg instanceof Algorithm) {
+
+        if (qalg instanceof Algorithm) {
+
             Element ser = ((Algorithm) qalg).toXML();
             Algorithm algorithm = Algorithm.createFromXML(ser);
             if (algorithm != null) {
@@ -681,7 +651,7 @@ public class Algorithm extends DefaultParameterProvider {
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
-    Element save() {
+    public Element save() {
         Element algElement = new Element("algorithm");
         algElement.setAttribute("version", "2");
 

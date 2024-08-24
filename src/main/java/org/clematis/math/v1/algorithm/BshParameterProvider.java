@@ -148,11 +148,11 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      * @param algorithmXML
      */
     static BshParameterProvider createFromXML(Element algorithmXML) {
-        /**
+        /*
          * Take not trivial algorithm xml element
          */
-        if (algorithmXML != null && algorithmXML.getChildren().size() > 0) {
-            /**
+        if (algorithmXML != null && !algorithmXML.getChildren().isEmpty()) {
+            /*
              * Create new algorithm
              */
             Element code = algorithmXML.getChild("code");
@@ -198,7 +198,8 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
-    Element save() {
+    @Override
+    public Element save() {
         Element algElement = new Element("algorithm");
         algElement.setAttribute("type", "bsh");
         algElement.setAttribute("version", "2");
@@ -223,7 +224,8 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
-    Element toXML() {
+    @Override
+    public Element toXML() {
         Element algElement = new Element("algorithm");
         algElement.setAttribute("type", "bsh");
 
@@ -266,7 +268,9 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     static BshParameterProvider createFromBshParameterProvider(iParameterProvider qalg, HashMap<Key, iValue> params)
         throws AlgorithmException {
-        if (qalg != null && qalg instanceof BshParameterProvider qalgorithm) {
+
+        if (qalg instanceof BshParameterProvider qalgorithm) {
+
             BshParameterProvider algorithm = new BshParameterProvider();
             algorithm.code = qalgorithm.code;
 

@@ -3,11 +3,11 @@
 
 package org.clematis.math.v1;
 
+import java.io.Serializable;
+
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.algorithm.iParameterProvider;
 import org.jdom2.Element;
-
-import java.io.Serializable;
 
 /**
  * Abstract constant, may be string or numeric

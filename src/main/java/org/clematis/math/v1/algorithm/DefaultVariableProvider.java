@@ -1,12 +1,12 @@
 // Created: 01.12.2003 T 12:40:09
 package org.clematis.math.v1.algorithm;
 
-import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.Constant;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
+
+import org.clematis.math.v1.AbstractConstant;
+import org.clematis.math.v1.Constant;
 
 /**
  * Default parameter provider is used to provide generic
@@ -14,22 +14,21 @@ import java.util.Random;
  */
 public class DefaultVariableProvider implements iVariableProvider {
     /**
-     * List of parameters.
-     */
-    protected ArrayList<Parameter> variables = new ArrayList<Parameter>();
-    /**
      * Randomizer.
      */
-    private static final Random rand = new Random(System.currentTimeMillis());
+    private static final Random RAND = new Random(System.currentTimeMillis());
     /**
      * Maximum power
      */
-    private int power = 15;
+    private static int power = 15;
+    /**
+     * List of parameters.
+     */
+    protected ArrayList<Parameter> variables = new ArrayList<>();
     /**
      * Hashed values
      */
-    protected Hashtable<String, Double> hashed_parameter_values = new Hashtable<String, Double>();
-
+    protected Hashtable<String, Double> valuesCache = new Hashtable<>();
     /**
      * Adds calculated parameter.
      *
@@ -50,10 +49,10 @@ public class DefaultVariableProvider implements iVariableProvider {
     /**
      * Adds random value to variables
      */
-    Double getRandomValue() {
-        double value = rand.nextDouble() * Math.pow(Math.E, rand.nextInt(power));
-        value = rand.nextBoolean() ? -value : value;
-        return new Double(value);
+    double getRandomValue() {
+        double value = RAND.nextDouble() * Math.pow(Math.E, RAND.nextInt(power));
+        value = RAND.nextBoolean() ? -value : value;
+        return value;
     }
 
     public int getPower() {
@@ -61,55 +60,46 @@ public class DefaultVariableProvider implements iVariableProvider {
     }
 
     public void setPower(int power) {
-        this.power = power;
+        DefaultVariableProvider.power = power;
     }
 
     /**
      * Return variable constant
      *
-     * @param in_varName parameter name
-     * @return parameter value, string or double
+     * @param name parameter name
+     * @return parameter value, name or double
      */
-    public AbstractConstant getVariableConstant(String in_varName) {
-        /**
+    public AbstractConstant getVariableConstant(String name) {
+
+        AbstractConstant result = null;
+
+        /*
          * Seek for previously added parameter
          */
-        for (int i = 0; i < variables.size(); i++) {
-            Parameter var = variables.get(i);
-            if (in_varName.equals(var.getName())) {
-                return var.getCurrentResult();
+        for (Parameter var : variables) {
+            if (name.equals(var.getName())) {
+                result = var.getCurrentResult();
+                break;
             }
         }
-        /**
+
+        /*
          * Seek in hashtable for generic random value
          */
-        if (hashed_parameter_values.containsKey(in_varName)) {
-            Double number = hashed_parameter_values.get(in_varName);
-            return new Constant(number.doubleValue());
-        }
-        /**
-         * Value not found, generate and save new one
-         */
-        else {
-            Double number = getRandomValue();
-            hashed_parameter_values.put(in_varName, number);
-            return new Constant(number.doubleValue());
-        }
-    }
-
-    /**
-     * Checks whether the string is a parameter name.
-     *
-     * @param name checked string.
-     * @return <code>true</code> if it is a parameter name or <code>false</code> in otherwise.
-     */
-    protected boolean isVarName(String name) {
-        for (int i = 0; i < variables.size(); i++) {
-            Parameter param = variables.get(i);
-            if (name.equals(param.getName())) {
-                return true;
+        if (result == null) {
+            if (valuesCache.containsKey(name)) {
+                Double number = valuesCache.get(name);
+                result = new Constant(number);
+            } else {
+                /*
+                 * If value not found, generate and save new one
+                 */
+                double number = getRandomValue();
+                valuesCache.put(name, number);
+                result = new Constant(number);
             }
         }
-        return false;
+
+        return result;
     }
 }

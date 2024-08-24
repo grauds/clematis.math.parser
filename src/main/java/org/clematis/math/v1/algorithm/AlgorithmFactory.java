@@ -15,20 +15,21 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-import org.xml.sax.InputSource;
 
 /**
  * Factory to create algorithms froms xml
  */
 public class AlgorithmFactory {
+
+    public static final String VERSION_2 = "2";
     /**
      * The JDOM builder.
      */
-    private static final SAXBuilder builder = new SAXBuilder();
+    private static final SAXBuilder BUILDER = new SAXBuilder();
 
-    /** config builder */
+    /* config builder */
     static {
-        builder.setExpandEntities(true);
+        BUILDER.setExpandEntities(true);
     }
 
     /**
@@ -40,10 +41,9 @@ public class AlgorithmFactory {
      * @throws org.jdom2.JDOMException on JDOM error.
      */
     static Document load(Reader in) throws IOException, JDOMException {
-        Reader reader = in;
-        Document doc = builder.build(reader);
-        reader.close();
-        return doc;
+        try (in) {
+            return BUILDER.build(in);
+        }
     }
 
     /**
@@ -54,9 +54,10 @@ public class AlgorithmFactory {
      * @throws IOException on I/O error.
      */
     public static String printToString(Document doc) throws IOException {
-        StringWriter out = new StringWriter();
-        new XMLOutputter(Format.getCompactFormat()).output(doc, out);
-        return out.toString();
+        try (StringWriter out = new StringWriter()) {
+            new XMLOutputter(Format.getCompactFormat()).output(doc, out);
+            return out.toString();
+        }
     }
 
     /**
@@ -67,55 +68,38 @@ public class AlgorithmFactory {
      * @throws java.io.IOException on I/O error.
      */
     public static String printToString(Element doc) throws IOException {
-        StringWriter out = new StringWriter();
-        new XMLOutputter(Format.getCompactFormat()).output(doc, out);
-        return out.toString();
-    }
-
-    /**
-     * Create either bsh algorithm or qu algorithm from xml element
-     * in question.
-     *
-     * @param algorithmXML
-     */
-    public static iParameterProvider createFromQuestionAlgorithm(Element algorithmXML) {
-        if (algorithmXML != null) {
-            if ("bsh".equals(algorithmXML.getAttributeValue("type"))) {
-                return BshParameterProvider.createFromQuestionXML(algorithmXML);
-            } else {
-                return Algorithm.createFromQuestionXML(algorithmXML);
-            }
+        try (StringWriter out = new StringWriter()) {
+            new XMLOutputter(Format.getCompactFormat()).output(doc, out);
+            return out.toString();
         }
-        return null;
     }
 
     /**
-     * Create either bsh algorithm or qu algorithm from xml element
-     * in question.
+     * Create from bsh algorithm
      *
-     * @param algorithmXML
+     * @param algorithmXML - xml notation of an algorithm
+     */
+    public static iParameterProvider createFromBeanShell(Element algorithmXML) {
+        return BshParameterProvider.createFromQuestionXML(algorithmXML);
+    }
+
+    /**
+     * Create algorithm from xml notation
+     *
+     * @param algorithmXML - xml notation of an algorithm
      */
     public static iParameterProvider createAlgorithm(Element algorithmXML) {
-        if (algorithmXML != null) {
-            if ("bsh".equals(algorithmXML.getAttributeValue("type"))) {
-                return BshParameterProvider.createFromXML(algorithmXML);
-            } else {
-                return Algorithm.createFromXML(algorithmXML);
-            }
-        }
-        return null;
+        return Algorithm.createFromXML(algorithmXML);
     }
 
     /**
-     * Create either bsh algorithm or qu algorithm from xml string in question.
+     * Parse string to xml and create algorithm out of it
      *
-     * @param algorithmXML
+     * @param algorithmXML - xml notation of an algorithm
      */
     public static iParameterProvider createAlgorithm(String algorithmXML) throws IOException, JDOMException {
-        if (algorithmXML != null && !algorithmXML.trim().equals("")) {
-            InputSource is = new InputSource(new StringReader(algorithmXML));
-            SAXBuilder sb = new SAXBuilder();
-            Document doc = sb.build(is);
+        if (algorithmXML != null && !algorithmXML.trim().isEmpty()) {
+            Document doc = load(new StringReader(algorithmXML));
             Element root = doc.getRootElement();
             return createAlgorithm(root);
         }
@@ -125,32 +109,30 @@ public class AlgorithmFactory {
     /**
      * Returns a copy of given algorithm
      *
-     * @param algorithm
+     * @param algorithm to get a copy of
      * @return a copy of given algorithm
      */
-    public static iParameterProvider copyAlgorithm(iParameterProvider algorithm, HashMap<Key, iValue> params)
-        throws AlgorithmException {
+    public static iParameterProvider copyAlgorithm(
+        iParameterProvider algorithm, HashMap<Key, iValue> params
+    ) throws AlgorithmException {
+
+        iParameterProvider result = algorithm;
         if (algorithm instanceof BshParameterProvider) {
-            return BshParameterProvider.createFromBshParameterProvider(algorithm, params);
+            result = BshParameterProvider.createFromBshParameterProvider(algorithm, params);
         } else if (algorithm instanceof Algorithm) {
-            return Algorithm.createFromAlgorithm(algorithm, params);
+            result = Algorithm.createFromAlgorithm(algorithm, params);
         }
-        return algorithm;
+        return result;
     }
 
     /**
      * Returns a copy of given algorithm
      *
-     * @param algorithm
+     * @param algorithm to get a copy of
      * @return a copy of given algorithm
      */
     public static iParameterProvider copyAlgorithm(iParameterProvider algorithm) throws AlgorithmException {
-        if (algorithm instanceof BshParameterProvider) {
-            return BshParameterProvider.createFromBshParameterProvider(algorithm);
-        } else if (algorithm instanceof Algorithm) {
-            return Algorithm.createFromAlgorithm(algorithm);
-        }
-        return algorithm;
+        return copyAlgorithm(algorithm, null);
     }
 
     /**
@@ -160,12 +142,7 @@ public class AlgorithmFactory {
      * @return xml string
      */
     public static String toXML(iParameterProvider algorithm) throws IOException {
-        if (algorithm instanceof BshParameterProvider) {
-            return printToString(((BshParameterProvider) algorithm).toXML());
-        } else if (algorithm instanceof Algorithm) {
-            return printToString(((Algorithm) algorithm).toXML());
-        }
-        return "";
+        return printToString(algorithm.toXML());
     }
 
     /**
@@ -178,19 +155,22 @@ public class AlgorithmFactory {
      */
     public static iParameterProvider loadAlgorithm(Element algorithmXML, Element algorithmResultsXML)
         throws AlgorithmException {
-        iParameterProvider algorithm = null;
+
+        iParameterProvider algorithm;
+
         // get version
         String version = null;
         if (algorithmResultsXML != null) {
             version = algorithmResultsXML.getAttributeValue("version");
         }
-        /** second version of algorithm storage */
-        if (algorithmXML != null && version != null && version.trim().equals("2")) {
-            /**
+
+        /* second version of algorithm storage */
+        if (algorithmXML != null && version != null && version.trim().equals(VERSION_2)) {
+            /*
              * Create algorithm from question xml
              */
             algorithm = AlgorithmFactory.createAlgorithm(algorithmXML);
-            /**
+            /*
              * Load algorithm results from taken algorithm xml
              */
             if (algorithm instanceof BshParameterProvider) {
@@ -198,63 +178,45 @@ public class AlgorithmFactory {
             } else if (algorithm instanceof Algorithm) {
                 ((Algorithm) algorithm).load(algorithmResultsXML);
             }
-            /**
+            /*
              * Set version 2 to loaded algorithm
              */
-            algorithm.setVersion("2");
-        }
-        /** first version of algorithm storage */
-        else {
+            algorithm.setVersion(VERSION_2);
+        } else {
             algorithm = AlgorithmFactory.createAlgorithm(algorithmResultsXML);
         }
         return algorithm;
     }
 
     /**
-     * Loads algorithm with results of calculation either from algorithm xml from question bank
-     * and xml from taken question or only from taken question
+     * Loads algorithm with results of calculation either from algorithm and results xml
      *
-     * @param algorithmXML        algorithm xml from question bank
-     * @param algorithmResultsXML algorithm xml from taken question
+     * @param algorithmXML        algorithm xml
+     * @param algorithmResultsXML algorithm results xml
      * @return algorithm with results of calculation
      */
     public static iParameterProvider loadAlgorithm(String algorithmXML, String algorithmResultsXML)
         throws IOException, JDOMException, AlgorithmException {
-        System.out.println("Loading algorithm from:" + algorithmResultsXML);
-        Element root = null;
 
-        if (algorithmXML != null && !algorithmXML.trim().equals("")) {
-            InputSource is = new InputSource(new StringReader(algorithmXML));
-            SAXBuilder sb = new SAXBuilder();
-            Document doc = sb.build(is);
-            root = doc.getRootElement();
+        Element algorithm = load(algorithmXML);
+        Element results = load(algorithmResultsXML);
+
+        return loadAlgorithm(algorithm, results);
+    }
+
+    public static Element load(String algorithmXML) throws IOException, JDOMException {
+        if (algorithmXML != null && !algorithmXML.trim().isEmpty()) {
+            return load(new StringReader(algorithmXML)).getRootElement();
         }
-
-        Element root2 = null;
-
-        if (algorithmResultsXML != null && !algorithmResultsXML.trim().equals("")) {
-            InputSource is = new InputSource(new StringReader(algorithmResultsXML));
-            SAXBuilder sb = new SAXBuilder();
-            Document doc = sb.build(is);
-            root2 = doc.getRootElement();
-        }
-
-        return loadAlgorithm(root, root2);
+        return null;
     }
 
     /**
-     * Save algorithm according to its version. Version 2 only
-     * saves calculated results and version 1 updates question bank.
+     * Save algorithm according to its version.
      *
-     * @param algorithm
+     * @param algorithm instance to save
      */
     public static String saveAlgorithm(iParameterProvider algorithm) throws IOException {
-        if (algorithm instanceof BshParameterProvider) {
-            return printToString(((BshParameterProvider) algorithm).save());
-        } else if (algorithm instanceof Algorithm) {
-            return printToString(((Algorithm) algorithm).save());
-        }
-
-        return "";
+        return printToString(algorithm.save());
     }
 }

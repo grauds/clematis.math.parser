@@ -12,7 +12,7 @@ import java.util.Iterator;
  * Provider of parameters for functions.
  */
 public interface iParameterProvider extends iSimpleParameterProvider,
-    iParameterFormatter,
+    IParameterFormatter,
     Iterable<String> {
     /**
      * Returns parameter names

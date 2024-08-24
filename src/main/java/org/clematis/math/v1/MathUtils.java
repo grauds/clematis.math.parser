@@ -36,11 +36,8 @@ public class MathUtils {
      */
     public static boolean isInteger(String str) {
         try {
-            /**
-             * Parse as double, as it may be notation like 1542.000
-             */
-            Double d = new Double(str);
-            return d.intValue() == d.doubleValue();
+            double d = Double.parseDouble(str);
+            return (int) d == d;
         } catch (NumberFormatException ex) {
             return false;
         }

@@ -2,11 +2,12 @@
 package org.clematis.math.v1.algorithm;
 
 import org.clematis.math.v1.OutputFormatSettings;
+import org.jdom2.Element;
 
 /**
  * Parameter formatter
  */
-public interface iParameterFormatter {
+public interface IParameterFormatter {
     /**
      * Get format settings from this algorithm
      *
@@ -18,4 +19,16 @@ public interface iParameterFormatter {
      * Sets format settings for this algorithm
      */
     void setFormatSettings(OutputFormatSettings fs);
+
+    /**
+     * Output parameters to XML
+     * @return xml representation of the algorithm
+     */
+    Element save();
+
+    /**
+     * Output parameters to XML
+     * @return xml representation of the algorithm
+     */
+    Element toXML();
 }

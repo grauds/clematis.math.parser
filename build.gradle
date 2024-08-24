@@ -1,15 +1,27 @@
 plugins {
     id 'java'
+    id 'jacoco'
+    id 'checkstyle'
 }
 
 group = 'org.clematis'
 version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    checkstyle "com.puppycrawl.tools:checkstyle:10.9.3"
+
     implementation "javax.xml.bind:jaxb-api:2.3.0"
     implementation group: 'org.jdom', name: 'jdom', version: '2.0.2'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'

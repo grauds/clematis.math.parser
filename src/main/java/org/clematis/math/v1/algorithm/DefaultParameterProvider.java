@@ -1,19 +1,20 @@
 // Created: 01.12.2003 T 11:57:27
 package org.clematis.math.v1.algorithm;
 
-import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.functions.aFunction;
-import org.clematis.math.v1.iValue;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.clematis.math.v1.AbstractConstant;
+import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.v1.FunctionFactory;
+import org.clematis.math.v1.functions.GenericFunction;
+import org.clematis.math.v1.functions.aFunction;
+import org.clematis.math.v1.iValue;
+import org.jdom2.Element;
 
 /**
  * Default parameter provider is used to provide generic
@@ -196,6 +197,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @return value from extra list
      */
     protected iValue findKey(String name, int no, HashMap<Key, iValue> params) {
+
         if (params != null && name != null) {
             /*
              * Create normal key to find
@@ -248,7 +250,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      */
     public Key getParameterKey(String name) {
         if (name != null) {
-            /**
+            /*
              * Find param with key with no=0
              */
             if (SimpleParameter.isNameWithBraces(name)) {
@@ -473,5 +475,15 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     public void addKey(Key key) {
         key.setLine(lines.size());
         lines.add(key);
+    }
+
+    @Override
+    public Element save() {
+        return null;
+    }
+
+    @Override
+    public Element toXML() {
+        return null;
     }
 }

@@ -3,23 +3,17 @@ package org.clematis.math.v1.algorithm;
 
 import org.clematis.math.v1.OutputFormatSettings;
 
+import lombok.Getter;
 /**
  *
  */
+@Getter
 abstract class AbstractParameterFormatter implements iParameterProvider {
+
     /**
      * Output text format settings
      */
     protected OutputFormatSettings formatSettings = new OutputFormatSettings();
-
-    /**
-     * Get format settings from this algorithm
-     *
-     * @return format settings from this algorithm
-     */
-    public OutputFormatSettings getFormatSettings() {
-        return formatSettings;
-    }
 
     /**
      * Sets format settings for this algorithm
