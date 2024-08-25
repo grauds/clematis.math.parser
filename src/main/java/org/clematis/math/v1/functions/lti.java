@@ -5,12 +5,13 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**
  * lti (a, b) returns a <= b ? 1.0 : 0.0
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class lti extends aFunction2 {
     /**
      * Calculate a subtree of expression items
@@ -19,7 +20,7 @@ public class lti extends aFunction2 {
      */
     public IExpressionItem calculate() throws AlgorithmException {
         try {
-            if (arguments.size() <= 1 || arguments.size() > 2) {
+            if (arguments.size() != 2) {
                 throw new AlgorithmException("Invalid number of arguments in function 'lti': " + arguments.size());
             }
 

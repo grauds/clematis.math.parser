@@ -3,14 +3,14 @@
 
 package org.clematis.math.v1.functions;
 
-import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.MathUtils;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.IExpressionItem;
-
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.MathUtils;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**
  * <code>Sig(n, x)</code>
@@ -20,7 +20,7 @@ public class Sig extends aFunction2 {
     /**
      * Get number format locale
      */
-    public static final NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+    public static final NumberFormat NF = NumberFormat.getNumberInstance(Locale.US);
 
     /**
      * Implementation of <code>calculate()</code> method of the
@@ -74,41 +74,41 @@ public class Sig extends aFunction2 {
      * @return true if this double has these significant digits
      */
     public static boolean validate(String numberString, int digitsRequired) {
-        /**
+        /*
          * If number is zero, it has 1 sig digit
          */
         if (MathUtils.isZero(numberString)) {
             return true;
         }
-        /**
+        /*
          * Indices for the number string
          */
         int decimalPointIndex = 0;
         int mostSignificantDigitIndex = 0;
         int leastSignificantDigitIndex = 0;
-        /**
+        /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
         numberString = MathUtils.correctAndValidateInput(numberString);
-        /**
+        /*
          * Wrong input, return null
          */
         if (numberString == null) {
             return false;
         }
-        /**
+        /*
          * Find index of scientific "e" in input string
          */
         int scientificIndex = numberString.toLowerCase().indexOf("e");
         if (scientificIndex != -1) {
             numberString = numberString.substring(0, scientificIndex);
         }
-        /**
+        /*
          * Get decimal point to find out the type of input number string
          */
         decimalPointIndex = numberString.indexOf(".");
-        /**
+        /*
          * Apply algorithms depending on decimal point index
          */
         switch (decimalPointIndex) {
@@ -136,8 +136,8 @@ public class Sig extends aFunction2 {
                 significantDigits = leastSignificantDigitIndex + 1;
                 if (significantDigits == digitsRequired) {
                     return true;
-                } else if (significantDigits < digitsRequired &&
-                    numberString.length() >= digitsRequired) {
+                } else if (significantDigits < digitsRequired
+                    && numberString.length() >= digitsRequired) {
                     //if the integer has the correct number of figures but has
                     //too few nonzero digits, it is POSSIBLE that the number is
                     //being expressed correctly, however it is also possible that
@@ -169,17 +169,17 @@ public class Sig extends aFunction2 {
      * @return cut string with required digits
      */
     private static String getSigDigitsDecimal(String numberString, int digitsRequired) {
-        /**
+        /*
          * Start count flag
          */
         boolean startCount = false;
-        /**
+        /*
          * Resulting string
          */
         StringBuilder sb = new StringBuilder();
         sb.append("0.");
         int counter = 0;
-        /**
+        /*
          * Here numberString is cut to .[input number]
          */
         for (int i = 1; i < numberString.length(); i++) {
@@ -252,9 +252,7 @@ public class Sig extends aFunction2 {
         if (counter < digitsRequired) {
             //if there are too few significant digits, this code adds trailing
             //zeroes to the number to the correct number of digits.
-            for (int i = 0; i < digitsRequired - counter; i++) {
-                sb.append("0");
-            }
+            sb.append("0".repeat(Math.max(0, digitsRequired - counter)));
         }
 
         if (round) {
@@ -275,38 +273,38 @@ public class Sig extends aFunction2 {
      * @return resulting number string
      */
     public static String getSigDigits(String numberString, int digitsRequired) {
-        /**
+        /*
          * Validate input
          */
         if (digitsRequired <= 0 || numberString == null || numberString.trim().equals("")) {
             return numberString;
         }
-        /**
+        /*
          * If number is zero, it has 1 sig digit
          */
         if (MathUtils.isZero(numberString)) {
             return "0";
         }
-        /**
+        /*
          * Resulting cut string
          */
         String cutString = null;
-        /**
+        /*
          * Negative flag
          */
         boolean negative = numberString.charAt(0) == '-';
-        /**
+        /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
         numberString = MathUtils.correctAndValidateInput(numberString);
-        /**
+        /*
          * Wrong input, return null
          */
         if (numberString == null) {
             return null;
         }
-        /**
+        /*
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
@@ -316,18 +314,18 @@ public class Sig extends aFunction2 {
             exp = numberString.substring(scientificIndex);
             numberString = numberString.substring(0, scientificIndex);
         }
-        /**
+        /*
          * Get decimal point to find out the type of input number string
          */
         int decimalPointIndex = numberString.indexOf(".");
-        /**
+        /*
          * Apply algorithms depending on decimal point index
          */
         switch (decimalPointIndex) {
-            case 0: //If the number is decimal only: -1 < n < 1
-            {
+            case 0: {
+                //If the number is decimal only: -1 < n < 1
                 cutString = getSigDigitsDecimal(numberString, digitsRequired);
-                /**
+                /*
                  * Restore 0 before .[input number]
                  */
                 numberString = "0" + numberString;
@@ -338,18 +336,18 @@ public class Sig extends aFunction2 {
                     return numberString;
                 }
             }
-            case -1: //If the number is an integer
-            {
+            case -1: {
+                //If the number is an integer
                 if (digitsRequired <= numberString.length()) {
                     if (scientificIndex != -1) {
-                        /**
+                        /*
                          * Before cutting the number we should increment
                          * exp by difference between required digits and
                          * length of number string
                          */
                         int diff = numberString.length() - digitsRequired;
                         int iexp = 0;
-                        if (exp != null && exp.trim().length() > 1) {
+                        if (exp.trim().length() > 1) {
                             iexp = Integer.parseInt(exp.substring(1));
                         }
                         iexp += diff;
@@ -362,9 +360,8 @@ public class Sig extends aFunction2 {
                     } else {
                         int diff = numberString.length() - digitsRequired;
                         StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < diff; i++) {
-                            sb.append("0");
-                        }
+                        sb.append("0".repeat(diff));
+
                         cutString = numberString.substring(0, digitsRequired);
                         if (negative) {
                             cutString = "-" + Decimal.addExtraDigit(cutString, numberString);
@@ -379,15 +376,13 @@ public class Sig extends aFunction2 {
                     StringBuilder sb = new StringBuilder();
                     sb.append(numberString);
                     sb.append(".");
-                    for (int i = 0; i < digitsRequired - numberString.length(); i++) {
-                        sb.append("0");
-                    }
+                    sb.append("0".repeat(digitsRequired - numberString.length()));
                     cutString = sb.toString();
                 }
                 return cutString + exp;
             }
-            default: //If it is a real number with an integer and decimal value
-            {
+            default: {
+                //If it is a real number with an integer and decimal value
                 if (negative) {
                     cutString = "-" + getSigDigitsFloat(numberString, digitsRequired);
                 } else {
@@ -422,18 +417,18 @@ public class Sig extends aFunction2 {
     public static int countSigDigits(String numberString) {
         int mostSignificantDigitIndex = 0;
         int leastSignificantDigitIndex = 0;
-        /**
+        /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
         numberString = MathUtils.correctAndValidateInput(numberString);
-        /**
+        /*
          * Wrong input, return -1
          */
         if (numberString == null) {
             return -1;
         }
-        /**
+        /*
          * Find index of scientific "e" in input string and if
          * found, cut off
          */
@@ -441,7 +436,7 @@ public class Sig extends aFunction2 {
         if (scientificIndex != -1) {
             numberString = numberString.substring(0, scientificIndex);
         }
-        /**
+        /*
          * Get decimal point to find out the type of input number string
          */
         int decimalPointIndex = numberString.indexOf(".");

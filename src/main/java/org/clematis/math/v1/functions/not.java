@@ -4,13 +4,14 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**
  * Returns 1.0 if a is equal to 0.0, otherwise returns 1.0;
  * i.e. it returns a == 0.0 ? 1.0 : 0.0.
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class not extends aFunction2 {
     /**
      * Calculate a subtree of expression items

@@ -1,12 +1,12 @@
 // Created: Feb 14, 2003 T 12:26:09 PM
 package org.clematis.math.v1.functions;
 
+import java.util.Random;
+
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.IExpressionItem;
-
-import java.util.Random;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**
  * rand(m,n)
@@ -16,7 +16,12 @@ import java.util.Random;
  * Returns a randomly chosen real number between m and n expressed to k significant places.
  */
 public class Rand extends aFunction2 {
-    private static final Random rand = new Random(System.currentTimeMillis());
+
+    public static final String SIGNATURE = "Rand";
+
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
+
+    private static final int ARGUMENTS_NUMBER = 3;
 
     /**
      * Returns a randomly chosen real number between m and n (inclusive) in
@@ -25,9 +30,10 @@ public class Rand extends aFunction2 {
      *
      * @return <code>Constant</code> with randomly chosen real number.
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem calculate() throws AlgorithmException {
         try {
-            if (arguments.size() <= 1 || arguments.size() > 3) {
+            if (arguments.size() <= 1 || arguments.size() > ARGUMENTS_NUMBER) {
                 throw new AlgorithmException("Invalid number of arguments in function 'Rand': " + arguments.size());
             }
 
@@ -36,7 +42,7 @@ public class Rand extends aFunction2 {
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2)) {
                 Rand retvalue = new Rand();
-                retvalue.setSignature("Rand");
+                retvalue.setSignature(SIGNATURE);
                 retvalue.addArgument(a1);
                 retvalue.addArgument(a2);
                 retvalue.setMultiplier(retvalue.getMultiplier() * getMultiplier());
@@ -44,11 +50,11 @@ public class Rand extends aFunction2 {
             }
 
             IExpressionItem a3 = null;
-            if (arguments.size() == 3) {
+            if (arguments.size() == ARGUMENTS_NUMBER) {
                 a3 = arguments.get(2).calculate();
                 if (!AlgorithmUtils.isGoodNumericArgument(a3)) {
                     Rand retvalue = new Rand();
-                    retvalue.setSignature("Rand");
+                    retvalue.setSignature(SIGNATURE);
                     retvalue.addArgument(a1);
                     retvalue.addArgument(a2);
                     retvalue.addArgument(a3);
@@ -63,7 +69,7 @@ public class Rand extends aFunction2 {
             if (a3 != null) {
                 c3 = AlgorithmUtils.getNumericArgument(a3);
             }
-            double rd = rand.nextDouble();
+            double rd = RANDOM.nextDouble();
             double newValue = c1.getNumber() * (1.0 - rd) + c2.getNumber() * rd;
             if (c3 != null) {
                 int sig = (int) c3.getNumber();
@@ -79,16 +85,5 @@ public class Rand extends aFunction2 {
         } catch (Exception ex) {
             throw new AlgorithmException("Failed calculation in " + signature + " due to " + ex);
         }
-    }
-
-    public int getSigDigits() {
-        if (arguments != null && arguments.size() == 3) {
-            IExpressionItem sigArg = arguments.get(2);
-            if (sigArg instanceof Constant) {
-                return (int) ((Constant) sigArg).getNumber();
-            }
-        }
-        // undefined state
-        return -1;
     }
 }

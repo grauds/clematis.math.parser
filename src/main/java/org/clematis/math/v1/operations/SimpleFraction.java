@@ -10,8 +10,9 @@ import org.jdom2.Element;
  * Simple fraction is a division operation, waiting
  */
 public class SimpleFraction extends aOperation {
-    public SimpleFraction(IExpressionItem in_operand1, IExpressionItem in_operand2) {
-        super(in_operand1, in_operand2);
+
+    public SimpleFraction(IExpressionItem operand1, IExpressionItem operand2) {
+        super(operand1, operand2);
     }
 
     /**
@@ -20,12 +21,12 @@ public class SimpleFraction extends aOperation {
      * @return expression item instance
      */
     public IExpressionItem calculate() throws AlgorithmException {
-        /**
+        /*
          * First try to calculate each operand
          */
         IExpressionItem a = getOperand1().calculate();
         IExpressionItem b = getOperand2().calculate();
-        /**
+        /*
          * Do not divide simple fraction
          */
         return new SimpleFraction(a, b);
@@ -37,13 +38,17 @@ public class SimpleFraction extends aOperation {
      * @param item another expression item
      * @return result expression item
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (this.aKindOf(item)) {
+
             SimpleFraction sf = (SimpleFraction) item;
             IExpressionItem t1 = getOperand2().multiply(sf.getOperand1());
             IExpressionItem t2 = sf.getOperand2().multiply(getOperand1());
+
             this.setOperand1(t1.add(t2));
             this.setOperand2(getOperand2().multiply(sf.getOperand2()));
+
             return this;
         } else if (item instanceof Constant) {
             IExpressionItem t = getOperand2().multiply(item);
@@ -61,6 +66,7 @@ public class SimpleFraction extends aOperation {
      * @param item another expression item
      * @return result expression item
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (this.aKindOf(item)) {
             SimpleFraction sf = (SimpleFraction) item;
@@ -68,7 +74,7 @@ public class SimpleFraction extends aOperation {
             setOperand2(getOperand2().multiply(sf.getOperand2()));
             return this;
         } else if (item instanceof Constant) {
-            /**
+            /*
              * Multiply term of fraction by constant
              */
             setOperand1(getOperand1().multiply(item));
@@ -121,7 +127,7 @@ public class SimpleFraction extends aOperation {
      * @return product of division
      */
     public Constant getProduct() throws AlgorithmException {
-        /**
+        /*
          * First try to calculate each operand
          */
         IExpressionItem a = getOperand1().calculate();
@@ -136,10 +142,10 @@ public class SimpleFraction extends aOperation {
     /**
      * Sets multiplier
      *
-     * @param multiplier
+     * @param multiplier to apply to the first operand
      */
     public void setMultiplier(double multiplier) {
-        /**
+        /*
          * Avoid trivial multiplication
          */
         if (multiplier != 1) {

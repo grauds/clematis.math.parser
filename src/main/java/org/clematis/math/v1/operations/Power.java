@@ -5,26 +5,32 @@ import java.math.BigDecimal;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.IExpressionItem;
 import org.jdom2.Element;
 
 /**
  * Power operation
  */
 public class Power extends aOperation {
+
+    public static final String APPLY_ELEMENT_NAME = "apply";
+    public static final String TIMES_ELEMENT_NAME = "times";
+    public static final String POWER_ELEMENT_NAME = "power";
+
     /**
      * Common constructor. Note, that constructor does
      * not simplify the expression.
      *
-     * @param in_operand1 first argument
-     * @param in_operand2 second argument
+     * @param operand1 first argument
+     * @param operand2 second argument
      */
-    public Power(IExpressionItem in_operand1, IExpressionItem in_operand2) {
-        super(in_operand1, in_operand2);
+    public Power(IExpressionItem operand1, IExpressionItem operand2) {
+        super(operand1, operand2);
     }
 
+    @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount"})
     public IExpressionItem calculate() throws AlgorithmException {
         IExpressionItem base = getOperand1().calculate();
         IExpressionItem exponent = getOperand2().calculate();
@@ -33,31 +39,28 @@ public class Power extends aOperation {
             return this;
         }
 
-        Constant c_exponent = AlgorithmUtils.getNumericArgument(exponent);
+        Constant cExponent = AlgorithmUtils.getNumericArgument(exponent);
 
         if (base != null) {
             if (AlgorithmUtils.isGoodNumericArgument(base)) {
                 try {
-                    if (((int) c_exponent.getNumber()) == c_exponent.getNumber()) {
-                        IExpressionItem item = AlgorithmUtils.getNumericArgument(base).pow(c_exponent);
+                    if (((int) cExponent.getNumber()) == cExponent.getNumber()) {
+                        IExpressionItem item = AlgorithmUtils.getNumericArgument(base).pow(cExponent);
                         item.setMultiplier(getMultiplier());
-                        if (item != null) {
-                            return item;
-                        }
+                        return item;
                     }
-                } catch (ArithmeticException ex) {
-                }
+                } catch (ArithmeticException ignored) {}
 
-                double power = Math.pow(((Constant) base).getNumber(), c_exponent.getNumber());
+                double power = Math.pow(((Constant) base).getNumber(), cExponent.getNumber());
                 Constant c = new Constant(power);
                 c.setMultiplier(getMultiplier());
 
                 return c;
-            } else if (c_exponent.getNumber() == 0) {
+            } else if (cExponent.getNumber() == 0) {
                 return new Constant(getMultiplier());
             }
         }
-        /**
+        /*
          * Create new power expression
          */
         Power power = new Power(base, exponent);
@@ -72,11 +75,11 @@ public class Power extends aOperation {
      * @return new expression item as a product of addition
      */
     public IExpressionItem add(IExpressionItem item) {
-        /**
+        /*
          * Case: y^2 + y^2.
          */
         if (this.aKindOf(item) && (item instanceof Power p)) {
-            /**
+            /*
              * Apply more strict limitations.
              */
             if (this.getPower().equals(p.getPower())) {
@@ -93,26 +96,26 @@ public class Power extends aOperation {
      * @param item expression item to multiply
      * @return new expression item as a product of multiplication
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
-        /**
-         * Case: C * y^3.
-         */
+
         if (item instanceof Constant) {
+            /*
+             * Case: C * y^3.
+             */
             this.setMultiplier(((Constant) item).getNumber() * getMultiplier());
             return this;
-        }
-        /**
-         * Case: y * y^3.
-         */
-        else if (this.aKindOf(item) && (item instanceof Variable v)) {
+        } else if (this.aKindOf(item) && (item instanceof Variable v)) {
+            /*
+             * Case: y * y^3.
+             */
             this.setMultiplier(getMultiplier() * v.getMultiplier());
             setOperand2(getPower().add(new Constant(1)));
             return this;
-        }
-        /**
-         * Case: y^2 * y^3.
-         */
-        else if (item instanceof Power p) {
+        } else if (item instanceof Power p) {
+            /*
+             * Case: y^2 * y^3.
+             */
             if (p.getOperand1().equals(getOperand1())) {
                 this.setMultiplier(getMultiplier() * p.getMultiplier());
                 setOperand2(getPower().add(p.getPower()));
@@ -148,8 +151,9 @@ public class Power extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public boolean aKindOf(IExpressionItem item) {
-        /**
+        /*
          * We can multiply power functions only if
          * bases are similar.
          * Addition can be made only
@@ -172,9 +176,9 @@ public class Power extends aOperation {
      */
     public boolean equals(IExpressionItem item) {
         if (item instanceof Power p) {
-            return (getOperand1().equals(p.getOperand1()) &&
-                (getPower().equals(p.getPower())) &&
-                (getMultiplier() == p.getMultiplier()));
+            return (getOperand1().equals(p.getOperand1())
+                && (getPower().equals(p.getPower()))
+                && (getMultiplier() == p.getMultiplier()));
         }
         return false;
     }
@@ -186,16 +190,17 @@ public class Power extends aOperation {
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply", IExpressionItem.NS_MATH);
+        Element apply = new Element(APPLY_ELEMENT_NAME, IExpressionItem.NS_MATH);
 
-        Element times = new Element("times", IExpressionItem.NS_MATH);
+        Element times = new Element(TIMES_ELEMENT_NAME, IExpressionItem.NS_MATH);
         apply.addContent(times);
+
         Element cn = new Element("cn", IExpressionItem.NS_MATH);
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element("apply", IExpressionItem.NS_MATH);
-        apply2.addContent(new Element("power", IExpressionItem.NS_MATH));
+        Element apply2 = new Element(APPLY_ELEMENT_NAME, IExpressionItem.NS_MATH);
+        apply2.addContent(new Element(POWER_ELEMENT_NAME, IExpressionItem.NS_MATH));
         apply2.addContent(getOperand1().toMathML());
         apply2.addContent(getOperand2().toMathML());
 
@@ -212,7 +217,7 @@ public class Power extends aOperation {
      */
     public void changeExponent(String difference) throws AlgorithmException {
         if (getOperand2() instanceof Constant c) {
-            c = (Constant) c.add(new Constant(new BigDecimal(difference)));
+            c.add(new Constant(new BigDecimal(difference)));
         }
     }
 

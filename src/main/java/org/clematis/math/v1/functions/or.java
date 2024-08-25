@@ -4,14 +4,15 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**
  * Returns 1.0 if a is any of arguments is equal to 1.0, otherwise returns 0.0;
  * <p>
  * i.e. it returns a == 0.0 || b == 1.0 ||& ... ? 1.0 : 0.0.
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class or extends aFunction2 {
     /**
      * Calculate a subtree of expression items
@@ -20,19 +21,19 @@ public class or extends aFunction2 {
      */
     public IExpressionItem calculate() throws AlgorithmException {
         try {
-            boolean good_arguments = true;
+            boolean goodArguments = true;
             boolean result = true;
 
             for (int i = 0; i < arguments.size(); i++) {
                 IExpressionItem a = arguments.get(i).calculate();
                 if (!(a instanceof Constant)) {
-                    good_arguments = false;
+                    goodArguments = false;
                     break;
                 }
                 Constant constant = AlgorithmUtils.getNumericArgument(a);
                 double value = constant.getNumber();
                 if (value != 1.0 && value != 0.0) {
-                    good_arguments = false;
+                    goodArguments = false;
                     break;
                 }
                 if (i == 0) {
@@ -42,12 +43,12 @@ public class or extends aFunction2 {
                 }
             }
 
-            if (!good_arguments) {
+            if (!goodArguments) {
                 or retvalue = new or();
                 retvalue.setSignature("or");
 
-                for (int i = 0; i < arguments.size(); i++) {
-                    retvalue.addArgument(arguments.get(i));
+                for (IExpressionItem argument : arguments) {
+                    retvalue.addArgument(argument);
                 }
 
                 retvalue.setMultiplier(retvalue.getMultiplier() * getMultiplier());

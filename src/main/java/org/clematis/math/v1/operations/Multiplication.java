@@ -10,21 +10,26 @@ import org.jdom2.Element;
  * Multiplication operation
  */
 public class Multiplication extends aOperation {
+
+    public static final String APPLY_ELEMENT_NAME = "apply";
+    public static final String TIMES_ELEMENT_NAME = "times";
+    public static final String MULTIPLY_SIGN = "*";
+
     /**
      * Common constructor. Note, that constructor does
      * not simplify the expression.
      *
-     * @param in_operand1 first argument
-     * @param in_operand2 second argument
+     * @param operand1 first argument
+     * @param operand2 second argument
      */
-    public Multiplication(IExpressionItem in_operand1, IExpressionItem in_operand2) {
-        super(in_operand1, in_operand2);
-        /**
+    public Multiplication(IExpressionItem operand1, IExpressionItem operand2) {
+        super(operand1, operand2);
+        /*
          * Set multiplier
          */
         setMultiplier(getMultiplier() * getOperand1().getMultiplier()
             * getOperand2().getMultiplier());
-        /**
+        /*
          * Set all other multipliers to 1.
          */
         getOperand1().setMultiplier(1);
@@ -37,19 +42,19 @@ public class Multiplication extends aOperation {
      * @return new or modified expression.
      */
     public IExpressionItem calculate() throws AlgorithmException {
-        /**
+        /*
          * Try to make multiplication
          */
         IExpressionItem a = getOperand1().calculate();
         IExpressionItem b = getOperand2().calculate();
         IExpressionItem result = a.multiply(b);
-        /**
+        /*
          * We failed
          */
         if (result == null) {
             result = new Multiplication(a, b);
         }
-        /**
+        /*
          * Take into account multiplier of this operation
          */
         result.setMultiplier(this.getMultiplier() * result.getMultiplier());
@@ -63,18 +68,18 @@ public class Multiplication extends aOperation {
      * @return new expression item as a product of addition
      */
     public IExpressionItem add(IExpressionItem item) {
-        /**
-         * Case: 5xy + 7yx. We get 12xy.
-         */
+
         if (this.aKindOf(item)) {
+            /*
+             * Case: 5xy + 7yx. We get 12xy.
+             */
             Multiplication m = (Multiplication) item;
             setMultiplier(getMultiplier() + m.getMultiplier());
             return this;
-        }
-        /**
-         * All other cases like: 5xy + 7yz.
-         */
-        else {
+        } else {
+            /*
+             * All other cases like: 5xy + 7yz.
+             */
             return null;
         }
     }
@@ -85,18 +90,19 @@ public class Multiplication extends aOperation {
      * @param item expression item to multiply
      * @return new expression item as a product of multiplication
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
-        /**
-         * Case C * xy
-         */
+
         if (item instanceof Constant) {
+            /*
+             * Case C * xy
+             */
             this.setMultiplier(((Constant) item).getNumber() * getMultiplier());
             return this;
-        }
-        /**
-         * Case: 7xy * 5yx. We get 35 * (x^2) * (y^2)
-         */
-        else if (this.aKindOf(item)) {
+        } else if (this.aKindOf(item)) {
+            /*
+             * Case: 7xy * 5yx. We get 35 * (x^2) * (y^2)
+             */
             Multiplication m = (Multiplication) item;
             setMultiplier(getMultiplier() * m.getMultiplier());
 
@@ -113,11 +119,10 @@ public class Multiplication extends aOperation {
             } else {
                 return this;
             }
-        }
-        /**
-         * All other cases like: 5xy * 7yz.
-         */
-        else {
+        } else {
+            /*
+             * All other cases like: 5xy * 7yz.
+             */
             return null;
         }
     }
@@ -131,11 +136,12 @@ public class Multiplication extends aOperation {
      */
     public boolean aKindOf(IExpressionItem item) {
         if (item instanceof Multiplication mitem) {
+
             IExpressionItem op1 = mitem.getOperand1();
             IExpressionItem op2 = mitem.getOperand2();
+
             return op1.aKindOf(getOperand1()) && op2.aKindOf(getOperand2())
-                ||
-                op2.aKindOf(getOperand1()) && op1.aKindOf(getOperand2());
+                || op2.aKindOf(getOperand1()) && op1.aKindOf(getOperand2());
         }
         return false;
     }
@@ -149,11 +155,12 @@ public class Multiplication extends aOperation {
      */
     public boolean equals(IExpressionItem item) {
         if (item instanceof Multiplication mitem) {
+
             IExpressionItem op1 = mitem.getOperand1();
             IExpressionItem op2 = mitem.getOperand2();
+
             if (op1.equals(getOperand1()) && op2.equals(getOperand2())
-                ||
-                op2.equals(getOperand1()) && op1.equals(getOperand2())) {
+                || op2.equals(getOperand1()) && op1.equals(getOperand2())) {
                 return getMultiplier() == item.getMultiplier();
             }
         }
@@ -167,16 +174,17 @@ public class Multiplication extends aOperation {
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply", IExpressionItem.NS_MATH);
 
-        Element times = new Element("times", IExpressionItem.NS_MATH);
+        Element apply = new Element(APPLY_ELEMENT_NAME, IExpressionItem.NS_MATH);
+        Element times = new Element(TIMES_ELEMENT_NAME, IExpressionItem.NS_MATH);
         apply.addContent(times);
+
         Element cn = new Element("cn", IExpressionItem.NS_MATH);
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element("apply", IExpressionItem.NS_MATH);
-        apply2.addContent(new Element("times", IExpressionItem.NS_MATH));
+        Element apply2 = new Element(APPLY_ELEMENT_NAME, IExpressionItem.NS_MATH);
+        apply2.addContent(new Element(TIMES_ELEMENT_NAME, IExpressionItem.NS_MATH));
         apply2.addContent(getOperand1().toMathML());
         apply2.addContent(getOperand2().toMathML());
 
@@ -196,10 +204,10 @@ public class Multiplication extends aOperation {
         StringBuilder sb = new StringBuilder();
         if (getMultiplier() != 1) {
             sb.append(new Constant(getMultiplier()));
-            sb.append("*");
+            sb.append(MULTIPLY_SIGN);
         }
         sb.append(getOperand1().toString());
-        sb.append("*");
+        sb.append(MULTIPLY_SIGN);
         sb.append(getOperand2().toString());
         return sb.toString();
     }

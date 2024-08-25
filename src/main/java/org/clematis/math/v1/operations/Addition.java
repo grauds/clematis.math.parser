@@ -13,15 +13,15 @@ public class Addition extends aOperation {
     /**
      * Public constructor for addition operation.
      *
-     * @param in_operand1 first operand
-     * @param in_operand2 second operand
+     * @param operand1 first operand
+     * @param operand2 second operand
      */
-    public Addition(IExpressionItem in_operand1, IExpressionItem in_operand2) {
-        super(in_operand1, in_operand2);
+    public Addition(IExpressionItem operand1, IExpressionItem operand2) {
+        super(operand1, operand2);
     }
 
     public IExpressionItem calculate() throws AlgorithmException {
-        /**
+        /*
          * First try to calculate each operand
          */
         IExpressionItem a = getOperand1().calculate();

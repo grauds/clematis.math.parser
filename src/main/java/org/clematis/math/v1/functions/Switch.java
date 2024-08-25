@@ -1,13 +1,13 @@
 // Created: 25.03.2004 T 17:21:28
 package org.clematis.math.v1.functions;
 
+import java.util.ArrayList;
+
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.iMultivariantLogic;
-
-import java.util.ArrayList;
 
 /**
  * Given a whole number 0, 1, 2, ... this returns the n'th item in the list
@@ -39,7 +39,7 @@ public class Switch extends aFunction2 implements iMultivariantLogic {
             }
 
             Constant c1 = AlgorithmUtils.getNumericArgument(a1);
-            /**
+            /*
              * Arguments (n, option1, option2, ... optionn) - size (n + 1)
              */
             if (c1.getNumber() + 1 < arguments.size()) {

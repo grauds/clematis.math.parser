@@ -3,16 +3,18 @@
 
 package org.clematis.math.v1.functions;
 
+import java.util.Random;
+
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.IExpressionItem;
-
-import java.util.Random;
 
 /**
  * Random list - chooses items from list randomly.
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class rList extends aFunction2 {
-    private static final Random rand = new Random(System.currentTimeMillis());
+
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     /**
      * Calculate a subtree of expression items
@@ -22,10 +24,10 @@ public class rList extends aFunction2 {
     public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() <= 0) {
-                throw new AlgorithmException("Invalid number of arguments in function 'rList': " + arguments.size());
+                throw new AlgorithmException("Invalid number of arguments in function 'rList': " + 0);
             }
 
-            int number = rand.nextInt(arguments.size() - 1);
+            int number = RANDOM.nextInt(arguments.size() - 1);
             IExpressionItem a = arguments.get(number).calculate();
             a.setMultiplier(a.getMultiplier() * getMultiplier());
             return a;

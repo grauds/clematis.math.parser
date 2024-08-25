@@ -2,20 +2,22 @@
 
 package org.clematis.math.v1.functions;
 
+import java.util.Random;
+
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.IExpressionItem;
-
-import java.util.Random;
+import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**
  * Random integer between 0 and n
  * <p>
  * rint(n)
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class rInt extends aFunction2 {
-    private static final Random rand = new Random(System.currentTimeMillis());
+
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     /**
      * Calculate a subtree of expression items
@@ -38,7 +40,7 @@ public class rInt extends aFunction2 {
             }
 
             Constant c1 = AlgorithmUtils.getNumericArgument(a1);
-            int rd = rand.nextInt((int) c1.getNumber());
+            int rd = RANDOM.nextInt((int) c1.getNumber());
             return new Constant(rd * getMultiplier());
         } catch (AlgorithmException ex) {
             throw ex;
