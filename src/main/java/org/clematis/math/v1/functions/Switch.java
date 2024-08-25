@@ -4,7 +4,7 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.iMultivariantLogic;
 
 import java.util.ArrayList;
@@ -23,9 +23,9 @@ public class Switch extends aFunction2 implements iMultivariantLogic {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
-            iExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1)) {
                 Switch retvalue = new Switch();
@@ -43,7 +43,7 @@ public class Switch extends aFunction2 implements iMultivariantLogic {
              * Arguments (n, option1, option2, ... optionn) - size (n + 1)
              */
             if (c1.getNumber() + 1 < arguments.size()) {
-                iExpressionItem result = arguments.get(((int) c1.getNumber() + 1)).calculate();
+                IExpressionItem result = arguments.get(((int) c1.getNumber() + 1)).calculate();
                 result.setMultiplier(result.getMultiplier() * getMultiplier());
                 return result;
             } else {
@@ -62,8 +62,8 @@ public class Switch extends aFunction2 implements iMultivariantLogic {
      *
      * @return switched variants list.
      */
-    public ArrayList<iExpressionItem> getVariants() {
-        ArrayList<iExpressionItem> variants = new ArrayList<iExpressionItem>();
+    public ArrayList<IExpressionItem> getVariants() {
+        ArrayList<IExpressionItem> variants = new ArrayList<IExpressionItem>();
         if (arguments != null && arguments.size() > 1) {
             for (int i = 1; i < arguments.size(); i++) {
                 variants.add(arguments.get(i));

@@ -8,28 +8,40 @@ import java.util.Objects;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.v1.algorithm.iParameterProvider;
-import org.clematis.math.v1.iExpressionItem;
-import org.clematis.math.v1.iFunction;
+import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.IFunction;
+import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.operations.Power;
 import org.jdom2.Element;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Abstract constant function.
  */
-public abstract class aFunction implements iFunction, Serializable {
-    /**
-     * Parent function factory
-     */
-    protected FunctionFactory functionFactory = new FunctionFactory();
+@Setter
+@Getter
+@SuppressWarnings("checkstyle:TypeName")
+public abstract class aFunction implements IFunction, Serializable {
+
+    public static final String APPLY_ELEMENT_NAME = "apply";
+
     /**
      * The list of arguments
      */
-    protected ArrayList<iExpressionItem> arguments = new ArrayList<iExpressionItem>();
+    protected ArrayList<IExpressionItem> arguments = new ArrayList<>();
+
+    /**
+     * Function factory
+     */
+    protected FunctionFactory functionFactory = new FunctionFactory();
+
     /**
      * Function signature
      */
     protected String signature = "";
+
     /**
      * Operation multiplier. For instance, it could be constant 2 in 2 * 5 ^ x
      */
@@ -38,10 +50,10 @@ public abstract class aFunction implements iFunction, Serializable {
     /**
      * Add argument to a function
      *
-     * @param argument expression item as a parameter
+     * @param item expression item as a parameter
      */
-    public void addArgument(iExpressionItem argument) {
-        arguments.add(argument);
+    public void addArgument(IExpressionItem item) {
+        arguments.add(item);
     }
 
     /**
@@ -49,7 +61,7 @@ public abstract class aFunction implements iFunction, Serializable {
      *
      * @param arguments expression items as a parameter
      */
-    public void addArguments(ArrayList<iExpressionItem> arguments) {
+    public void addArguments(ArrayList<IExpressionItem> arguments) {
         this.arguments.addAll(arguments);
     }
 
@@ -61,40 +73,14 @@ public abstract class aFunction implements iFunction, Serializable {
     }
 
     /**
-     * Return a set of arguments of this function
-     *
-     * @return an iExpressionItem set of arguments of this function
-     */
-    public iExpressionItem[] getArguments() {
-        iExpressionItem[] ret = new iExpressionItem[arguments.size()];
-        System.arraycopy(arguments.toArray(), 0, ret, 0, arguments.size());
-        return ret;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public FunctionFactory getFunctionFactory() {
-        return functionFactory;
-    }
-
-    public void setFunctionFactory(FunctionFactory functionFactory) {
-        this.functionFactory = functionFactory;
-    }
-
-    /**
      * Provides mathml formatted element, representing
      * expression subtree.
      *
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply"/*, Constants.NS_MATH*/);
+
+        Element apply = new Element(APPLY_ELEMENT_NAME/*, Constants.NS_MATH*/);
 
         Element times = new Element("times"/*, Constants.NS_MATH*/);
         apply.addContent(times);
@@ -102,12 +88,12 @@ public abstract class aFunction implements iFunction, Serializable {
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element("apply"/*, Constants.NS_MATH*/);
+        Element apply2 = new Element(APPLY_ELEMENT_NAME/*, Constants.NS_MATH*/);
 
         Element function = new Element(signature);
         apply2.addContent(function);
-        for (int i = 0; i < arguments.size(); i++) {
-            Element argument = arguments.get(i).toMathML();
+        for (IExpressionItem iExpressionItem : arguments) {
+            Element argument = iExpressionItem.toMathML();
             apply2.addContent(argument);
         }
 
@@ -116,10 +102,12 @@ public abstract class aFunction implements iFunction, Serializable {
         return apply;
     }
 
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
+
         if (this == item) {
             return true;
         }
+
         if (!(item instanceof aFunction aFunction)) {
             return false;
         }
@@ -128,14 +116,13 @@ public abstract class aFunction implements iFunction, Serializable {
     }
 
     /**
-     * Calculate a subtree of expression items with parameter
-     * and functions provider
+     * Calculate a subtree of expression items with parameter and functions provider
      *
      * @param parameterProvider parameter
      *                          and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         return calculate();
     }
 
@@ -146,14 +133,15 @@ public abstract class aFunction implements iFunction, Serializable {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public boolean aKindOf(IExpressionItem item) {
         if (this == item) {
             return true;
         }
         if (item instanceof aFunction) {
             return equals(item);
         } else if (item instanceof Power) {
-            iExpressionItem expression = ((Power) item).getOperand1();
+            IExpressionItem expression = ((Power) item).getOperand1();
             if (expression instanceof aFunction) {
                 return equals(expression);
             }
@@ -162,30 +150,12 @@ public abstract class aFunction implements iFunction, Serializable {
     }
 
     /**
-     * Return constant coefficient
-     *
-     * @return constant coefficient
-     */
-    public double getMultiplier() {
-        return multiplier;
-    }
-
-    /**
-     * Sets constant multiplier
-     *
-     * @param multiplier
-     */
-    public void setMultiplier(double multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    /**
      * Adds another expression item to this one.
      *
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem add(iExpressionItem item) {
+    public IExpressionItem add(IExpressionItem item) {
         if (item instanceof aFunction && item.aKindOf(this)) {
             this.setMultiplier(this.getMultiplier() + item.getMultiplier());
             return this;
@@ -199,10 +169,11 @@ public abstract class aFunction implements iFunction, Serializable {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (item.aKindOf(this)) {
             if (item instanceof aFunction) {
-                /**
+                /*
                  *  2 * sin ( x ) * 3 * sin ( x ) = 6 * sin ( x ) ^ 2
                  */
                 Power power = new Power(this, new Constant(2));
@@ -210,7 +181,7 @@ public abstract class aFunction implements iFunction, Serializable {
                 this.setMultiplier(1);
                 return power;
             } else if (item instanceof Power power) {
-                /**
+                /*
                  *  2 * sin ( x ) * 3 * sin ( x ) ^ 3 = 6 * sin ( x ) ^ 4
                  */
                 power.setMultiplier(this.getMultiplier() * item.getMultiplier());
@@ -241,7 +212,7 @@ public abstract class aFunction implements iFunction, Serializable {
         sb.append(signature);
         sb.append("(");
         for (int i = 0; i < arguments.size(); i++) {
-            iExpressionItem arg = arguments.get(i);
+            IExpressionItem arg = arguments.get(i);
             sb.append(arg.toString());
             if (i + 1 != arguments.size()) {
                 sb.append(",");

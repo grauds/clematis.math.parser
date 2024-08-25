@@ -5,7 +5,7 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 
 /**
  * Returns 1.0 if a is any of arguments is equal to 1.0, otherwise returns 0.0;
@@ -18,13 +18,13 @@ public class or extends aFunction2 {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             boolean good_arguments = true;
             boolean result = true;
 
             for (int i = 0; i < arguments.size(); i++) {
-                iExpressionItem a = arguments.get(i).calculate();
+                IExpressionItem a = arguments.get(i).calculate();
                 if (!(a instanceof Constant)) {
                     good_arguments = false;
                     break;

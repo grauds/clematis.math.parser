@@ -6,8 +6,8 @@ package org.clematis.math.v1;
 import java.io.Serializable;
 import java.util.List;
 
-import org.clematis.math.v1.algorithm.iParameterProvider;
-import org.clematis.math.v1.algorithm.iVariableProvider;
+import org.clematis.math.v1.algorithm.IParameterProvider;
+import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
 import org.clematis.math.v2.utils.StringUtils;
@@ -18,7 +18,7 @@ import org.jdom2.Element;
  *
  * @version 1.0
  */
-public class Variable implements iExpressionItem, Serializable {
+public class Variable implements IExpressionItem, Serializable {
     /**
      * Varaiable name.
      */
@@ -44,7 +44,7 @@ public class Variable implements iExpressionItem, Serializable {
      * @param name for future variable
      * @return variable or multiplication
      */
-    public static iExpressionItem create(String name) {
+    public static IExpressionItem create(String name) {
         return Variable.create(null, name);
     }
 
@@ -55,12 +55,12 @@ public class Variable implements iExpressionItem, Serializable {
      * @param name for future variable
      * @return variable or multiplication
      */
-    public static iExpressionItem create(iVariableProvider varProvider, String name) {
+    public static IExpressionItem create(IVariableProvider varProvider, String name) {
         List<String> arr = StringUtils.tokenizeReg(name, "[:digit:]+|[:alpha:]+[:alnum:]*", false);
 
         if (arr.size() > 1) {
             String arg = arr.get(0);
-            iExpressionItem argItem = null;
+            IExpressionItem argItem = null;
 
             // number
             if (MathUtils.isDigit(arg.charAt(0))) {
@@ -72,7 +72,7 @@ public class Variable implements iExpressionItem, Serializable {
             }
 
             for (int i = 1; i < arr.size(); i++) {
-                iExpressionItem argItem1;
+                IExpressionItem argItem1;
                 String arg1 = arr.get(i);
 
                 // number
@@ -106,7 +106,7 @@ public class Variable implements iExpressionItem, Serializable {
      * @param name        of variable
      * @return either variable or constant
      */
-    private static iExpressionItem applyVariableProvider(iVariableProvider varProvider, String name) {
+    private static IExpressionItem applyVariableProvider(IVariableProvider varProvider, String name) {
         if (varProvider != null) {
             AbstractConstant constant = varProvider.getVariableConstant(name);
             if (constant != null) {
@@ -130,7 +130,7 @@ public class Variable implements iExpressionItem, Serializable {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() {
+    public IExpressionItem calculate() {
         return this;
     }
 
@@ -142,7 +142,7 @@ public class Variable implements iExpressionItem, Serializable {
      *                          and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         return this;
     }
 
@@ -170,7 +170,7 @@ public class Variable implements iExpressionItem, Serializable {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem add(iExpressionItem item) {
+    public IExpressionItem add(IExpressionItem item) {
         if (item instanceof Variable v) {
             if (v.getName().equals(name)) {
                 multiplier += v.getMultiplier();
@@ -204,16 +204,16 @@ public class Variable implements iExpressionItem, Serializable {
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply", iExpressionItem.NS_MATH);
+        Element apply = new Element("apply", IExpressionItem.NS_MATH);
 
-        Element times = new Element("times", iExpressionItem.NS_MATH);
+        Element times = new Element("times", IExpressionItem.NS_MATH);
         apply.addContent(times);
 
-        Element cn = new Element("cn", iExpressionItem.NS_MATH);
+        Element cn = new Element("cn", IExpressionItem.NS_MATH);
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element ci = new Element("ci", iExpressionItem.NS_MATH);
+        Element ci = new Element("ci", IExpressionItem.NS_MATH);
         ci.setAttribute("type", "real");
         ci.setText(this.getName());
         apply.addContent(ci);
@@ -227,7 +227,7 @@ public class Variable implements iExpressionItem, Serializable {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Constant c) {
             multiplier *= c.getNumber();
             return this;
@@ -257,7 +257,7 @@ public class Variable implements iExpressionItem, Serializable {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         if (item instanceof Variable) {
             String item_name = ((Variable) item).getName();
             return item_name.equalsIgnoreCase(this.getName());
@@ -272,7 +272,7 @@ public class Variable implements iExpressionItem, Serializable {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (item instanceof Variable) {
             String item_name = ((Variable) item).getName();
             return (

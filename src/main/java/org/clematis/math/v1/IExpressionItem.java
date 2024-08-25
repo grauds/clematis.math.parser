@@ -3,7 +3,7 @@
 
 package org.clematis.math.v1;
 
-import org.clematis.math.v1.algorithm.iParameterProvider;
+import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
@@ -11,7 +11,7 @@ import org.jdom2.Namespace;
  * Abstract expression item, that can add other expression items
  * to itself, multiply or calculate subtree of expression items.
  */
-public interface iExpressionItem {
+public interface IExpressionItem {
     /**
      * URI for the MATH XML namspace.
      */
@@ -26,7 +26,7 @@ public interface iExpressionItem {
      *
      * @return expression item instance
      */
-    iExpressionItem calculate() throws AlgorithmException;
+    IExpressionItem calculate() throws AlgorithmException;
 
     /**
      * Calculate a subtree of expression items with parameter
@@ -36,7 +36,7 @@ public interface iExpressionItem {
      *                          and functions provider
      * @return expression item instance
      */
-    iExpressionItem calculate(iParameterProvider parameterProvider) throws AlgorithmException;
+    IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException;
 
     /**
      * Adds another expression item to this one.
@@ -44,7 +44,7 @@ public interface iExpressionItem {
      * @param item another expression item
      * @return result expression item
      */
-    iExpressionItem add(iExpressionItem item) throws AlgorithmException;
+    IExpressionItem add(IExpressionItem item) throws AlgorithmException;
 
     /**
      * Multiplies this expression item by another one.
@@ -52,7 +52,7 @@ public interface iExpressionItem {
      * @param item another expression item
      * @return result expression item
      */
-    iExpressionItem multiply(iExpressionItem item) throws AlgorithmException;
+    IExpressionItem multiply(IExpressionItem item) throws AlgorithmException;
 
     /**
      * Compares this expression item with a given one and
@@ -61,7 +61,7 @@ public interface iExpressionItem {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    boolean aKindOf(iExpressionItem item);
+    boolean aKindOf(IExpressionItem item);
 
     /**
      * Compares this expression item with a given one and returns
@@ -70,7 +70,7 @@ public interface iExpressionItem {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    boolean equals(iExpressionItem item);
+    boolean equals(IExpressionItem item);
 
     /**
      * Return constant coefficient

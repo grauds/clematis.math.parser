@@ -3,32 +3,35 @@
 
 package org.clematis.math.v1.functions;
 
+import java.util.ArrayList;
+
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
 import org.clematis.math.v1.iMultivariantLogic;
-
-import java.util.ArrayList;
 
 /**
  * if (a, b, c)    returns ( a != 0) ? b : c
  */
 public class If extends aFunction2 implements iMultivariantLogic {
+
+    public static final int NUMBER_OF_ARGUMENTS = 3;
+
     /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
-            if (arguments.size() <= 2 || arguments.size() > 3) {
+            if (arguments.size() != NUMBER_OF_ARGUMENTS) {
                 throw new AlgorithmException("Invalid number of arguments in function 'if': " + arguments.size());
             }
 
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
-            iExpressionItem a3 = arguments.get(2).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a3 = arguments.get(2).calculate();
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1)) {
                 If retvalue = new If();
@@ -42,7 +45,7 @@ public class If extends aFunction2 implements iMultivariantLogic {
 
             Constant c1 = AlgorithmUtils.getNumericArgument(a1);
 
-            iExpressionItem result = (c1.getNumber() != 0) ? a2 : a3;
+            IExpressionItem result = (c1.getNumber() != 0) ? a2 : a3;
             result.setMultiplier(result.getMultiplier() * getMultiplier());
             return result;
         } catch (AlgorithmException ex) {
@@ -57,8 +60,8 @@ public class If extends aFunction2 implements iMultivariantLogic {
      *
      * @return list of possible returned values.
      */
-    public ArrayList<iExpressionItem> getVariants() {
-        ArrayList<iExpressionItem> variants = new ArrayList<iExpressionItem>();
+    public ArrayList<IExpressionItem> getVariants() {
+        ArrayList<IExpressionItem> variants = new ArrayList<IExpressionItem>();
         if (arguments.size() >= 2) {
             for (int i = 1; i < arguments.size(); i++) {
                 variants.add(arguments.get(i));

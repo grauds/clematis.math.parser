@@ -10,12 +10,12 @@ import java.util.List;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.OutputFormatSettings;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.iExpressionItem;
-import org.clematis.math.v1.iFunction;
 import org.clematis.math.v1.iValue;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
@@ -132,8 +132,6 @@ public class Algorithm extends DefaultParameterProvider {
 
         finishAndClear();
     }
-//************************ ADD, FIND OR REMOVE ALGORITHMS ************************
-
     /**
      * Add child algorithm
      *
@@ -141,15 +139,15 @@ public class Algorithm extends DefaultParameterProvider {
      * @param algorithm child algorithm
      */
     public void addAlgorithm(String key, Algorithm algorithm) {
-        /**
+        /*
          * Inherit parameters from parent algorithm
          */
         algorithm.setParent(this);
-        /**
+        /*
          * Set ident to calculated algorithm
          */
         algorithm.setIdent(key);
-        /**
+        /*
          * Store algorithm
          */
         children.add(algorithm);
@@ -162,54 +160,18 @@ public class Algorithm extends DefaultParameterProvider {
      * @return algorithm, stored under given ident
      */
     public Algorithm getAlgorithm(String key) {
+
         Algorithm ret = null;
 
         if (getIdent() != null && getIdent().equals(key)) {
             return this;
         }
 
-        Iterator<Algorithm> it = children.iterator();
-        while (it.hasNext()) {
-            Algorithm algorithm = it.next();
+        for (Algorithm algorithm : children) {
             if (algorithm != null) {
                 ret = algorithm.getAlgorithm(key);
                 if (ret != null) {
-                    return ret;
-                }
-            }
-        }
-
-        if (ret == null) {
-            if (getParent() != null && getParent().getIdent() == null) {
-                return this;
-            } else if (getParent() == null) {
-                return this;
-            }
-        }
-
-        return ret;
-    }
-
-    /**
-     * Finds algorithm, stored under given key among children
-     *
-     * @param key of algorithm to find
-     * @return algorithm, stored under given key among children
-     */
-    public Algorithm findAlgorithm(String key) {
-        Algorithm ret = null;
-
-        if (getIdent() != null && getIdent().equals(key)) {
-            return this;
-        }
-
-        Iterator<Algorithm> it = children.iterator();
-        while (it.hasNext()) {
-            Algorithm algorithm = it.next();
-            if (algorithm != null) {
-                ret = algorithm.getAlgorithm(key);
-                if (ret != null) {
-                    return ret;
+                    break;
                 }
             }
         }
@@ -229,7 +191,6 @@ public class Algorithm extends DefaultParameterProvider {
             this.children.remove(algorithm);
         }
     }
-//************************ CALCULATE PARAMETERS ************************
 
     /**
      * Calculates values of all parameters participating in algorithm.
@@ -788,7 +749,6 @@ public class Algorithm extends DefaultParameterProvider {
 
         return algElement;
     }
-//************************ FIND PARAMETERS' DEPENDENCIES *********************
 
     /**
      * Finds all parameters dependenced from the parameter.
@@ -811,11 +771,10 @@ public class Algorithm extends DefaultParameterProvider {
      * @param exprItem     the expression root.
      * @param dependencies container for dependencies.
      */
-    private void findDependencies(iExpressionItem exprItem, ArrayList dependencies) {
-        if (exprItem instanceof iFunction function) {
-            iExpressionItem[] args = function.getArguments();
-            for (int i = 0; i < args.length; i++) {
-                findDependencies(args[i], dependencies);
+    private void findDependencies(IExpressionItem exprItem, ArrayList<Parameter> dependencies) {
+        if (exprItem instanceof IFunction function) {
+            for (IExpressionItem arg : function.getArguments()) {
+                findDependencies(arg, dependencies);
             }
         } else if (exprItem instanceof StringConstant constant) {
             ArrayList paramNames = SimpleParameter.findParameters(constant.getValue(null), this, false);

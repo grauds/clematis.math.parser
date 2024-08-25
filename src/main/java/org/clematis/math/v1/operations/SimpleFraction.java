@@ -3,14 +3,14 @@ package org.clematis.math.v1.operations;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 import org.jdom2.Element;
 
 /**
  * Simple fraction is a division operation, waiting
  */
 public class SimpleFraction extends aOperation {
-    public SimpleFraction(iExpressionItem in_operand1, iExpressionItem in_operand2) {
+    public SimpleFraction(IExpressionItem in_operand1, IExpressionItem in_operand2) {
         super(in_operand1, in_operand2);
     }
 
@@ -19,12 +19,12 @@ public class SimpleFraction extends aOperation {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         /**
          * First try to calculate each operand
          */
-        iExpressionItem a = getOperand1().calculate();
-        iExpressionItem b = getOperand2().calculate();
+        IExpressionItem a = getOperand1().calculate();
+        IExpressionItem b = getOperand2().calculate();
         /**
          * Do not divide simple fraction
          */
@@ -37,16 +37,16 @@ public class SimpleFraction extends aOperation {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem add(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (this.aKindOf(item)) {
             SimpleFraction sf = (SimpleFraction) item;
-            iExpressionItem t1 = getOperand2().multiply(sf.getOperand1());
-            iExpressionItem t2 = sf.getOperand2().multiply(getOperand1());
+            IExpressionItem t1 = getOperand2().multiply(sf.getOperand1());
+            IExpressionItem t2 = sf.getOperand2().multiply(getOperand1());
             this.setOperand1(t1.add(t2));
             this.setOperand2(getOperand2().multiply(sf.getOperand2()));
             return this;
         } else if (item instanceof Constant) {
-            iExpressionItem t = getOperand2().multiply(item);
+            IExpressionItem t = getOperand2().multiply(item);
             if (t != null) {
                 setOperand1(t.add(getOperand1()));
             }
@@ -61,7 +61,7 @@ public class SimpleFraction extends aOperation {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (this.aKindOf(item)) {
             SimpleFraction sf = (SimpleFraction) item;
             setOperand1(getOperand1().multiply(sf.getOperand1()));
@@ -84,7 +84,7 @@ public class SimpleFraction extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         return item instanceof SimpleFraction;
     }
 
@@ -95,7 +95,7 @@ public class SimpleFraction extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (aKindOf(item)) {
             SimpleFraction sf = (SimpleFraction) item;
             if (getOperand1().equals(sf.getOperand1()) && getOperand2().equals(sf.getOperand2())) {
@@ -124,8 +124,8 @@ public class SimpleFraction extends aOperation {
         /**
          * First try to calculate each operand
          */
-        iExpressionItem a = getOperand1().calculate();
-        iExpressionItem b = getOperand2().calculate();
+        IExpressionItem a = getOperand1().calculate();
+        IExpressionItem b = getOperand2().calculate();
 
         if (a instanceof Constant && b instanceof Constant) {
             return new Constant(((Constant) a).getNumber() / ((Constant) b).getNumber());

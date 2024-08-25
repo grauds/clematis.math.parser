@@ -11,10 +11,10 @@ import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
 import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.algorithm.iFunctionProvider;
-import org.clematis.math.v1.algorithm.iSimpleParameterProvider;
-import org.clematis.math.v1.algorithm.iVariableProvider;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.algorithm.IFunctionProvider;
+import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
+import org.clematis.math.v1.algorithm.IVariableProvider;
+import org.clematis.math.v1.IExpressionItem;
 
 /**
  * Returns the result of summing the expression expr as the variable
@@ -27,9 +27,9 @@ import org.clematis.math.v1.iExpressionItem;
  * NOTE: The dummy variable in the sum MUST NOT be decorated with a $ character.
  */
 public class sum extends aFunction2 {
-    class Provider implements iSimpleParameterProvider,
-        iVariableProvider,
-        iFunctionProvider {
+    class Provider implements ISimpleParameterProvider,
+        IVariableProvider,
+        IFunctionProvider {
         /**
          * Value of variable
          */
@@ -46,11 +46,11 @@ public class sum extends aFunction2 {
         /**
          * Return parameter constant
          *
-         * @param in_varName parameter name
+         * @param name parameter name
          * @return parameter value, string or double
          */
-        public AbstractConstant getParameterConstant(String in_varName) {
-            if (in_varName != null && !"".equals(in_varName.trim()) && in_varName.equals(name)) {
+        public AbstractConstant getParameterConstant(String name) {
+            if (name != null && !"".equals(name.trim()) && name.equals(this.name)) {
                 return new Constant(variable);
             } else {
                 return new Constant(0.0);
@@ -84,7 +84,7 @@ public class sum extends aFunction2 {
             return functionFactory.getFunction(name);
         }
 
-        public AbstractConstant getVariableConstant(String in_varName) {
+        public AbstractConstant getVariableConstant(String name) {
             return new Constant(variable);
         }
     }
@@ -94,16 +94,16 @@ public class sum extends aFunction2 {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() <= 3 || arguments.size() > 4) {
                 throw new AlgorithmException("Invalid number of arguments in function 'sum': " + arguments.size());
             }
 
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
-            iExpressionItem a3 = arguments.get(2).calculate();
-            iExpressionItem a4 = arguments.get(3).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a3 = arguments.get(2).calculate();
+            IExpressionItem a4 = arguments.get(3).calculate();
 
             if (!(a1 instanceof Variable) ||
                 !AlgorithmUtils.isGoodNumericArgument(a2) ||
@@ -142,7 +142,7 @@ public class sum extends aFunction2 {
                 ExpressionParser parser =
                     new ExpressionParser(s4.getValue(null), provider, provider, provider);
 
-                iExpressionItem item = parser.parse();
+                IExpressionItem item = parser.parse();
                 item = item.calculate();
                 if (item instanceof Constant) {
                     sum += ((Constant) item).getNumber();

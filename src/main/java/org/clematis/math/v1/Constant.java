@@ -288,7 +288,7 @@ public class Constant extends AbstractConstant {
      * @return modified this <code>Constant</code> object or
      * null when  <code>item</code> is not instance of <code>Constant</code> class.
      */
-    public iExpressionItem add(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Constant c) {
             /**  apply significant digits to output */
             String str1 = this.getExactStringValue();
@@ -309,7 +309,7 @@ public class Constant extends AbstractConstant {
      * @return modified this <code>Constant</code> object or
      * null when  <code>item</code> is not instance of <code>Constant</code> class.
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Constant c) {
             String str1 = this.getExactStringValue();
             String str2 = c.getExactStringValue();
@@ -331,7 +331,7 @@ public class Constant extends AbstractConstant {
      * @return a <tt>Constant</tt> whose value is
      * <tt>(this<sup>n</sup>)</tt>
      */
-    public iExpressionItem pow(Constant c) {
+    public IExpressionItem pow(Constant c) {
         if (getValue(null) != null) {
             if (((int) c.getNumber()) == c.getNumber()) {
                 Constant ret = new Constant(this);
@@ -356,7 +356,7 @@ public class Constant extends AbstractConstant {
      * @param c - divisor
      * @return <tt>Constant</tt> whose value is <tt>(this / divisor)</tt>
      */
-    public iExpressionItem divide(Constant c) {
+    public IExpressionItem divide(Constant c) {
         if (getValue(null) != null) {
             /**
              * Try to divide exactly first
@@ -380,7 +380,7 @@ public class Constant extends AbstractConstant {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         return (item instanceof Constant);
     }
 
@@ -391,7 +391,7 @@ public class Constant extends AbstractConstant {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (item instanceof Constant c) {
             return this.getNumber() == c.getNumber();
         }

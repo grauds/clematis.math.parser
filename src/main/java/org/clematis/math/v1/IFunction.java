@@ -2,24 +2,25 @@
 package org.clematis.math.v1;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Function is an expression item with parameter
  */
-public interface iFunction extends iExpressionItem {
+public interface IFunction extends IExpressionItem {
     /**
      * Add parameter to a function
      *
-     * @param in_parameter expression item as a parameter
+     * @param item expression item as a parameter
      */
-    void addArgument(iExpressionItem in_parameter);
+    void addArgument(IExpressionItem item);
 
     /**
      * Add arguments to a function
      *
      * @param arguments expression items as a parameter
      */
-    void addArguments(ArrayList<iExpressionItem> arguments);
+    void addArguments(ArrayList<IExpressionItem> arguments);
 
     /**
      * Removes all arguments from the function
@@ -45,5 +46,5 @@ public interface iFunction extends iExpressionItem {
      *
      * @return an iExpressionItem set of arguments of this function
      */
-    iExpressionItem[] getArguments();
+    List<IExpressionItem> getArguments();
 }

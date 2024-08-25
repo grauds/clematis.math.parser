@@ -3,9 +3,9 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.MathUtils;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
 
 /**
  * lsu( n, x )
@@ -20,14 +20,14 @@ public class Lsu extends aFunction2 {
      *
      * @return <code>Constant</code> with formatted value or null on error.
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
-            if (arguments.size() <= 1 || arguments.size() > 2) {
+            if (arguments.size() != 2) {
                 throw new AlgorithmException("Invalid number of arguments in function 'Lsu': " + arguments.size());
             }
 
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2)) {
                 Lsu retvalue = new Lsu();
@@ -65,22 +65,22 @@ public class Lsu extends aFunction2 {
     }
 
     private static int getLsuPower(String numberString, int sigDigits) {
-        /**
+        /*
          * Indices for the number string
          */
         int decimalPointIndex = 0;
-        /**
+        /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
         numberString = MathUtils.correctAndValidateInput(numberString);
-        /**
+        /*
          * Wrong input, return zero
          */
         if (numberString == null) {
             return 0;
         }
-        /**
+        /*
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
@@ -90,16 +90,16 @@ public class Lsu extends aFunction2 {
             exp = numberString.substring(scientificIndex + 1);
             numberString = numberString.substring(0, scientificIndex);
         }
-        /**
+        /*
          * Get decimal point to find out the type of input number string
          */
         decimalPointIndex = numberString.indexOf(".");
-        /**
+        /*
          * Apply algorithms depending on decimal point index
          */
         switch (decimalPointIndex) {
-            case 0: //If the number is decimal only: -1 < n < 1
-            {
+            case 0: {
+                //If the number is decimal only: -1 < n < 1
                 // find non zero digit
                 boolean foundNonZero = false;
                 for (int i = 1; i < numberString.length(); i++) {
@@ -109,21 +109,22 @@ public class Lsu extends aFunction2 {
                         break;
                     }
                 }
-                /**
+                /*
                  * Return - MSDI + exp, ie, 0.0876 ->  10^(-4)
                  */
+                int i = exp.isEmpty() ? 0 : Integer.parseInt(exp);
                 if (foundNonZero) {
-                    return -(numberString.length() - 1) + (exp.equals("") ? 0 : Integer.parseInt(exp));
+                    return -(numberString.length() - 1) + i;
                 } else {
-                    return (exp.equals("") ? 0 : Integer.parseInt(exp));
+                    return i;
                 }
             }
-            case -1: //If the number is an integer
-            {
-                /**
+            case -1: {
+                //If the number is an integer
+                /*
                  * Return LENGTH - sigDigits - 1 + exp, ie, 1456000 -> 10^(3)
                  */
-                return numberString.length() - sigDigits + (exp.equals("") ? 0 : Integer.parseInt(exp));
+                return numberString.length() - sigDigits + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
             }
             default: {
                 // find non zero digit
@@ -137,13 +138,13 @@ public class Lsu extends aFunction2 {
                            break;
                        }
                     }     */
-                /**
+                /*
                  * Return - MSDI + exp, ie, 9870.0876 ->  10^(-4)
                  */
                 /*    if ( foundNonZero )
                     {*/
-                return -(numberString.length() - (decimalPointIndex + 1)) +
-                    (exp.equals("") ? 0 : Integer.parseInt(exp));
+                return -(numberString.length() - (decimalPointIndex + 1))
+                    + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
                /*     }
                     else
                     {
@@ -154,23 +155,23 @@ public class Lsu extends aFunction2 {
     }
 
     private static int getLsuPower(String numberString) {
-        /**
+        /*
          * Indices for the number string
          */
         int decimalPointIndex = 0;
         int leastSignificantDigitIndex = 0;
-        /**
+        /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
         numberString = MathUtils.correctAndValidateInput(numberString);
-        /**
+        /*
          * Wrong input, return zero
          */
         if (numberString == null) {
             return 0;
         }
-        /**
+        /*
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
@@ -180,16 +181,16 @@ public class Lsu extends aFunction2 {
             exp = numberString.substring(scientificIndex + 1);
             numberString = numberString.substring(0, scientificIndex);
         }
-        /**
+        /*
          * Get decimal point to find out the type of input number string
          */
         decimalPointIndex = numberString.indexOf(".");
-        /**
+        /*
          * Apply algorithms depending on decimal point index
          */
         switch (decimalPointIndex) {
-            case 0: //If the number is decimal only: -1 < n < 1
-            {
+            case 0: {
+                //If the number is decimal only: -1 < n < 1
                 // find non zero digit
                 boolean foundNonZero = false;
                 for (int i = 1; i < numberString.length(); i++) {
@@ -199,28 +200,28 @@ public class Lsu extends aFunction2 {
                         break;
                     }
                 }
-                /**
+                /*
                  * Return - MSDI + exp, ie, 0.0876 ->  10^(-4)
                  */
                 if (foundNonZero) {
-                    return -(numberString.length() - 1) + (exp.equals("") ? 0 : Integer.parseInt(exp));
+                    return -(numberString.length() - 1) + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
                 } else {
-                    return (exp.equals("") ? 0 : Integer.parseInt(exp));
+                    return (exp.isEmpty() ? 0 : Integer.parseInt(exp));
                 }
             }
-            case -1: //If the number is an integer
-            {
+            case -1: {
+                //If the number is an integer
                 for (int i = numberString.length() - 1; i >= 0; i--) {
                     if (numberString.charAt(i) != '0') {
                         leastSignificantDigitIndex = i;
                         break;
                     }
                 }
-                /**
+                /*
                  * Return LENGTH - LSDI - 1 + exp, ie, 1456000 -> 10^(3)
                  */
-                return numberString.length() - leastSignificantDigitIndex - 1 +
-                    (exp.equals("") ? 0 : Integer.parseInt(exp));
+                return numberString.length() - leastSignificantDigitIndex - 1
+                    + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
             }
             default: {
                 // find non zero digit
@@ -234,13 +235,13 @@ public class Lsu extends aFunction2 {
                            break;
                        }
                     }    */
-                /**
+                /*
                  * Return - MSDI + exp, ie, 9870.0876 ->  10^(-4)
                  */
                /*     if ( foundNonZero )
                     {*/
-                return -(numberString.length() - (decimalPointIndex + 1)) +
-                    (exp.equals("") ? 0 : Integer.parseInt(exp));
+                return -(numberString.length() - (decimalPointIndex + 1))
+                    + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
                /*     }
                     else
                     {
@@ -253,7 +254,7 @@ public class Lsu extends aFunction2 {
     /**
      * todo correct this
      *
-     * @param digit
+     * @param digit to correct
      */
     private static String correctPlainInteger(double digit) {
         String str = Double.toString(digit);

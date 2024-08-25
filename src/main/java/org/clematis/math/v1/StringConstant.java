@@ -60,7 +60,7 @@ public class StringConstant extends AbstractConstant {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem add(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         return null;
     }
 
@@ -70,7 +70,7 @@ public class StringConstant extends AbstractConstant {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         return null;
     }
 
@@ -81,7 +81,7 @@ public class StringConstant extends AbstractConstant {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         return (item instanceof StringConstant);
     }
 
@@ -92,7 +92,7 @@ public class StringConstant extends AbstractConstant {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (item instanceof StringConstant c) {
             return this.getValue(null).equals(c.getValue(null));
         }

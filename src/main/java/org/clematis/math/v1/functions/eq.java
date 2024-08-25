@@ -4,26 +4,28 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 
 /**
  * Returns 1.0 if a and b are equal, otherwise returns 0.0;
  * i.e. it returns a == b ? 1.0 : 0.0.
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class eq extends aFunction2 {
+
     /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
-        if (arguments.size() <= 1 || arguments.size() > 2) {
+    public IExpressionItem calculate() throws AlgorithmException {
+        if (arguments.size() != 2) {
             throw new AlgorithmException("Invalid number of arguments in function 'eq': " + arguments.size());
         }
 
-        iExpressionItem a1 = arguments.get(0).calculate();
-        iExpressionItem a2 = arguments.get(1).calculate();
-/*          if( !AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2) )
+        IExpressionItem a1 = arguments.get(0).calculate();
+        IExpressionItem a2 = arguments.get(1).calculate();
+/*      if( !AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2) )
         {
             eq retvalue = new eq();
             retvalue.setSignature("eq");

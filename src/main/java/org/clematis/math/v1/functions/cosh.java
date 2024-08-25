@@ -4,25 +4,26 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
 
 /**
  * cosh(x) = ( e^x + e^(-x) ) / 2
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class cosh extends aFunction {
     /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() != 1) {
                 throw new AlgorithmException("Invalid number of arguments in function 'cosh': " + arguments.size());
             }
 
-            iExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
             if (!AlgorithmUtils.isGoodNumericArgument(a1)) {
                 cosh retvalue = new cosh();
                 retvalue.setSignature("cosh");

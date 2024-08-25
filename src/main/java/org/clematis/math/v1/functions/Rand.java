@@ -4,7 +4,7 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 
 import java.util.Random;
 
@@ -25,14 +25,14 @@ public class Rand extends aFunction2 {
      *
      * @return <code>Constant</code> with randomly chosen real number.
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() <= 1 || arguments.size() > 3) {
                 throw new AlgorithmException("Invalid number of arguments in function 'Rand': " + arguments.size());
             }
 
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2)) {
                 Rand retvalue = new Rand();
@@ -43,7 +43,7 @@ public class Rand extends aFunction2 {
                 return retvalue;
             }
 
-            iExpressionItem a3 = null;
+            IExpressionItem a3 = null;
             if (arguments.size() == 3) {
                 a3 = arguments.get(2).calculate();
                 if (!AlgorithmUtils.isGoodNumericArgument(a3)) {
@@ -83,7 +83,7 @@ public class Rand extends aFunction2 {
 
     public int getSigDigits() {
         if (arguments != null && arguments.size() == 3) {
-            iExpressionItem sigArg = arguments.get(2);
+            IExpressionItem sigArg = arguments.get(2);
             if (sigArg instanceof Constant) {
                 return (int) ((Constant) sigArg).getNumber();
             }

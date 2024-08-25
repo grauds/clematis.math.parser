@@ -5,27 +5,33 @@ import java.math.BigDecimal;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.MathUtils;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
 
 /**
- * Returns x expressed as a floating-point number rounded to n
- * decimal places.
+ * Returns x expressed as a floating-point number rounded to n decimal places.
  */
+@SuppressWarnings("checkstyle:TodoComment")
+/* TODO: refactor to reduce cyclomatic complexity, write unit tests for this class */
 public class Decimal extends aFunction2 {
+
+    public static final String MINUS_SIGNS = "-";
+    public static final String DOT = ".";
+    public static final String ZERO = "0";
+
     /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() != 2) {
                 throw new AlgorithmException("Invalid number of arguments in function 'Decimal': " + arguments.size());
             }
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
             if (!AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2)) {
                 Decimal retvalue = new Decimal();
                 retvalue.setSignature("Decimal");
@@ -52,37 +58,40 @@ public class Decimal extends aFunction2 {
     /**
      * Rounds float numbers after dot. Does not support scientific notation
      *
-     * @param cutStr     roughtly cut initial string
+     * @param cutStr     roughly cut initial string
      * @param initialStr initial string
      * @return rounded string
      */
+    @SuppressWarnings({"checkstyle:ReturnCount", "checkstyle:NestedIfDepth"})
     protected static String addExtraDigit(String cutStr, String initialStr) {
-        if (initialStr.length() > cutStr.length()) {
-            char next = initialStr.charAt(cutStr.length());
+        String result = cutStr;
+
+        if (initialStr.length() > result.length()) {
+            char next = initialStr.charAt(result.length());
 
             if (next == '.') {
-                if (cutStr.length() + 2 > initialStr.length()) {
-                    return cutStr;
+                if (result.length() + 2 > initialStr.length()) {
+                    return result;
                 }
-                next = initialStr.charAt(cutStr.length() + 1);
+                next = initialStr.charAt(result.length() + 1);
             }
 
             boolean round = next > '4';
 
             if (round) {
-                boolean negative = (cutStr.charAt(0) == '-');
+                boolean negative = (result.charAt(0) == '-');
                 if (negative) {
-                    cutStr = cutStr.substring(1);
+                    result = result.substring(1);
                 }
-                /**
+                /*
                  * Recursively add one point to
                  * all chars from the end to
                  * the beginning of the string
                  */
-                return (negative ? "-" : "") + addExtraDigit(cutStr);
+                return (negative ? MINUS_SIGNS : "") + addExtraDigit(result);
             }
         }
-        return cutStr;
+        return result;
     }
 
     /**
@@ -92,20 +101,20 @@ public class Decimal extends aFunction2 {
      * @param str string
      * @return rounded result
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     private static String addExtraDigit(String str) {
         StringBuilder sb = new StringBuilder();
         boolean extraDigit = true;
 
         for (int i = str.length() - 1; i >= 0; i--) {
             char digit = str.charAt(i);
-            /**
+            /*
              * In case we have some digit to increase
              */
             if (MathUtils.isDigit(digit)) {
                 if (extraDigit) {
                     if (digit == '9') {
                         digit = '0';
-                        extraDigit = true;
                     } else {
                         digit++;
                         extraDigit = false;
@@ -120,7 +129,7 @@ public class Decimal extends aFunction2 {
 
         String result = sb.reverse().toString();
         // get rid of dot at the end of the string, for example in "1."
-        if (result.endsWith(".")) {
+        if (result.endsWith(DOT)) {
             result = result.substring(0, result.length() - 1);
         }
         return result;
@@ -151,93 +160,102 @@ public class Decimal extends aFunction2 {
      *                     absolute dot, not to dot of mantissa
      * @return rounded string
      */
+    @SuppressWarnings({"checkstyle:CyclomaticComplexity",
+        "checkstyle:ReturnCount",
+        "checkstyle:ParameterAssignment",
+        "checkstyle:MethodLength"
+    })
     public static String round(String numberString, int place, boolean mantissa) {
-        /**
+        /*
          * Validate input
          */
-        if (numberString == null || numberString.trim().equals("")) {
+        if (numberString == null || numberString.trim().isEmpty()) {
             return numberString;
         }
-        /**
+        /*
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
         int scientificIndex = numberString.toLowerCase().indexOf("e");
-        /**
+        /*
          * Store exponent
          */
         String exp = "";
         if (scientificIndex != -1) {
-            /** get only mantissa */
+            /* get only mantissa */
             if (mantissa) {
                 exp = numberString.substring(scientificIndex);
                 numberString = numberString.substring(0, scientificIndex);
-            }
-            /** get common number notation, without exponent */
-            else {
+            } else {
+                /* get common number notation, without exponent */
                 BigDecimal bd = new BigDecimal(numberString);
                 numberString = bd.toString();
             }
         }
-        /**
+        /*
          * Negative flag
          */
         boolean negative = numberString.charAt(0) == '-';
-        /**
+        /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
         numberString = MathUtils.correctAndValidateInput(numberString);
-        /**
+        /*
          * Wrong input, return null
          */
         if (numberString == null) {
             return null;
         }
-        /**
+        /*
          * Get decimal point to find out the type of input number string
          */
-        int decimalPointIndex = numberString.indexOf(".");
-        /**
+        int decimalPointIndex = numberString.indexOf(DOT);
+        /*
          * Apply algorithms depending on decimal point index
          */
         switch (decimalPointIndex) {
-            case 0: //If the number is decimal only: -1 < n < 1
-            {
+            case 0: {
+                // If the number is decimal only: -1 < n < 1
                 // place can be only negative, 1 based
                 // .7542102
                 if (place <= 0 && Math.abs(place) + 1 < numberString.length()) {
-                    // initial extra digit
-                    boolean extraDigit = false;
+
                     // shift to next char
                     char next = numberString.charAt(Math.abs(place) + 1);
-                    extraDigit = next > '4';
+
+                    // initial extra digit
+                    boolean extraDigit = next > '4';
+
                     // cut number string
                     numberString = numberString.substring(0, Math.abs(place) + 1);
+
                     // addExtraDigit
                     if (extraDigit) {
                         numberString = addExtraDigit(numberString);
                     }
+
                     // if one point were added, reinitialize extra digit
-                    extraDigit = !numberString.startsWith(".");
+                    extraDigit = !numberString.startsWith(DOT);
+
                     // cut trailing zeros
                     //numberString = cutTrailingsZeros( numberString );
-                    if (numberString.trim().equals(".")) {
-                        return "0";
+                    if (numberString.trim().equals(DOT)) {
+                        return ZERO;
                     }
                     // is resulting string empty?
-                    boolean isEmpty = numberString.trim().equals("");
+                    boolean isEmpty = numberString.trim().isEmpty();
                     // if extra digit, do not reappend zero
                     if (extraDigit) {
-                        return ((negative && !isEmpty) ? "-" : "") + numberString + exp;
+                        return ((negative && !isEmpty) ? MINUS_SIGNS : "") + numberString + exp;
                     } else {
-                        return ((negative && !isEmpty) ? "-" : "") + "0" + numberString + exp;
+                        return ((negative && !isEmpty) ? MINUS_SIGNS : "") + ZERO + numberString + exp;
                     }
                 }
                 break;
             }
-            case -1: //If the number is an integer
-            {
+            case -1: {
+                //If the number is an integer
                 // place cannot be negative, zero based
                 // 93242350
                 if (place >= 0 && place < numberString.length()) {
@@ -255,51 +273,52 @@ public class Decimal extends aFunction2 {
                         numberString = addExtraDigit(numberString);
                     }
                     // add cut zeros to the end - 1 - to zero based place
-                    for (int i = 0; i < place; i++) {
-                        numberString += 0;
-                    }
-                    return (negative ? "-" : "") + /*cutTrailingsZeros( */numberString /*)*/ + exp;
+                    numberString = numberString + ZERO.repeat(place);
+                    return (negative ? MINUS_SIGNS : "") + /*cutTrailingsZeros( */numberString /*)*/ + exp;
                 }
                 break;
             }
-            default: //If it is a real number with an integer and decimal value
-            {
+            default: {
+                // If it is a real number with an integer and decimal value
                 // place can be of any sign
                 // 14523.12456
                 if (place < decimalPointIndex && place > -(numberString.length() - decimalPointIndex - 1)) {
                     // initial extra digit
                     boolean extraDigit = false;
                     // shift to next char
-                    char next = numberString.charAt(decimalPointIndex - ((place > 0) ? place : (place - 1)));
+                    int index = decimalPointIndex - ((place > 0) ? place : (place - 1));
+
+                    char next = numberString.charAt(index);
                     if (next == '.') {
-                        next = numberString.charAt(decimalPointIndex - ((place > 0) ? place : (place - 1)) + 1);
+                        next = numberString.charAt(index + 1);
                     }
+
                     extraDigit = next > '4';
+
                     // cut number string
-                    numberString = numberString.substring(0, decimalPointIndex - ((place > 0) ? place : (place - 1)));
+                    numberString = numberString.substring(0, index);
+
                     // addExtraDigit
                     if (extraDigit) {
                         numberString = addExtraDigit(numberString);
                     }
                     // if place is positive, make zerofilling
                     if (place > 0) {
-                        for (int i = 0; i < place; i++) {
-                            numberString += 0;
-                        }
+                        numberString = numberString + ZERO.repeat(place);
                     }
-                    if (numberString.endsWith(".")) {
+                    if (numberString.endsWith(DOT)) {
                         numberString = numberString.substring(0, numberString.length() - 1);
                     }
-                    return (negative ? "-" : "") + numberString + exp;
+                    return (negative ? MINUS_SIGNS : "") + numberString + exp;
                 }
                 break;
             }
         }
         // do not change number
-        if (!numberString.startsWith(".")) {
-            return (negative ? "-" : "") +  /*cutTrailingsZeros(*/ numberString/* ) */ + exp;
+        if (!numberString.startsWith(DOT)) {
+            return (negative ? MINUS_SIGNS : "") +  /*cutTrailingsZeros(*/ numberString/* ) */ + exp;
         } else {
-            return (negative ? "-" : "") + "0" + /*cutTrailingsZeros( */numberString /*)*/ + exp;
+            return (negative ? MINUS_SIGNS : "") + ZERO + /*cutTrailingsZeros( */numberString /*)*/ + exp;
         }
     }
 }

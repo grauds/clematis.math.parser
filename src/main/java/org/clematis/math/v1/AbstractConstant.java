@@ -6,13 +6,13 @@ package org.clematis.math.v1;
 import java.io.Serializable;
 
 import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.algorithm.iParameterProvider;
+import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.jdom2.Element;
 
 /**
  * Abstract constant, may be string or numeric
  */
-public abstract class AbstractConstant extends SimpleValue implements iExpressionItem, Serializable {
+public abstract class AbstractConstant extends SimpleValue implements IExpressionItem, Serializable {
     /**
      * This flag allows application of significant digits.
      * If set to 1, answers will be cut to required number
@@ -34,7 +34,7 @@ public abstract class AbstractConstant extends SimpleValue implements iExpressio
      *
      * @return <code>this</code> reference.
      */
-    public iExpressionItem calculate() {
+    public IExpressionItem calculate() {
         return this;
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractConstant extends SimpleValue implements iExpressio
      *                          and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         return this;
     }
 
@@ -57,7 +57,7 @@ public abstract class AbstractConstant extends SimpleValue implements iExpressio
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public abstract boolean aKindOf(iExpressionItem item);
+    public abstract boolean aKindOf(IExpressionItem item);
 
     /**
      * Compares this expression item with a given one and returns
@@ -66,7 +66,7 @@ public abstract class AbstractConstant extends SimpleValue implements iExpressio
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public abstract boolean equals(iExpressionItem item);
+    public abstract boolean equals(IExpressionItem item);
 
     /**
      * Sets constant multiplier

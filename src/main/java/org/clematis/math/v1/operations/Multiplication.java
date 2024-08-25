@@ -3,7 +3,7 @@ package org.clematis.math.v1.operations;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 import org.jdom2.Element;
 
 /**
@@ -17,7 +17,7 @@ public class Multiplication extends aOperation {
      * @param in_operand1 first argument
      * @param in_operand2 second argument
      */
-    public Multiplication(iExpressionItem in_operand1, iExpressionItem in_operand2) {
+    public Multiplication(IExpressionItem in_operand1, IExpressionItem in_operand2) {
         super(in_operand1, in_operand2);
         /**
          * Set multiplier
@@ -36,13 +36,13 @@ public class Multiplication extends aOperation {
      *
      * @return new or modified expression.
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         /**
          * Try to make multiplication
          */
-        iExpressionItem a = getOperand1().calculate();
-        iExpressionItem b = getOperand2().calculate();
-        iExpressionItem result = a.multiply(b);
+        IExpressionItem a = getOperand1().calculate();
+        IExpressionItem b = getOperand2().calculate();
+        IExpressionItem result = a.multiply(b);
         /**
          * We failed
          */
@@ -62,7 +62,7 @@ public class Multiplication extends aOperation {
      * @param item expression item to add
      * @return new expression item as a product of addition
      */
-    public iExpressionItem add(iExpressionItem item) {
+    public IExpressionItem add(IExpressionItem item) {
         /**
          * Case: 5xy + 7yx. We get 12xy.
          */
@@ -85,7 +85,7 @@ public class Multiplication extends aOperation {
      * @param item expression item to multiply
      * @return new expression item as a product of multiplication
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         /**
          * Case C * xy
          */
@@ -129,10 +129,10 @@ public class Multiplication extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         if (item instanceof Multiplication mitem) {
-            iExpressionItem op1 = mitem.getOperand1();
-            iExpressionItem op2 = mitem.getOperand2();
+            IExpressionItem op1 = mitem.getOperand1();
+            IExpressionItem op2 = mitem.getOperand2();
             return op1.aKindOf(getOperand1()) && op2.aKindOf(getOperand2())
                 ||
                 op2.aKindOf(getOperand1()) && op1.aKindOf(getOperand2());
@@ -147,10 +147,10 @@ public class Multiplication extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (item instanceof Multiplication mitem) {
-            iExpressionItem op1 = mitem.getOperand1();
-            iExpressionItem op2 = mitem.getOperand2();
+            IExpressionItem op1 = mitem.getOperand1();
+            IExpressionItem op2 = mitem.getOperand2();
             if (op1.equals(getOperand1()) && op2.equals(getOperand2())
                 ||
                 op2.equals(getOperand1()) && op1.equals(getOperand2())) {
@@ -167,16 +167,16 @@ public class Multiplication extends aOperation {
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply", iExpressionItem.NS_MATH);
+        Element apply = new Element("apply", IExpressionItem.NS_MATH);
 
-        Element times = new Element("times", iExpressionItem.NS_MATH);
+        Element times = new Element("times", IExpressionItem.NS_MATH);
         apply.addContent(times);
-        Element cn = new Element("cn", iExpressionItem.NS_MATH);
+        Element cn = new Element("cn", IExpressionItem.NS_MATH);
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element("apply", iExpressionItem.NS_MATH);
-        apply2.addContent(new Element("times", iExpressionItem.NS_MATH));
+        Element apply2 = new Element("apply", IExpressionItem.NS_MATH);
+        apply2.addContent(new Element("times", IExpressionItem.NS_MATH));
         apply2.addContent(getOperand1().toMathML());
         apply2.addContent(getOperand2().toMathML());
 

@@ -7,8 +7,8 @@ import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.ExpressionParser;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.OutputFormatSettings;
-import org.clematis.math.v1.iExpressionItem;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.clematis.math.v2.utils.StringUtils;
 import org.jdom2.CDATA;
@@ -89,7 +89,7 @@ public class Parameter extends SimpleParameter {
     /**
      * Object representation of the expression code.
      */
-    private iExpressionItem expressionRoot = null;
+    private IExpressionItem expressionRoot = null;
     /**
      * Calculated qu algorithm, this parameter belongs to
      */
@@ -154,7 +154,7 @@ public class Parameter extends SimpleParameter {
         /*
          * If code is not null, Parameter is mutable, if null - immutable via calculation
          */
-        iExpressionItem result = null;
+        IExpressionItem result = null;
         if (code != null) {
             try {
                 //** parse processed code string */

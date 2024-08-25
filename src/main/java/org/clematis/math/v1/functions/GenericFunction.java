@@ -2,85 +2,48 @@
 package org.clematis.math.v1.functions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.ExpressionParser;
 import org.clematis.math.v1.FunctionFactory;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.algorithm.DefaultParameterProvider;
+import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.Key;
 import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.algorithm.iParameterProvider;
-import org.clematis.math.v1.iExpressionItem;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Generic function can be created on-the-fly then parsing
  * algorithm code.
  */
+@Getter
+@Setter
 public class GenericFunction extends aFunction {
     /**
      * Special name of generic function
      */
-    public final static String GENERIC_FUNCTION_NAME = "function";
+    public static final String GENERIC_FUNCTION_NAME = "function";
+    public static final String SIGNATURE_ATTRIBUTE_NAME = "signature";
+    public static final String ARGUMENT_ELEMENT_NAME = "argument";
+    /**
+     * Arguments provider
+     */
+    private final ArgumentsProvider argumentsProvider = new ArgumentsProvider();
     /**
      * Code of this function
      */
     private String code = "";
     /**
-     * Arguments provider
-     */
-    private final ArgumentsProvider argumentsProvider = new ArgumentsProvider();
-
-    /**
-     * Provides generic function with actual
-     * arguments instead of formal ones.
-     */
-    class ArgumentsProvider extends DefaultParameterProvider {
-        public ArrayList<Key> getLines() {
-            return this.lines;
-        }
-
-        public void setLines(ArrayList<Key> lines) {
-            this.lines = new ArrayList<Key>();
-            this.lines.addAll(lines);
-        }
-
-        /**
-         * Return parameter constant
-         *
-         * @param in_varName parameter name
-         * @return parameter value, string or double
-         */
-        public AbstractConstant getParameterConstant(String in_varName) throws AlgorithmException {
-            /** in_varName ignored */
-            AbstractConstant result = null;
-            if ((result = super.getParameterConstant(in_varName)) != null) {
-                return result;
-            } else {
-                /** get index of name in formal parameters and get argument by this index */
-                int index = lines.indexOf(new Key(in_varName));
-                if ((index >= 0) && (index < arguments.size())) {
-                    iExpressionItem argument = arguments.get(index);
-                    argument = argument.calculate();
-                    if (argument instanceof AbstractConstant) {
-                        /** join constant and its name */
-                        addParameter(new Parameter(in_varName, (AbstractConstant) argument));
-                        result = (AbstractConstant) argument;
-                    }
-                }
-            }
-            return result;
-        }
-    }
-
-    /**
      * Copy constructor
      *
-     * @param genericFunction
+     * @param genericFunction to copy values from
      */
     public GenericFunction(GenericFunction genericFunction) {
         super();
@@ -121,7 +84,7 @@ public class GenericFunction extends aFunction {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         return calculate(null);
     }
 
@@ -132,12 +95,12 @@ public class GenericFunction extends aFunction {
      * @param parameterProvider parameter and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(iParameterProvider parameterProvider)
+    public IExpressionItem calculate(IParameterProvider parameterProvider)
         throws AlgorithmException {
-        /** parse code of this generic function */
+        /* parse code of this generic function */
         ExpressionParser parser = new ExpressionParser(code, argumentsProvider, null, argumentsProvider);
-        iExpressionItem root = parser.parse();
-        /** calculate generic function */
+        IExpressionItem root = parser.parse();
+        /* calculate generic function */
         if (root != null) {
             root = root.calculate(parameterProvider);
         }
@@ -161,51 +124,32 @@ public class GenericFunction extends aFunction {
     }
 
     /**
-     * Get generic function code
-     *
-     * @return generic function code
-     */
-    public String getCode() {
-        return code;
-    }
-
-    /**
-     * Set generic function code
-     *
-     * @param code generic function code
-     */
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    /**
      * Create function from declaration
      *
      * @param declaration of generic function
      * @return instance of generic function
-     * @throws AlgorithmException
      */
     public static GenericFunction create(String declaration) throws AlgorithmException {
-        String _statement = declaration.substring(GENERIC_FUNCTION_NAME.length() + 1);
-        /** position of = sign */
-        int pos = _statement.indexOf('=');
+        String statement = declaration.substring(GENERIC_FUNCTION_NAME.length() + 1);
+        /* position of = sign */
+        int pos = statement.indexOf('=');
         if (pos == -1) {
             throw new AlgorithmException("Operand '=' is missed: " + declaration);
         }
-        /** signature of the function */
-        String signature = _statement.substring(0, pos).trim();
-        if (signature.length() < 1) {
+        /* signature of the function */
+        String signature = statement.substring(0, pos).trim();
+        if (signature.isEmpty()) {
             throw new AlgorithmException("Function signature is empty");
         }
         int beginBracesIndex = signature.indexOf('(');
         int endBracesIndex = signature.indexOf(')');
-        /** name of the function */
+        /* name of the function */
         String name = signature.substring(0, beginBracesIndex);
-        /** code of function */
-        String code = _statement.substring(pos + 1).trim();
-        /** create generic function */
+        /* code of function */
+        String code = statement.substring(pos + 1).trim();
+        /* create generic function */
         GenericFunction function = new GenericFunction(name, code);
-        /** formal parameters */
+        /* formal parameters */
         String parameters = signature.substring(beginBracesIndex + 1, endBracesIndex);
         StringTokenizer st = new StringTokenizer(parameters, ",");
         while (st.hasMoreTokens()) {
@@ -221,16 +165,14 @@ public class GenericFunction extends aFunction {
      * @return parameter
      */
     public static GenericFunction create(Element xml) {
-        /**
+        /*
          * Create generic function
          */
-        if (xml.getAttribute("signature") != null) {
-            String signature = xml.getAttributeValue("signature");
+        if (xml.getAttribute(SIGNATURE_ATTRIBUTE_NAME) != null) {
+            String signature = xml.getAttributeValue(SIGNATURE_ATTRIBUTE_NAME);
             String code = xml.getText();
             GenericFunction function = new GenericFunction(signature, code);
-            Iterator arguments = xml.getChildren("argument").iterator();
-            while (arguments.hasNext()) {
-                Element argument = (Element) arguments.next();
+            for (Element argument : xml.getChildren(ARGUMENT_ELEMENT_NAME)) {
                 function.addFormalArgument(argument.getText());
             }
             return function;
@@ -244,12 +186,12 @@ public class GenericFunction extends aFunction {
      * @return xml representation of this parameter
      */
     public Element toXML() {
-        Element paramElement = new Element("function");
+        Element paramElement = new Element(GENERIC_FUNCTION_NAME);
         if (getSignature() != null) {
-            paramElement.setAttribute("signature", getSignature());
+            paramElement.setAttribute(SIGNATURE_ATTRIBUTE_NAME, getSignature());
         }
         for (int i = 0; i < getFormalArguments().size(); i++) {
-            Element arg = new Element("argument");
+            Element arg = new Element(ARGUMENT_ELEMENT_NAME);
             arg.setText(getFormalArguments().get(i).getName());
             paramElement.addContent(arg);
         }
@@ -257,5 +199,49 @@ public class GenericFunction extends aFunction {
             paramElement.addContent(new CDATA(getCode()));
         }
         return paramElement;
+    }
+
+
+    /**
+     * Provides generic function with actual
+     * arguments instead of formal ones.
+     */
+    class ArgumentsProvider extends DefaultParameterProvider {
+        public ArrayList<Key> getLines() {
+            return this.lines;
+        }
+
+        public void setLines(ArrayList<Key> lines) {
+            this.lines = new ArrayList<Key>();
+            this.lines.addAll(lines);
+        }
+
+        /**
+         * Return parameter constant
+         *
+         * @param name parameter name
+         * @return parameter value, string or double
+         */
+        @SuppressWarnings("checkstyle:NestedIfDepth")
+        public AbstractConstant getParameterConstant(String name) throws AlgorithmException {
+            /* name ignored */
+            AbstractConstant result = super.getParameterConstant(name);
+            if (result != null) {
+                return result;
+            } else {
+                /* get index of name in formal parameters and get argument by this index */
+                int index = lines.indexOf(new Key(name));
+                if ((index >= 0) && (index < arguments.size())) {
+                    IExpressionItem argument = arguments.get(index);
+                    argument = argument.calculate();
+                    if (argument instanceof AbstractConstant) {
+                        /* join constant and its name */
+                        addParameter(new Parameter(name, (AbstractConstant) argument));
+                        result = (AbstractConstant) argument;
+                    }
+                }
+            }
+            return result;
+        }
     }
 }

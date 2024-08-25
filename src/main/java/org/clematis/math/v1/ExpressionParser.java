@@ -9,9 +9,9 @@ import java.util.List;
 import org.clematis.math.v1.algorithm.DefaultParameterProvider;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.algorithm.ParameterReference;
-import org.clematis.math.v1.algorithm.iFunctionProvider;
-import org.clematis.math.v1.algorithm.iSimpleParameterProvider;
-import org.clematis.math.v1.algorithm.iVariableProvider;
+import org.clematis.math.v1.algorithm.IFunctionProvider;
+import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
+import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.functions.aFunction;
 import org.clematis.math.v1.operations.Addition;
 import org.clematis.math.v1.operations.Multiplication;
@@ -46,15 +46,15 @@ public class ExpressionParser {
     /**
      * Parameter provider, always not null
      */
-    iSimpleParameterProvider m_paramProvider = new DefaultParameterProvider();
+    ISimpleParameterProvider m_paramProvider = new DefaultParameterProvider();
     /**
      * Variable provider
      */
-    iVariableProvider m_varProvider = null;
+    IVariableProvider m_varProvider = null;
     /**
      * Function provider
      */
-    iFunctionProvider m_functionProvider = null;
+    IFunctionProvider m_functionProvider = null;
     /**
      * Buffer to pick up letters of operand
      */
@@ -88,7 +88,7 @@ public class ExpressionParser {
      * @param in_expression    expression to parse
      * @param in_paramProvider parameter provider
      */
-    private ExpressionParser(String in_expression, iSimpleParameterProvider in_paramProvider) {
+    private ExpressionParser(String in_expression, ISimpleParameterProvider in_paramProvider) {
         this(in_expression);
         this.m_paramProvider = in_paramProvider;
     }
@@ -100,8 +100,8 @@ public class ExpressionParser {
      * @param in_paramProvider parameter provider
      * @param in_varProvider   parameter provider
      */
-    public ExpressionParser(String in_expression, iSimpleParameterProvider in_paramProvider,
-                            iVariableProvider in_varProvider) {
+    public ExpressionParser(String in_expression, ISimpleParameterProvider in_paramProvider,
+                            IVariableProvider in_varProvider) {
         this(in_expression, in_paramProvider);
         this.m_varProvider = in_varProvider;
     }
@@ -113,9 +113,9 @@ public class ExpressionParser {
      * @param in_paramProvider parameter provider
      * @param in_varProvider   parameter provider
      */
-    public ExpressionParser(String in_expression, iSimpleParameterProvider in_paramProvider,
-                            iVariableProvider in_varProvider,
-                            iFunctionProvider in_functionProvider) {
+    public ExpressionParser(String in_expression, ISimpleParameterProvider in_paramProvider,
+                            IVariableProvider in_varProvider,
+                            IFunctionProvider in_functionProvider) {
         this(in_expression, in_paramProvider, in_varProvider);
         this.m_functionProvider = in_functionProvider;
     }
@@ -327,13 +327,13 @@ public class ExpressionParser {
         }
     }
 
-    public iExpressionItem parse() throws AlgorithmException {
+    public IExpressionItem parse() throws AlgorithmException {
         checkBrackets();
 
         /** array of items */
-        List<iExpressionItem> items = new ArrayList<iExpressionItem>();
+        List<IExpressionItem> items = new ArrayList<IExpressionItem>();
         /** add first item */
-        iExpressionItem item = evalExpression();
+        IExpressionItem item = evalExpression();
         if (item != null) {
             items.add(item);
         }
@@ -357,7 +357,7 @@ public class ExpressionParser {
 
             final aFunction and = m_functionProvider.getFunction("and");
             if (and != null) {
-                for (final iExpressionItem itm : items) {
+                for (final IExpressionItem itm : items) {
                     and.addArgument(itm);
                 }
             }
@@ -370,21 +370,21 @@ public class ExpressionParser {
         }
     }
 
-    private iExpressionItem evalExpression() throws AlgorithmException {
+    private IExpressionItem evalExpression() throws AlgorithmException {
         if (!getNextOperatorAndOperand()) {
             return null;
         }
         return evalPlusMinus();
     }
 
-    private iExpressionItem evalPlusMinus() throws AlgorithmException {
-        iExpressionItem calculable = evalMultDiv();
+    private IExpressionItem evalPlusMinus() throws AlgorithmException {
+        IExpressionItem calculable = evalMultDiv();
 
         final InfLoopChecker checker = new InfLoopChecker();
         while (m_operator == '+' || m_operator == '-') {
             boolean sub = m_operator == '-';
             if (getNextOperatorAndOperand()) {
-                iExpressionItem secondOperand = evalMultDiv();
+                IExpressionItem secondOperand = evalMultDiv();
                 if (sub) {
                     secondOperand.setMultiplier(secondOperand.getMultiplier() * (-1));
                 }
@@ -395,14 +395,14 @@ public class ExpressionParser {
         return calculable;
     }
 
-    private iExpressionItem evalMultDiv() throws AlgorithmException {
-        iExpressionItem calculable = evalPower();
+    private IExpressionItem evalMultDiv() throws AlgorithmException {
+        IExpressionItem calculable = evalPower();
 
         final InfLoopChecker checker = new InfLoopChecker();
         while (m_operator == '*' || m_operator == '/') {
             boolean div = m_operator == '/';
             if (getNextOperatorAndOperand()) {
-                iExpressionItem secondOperand = null;
+                IExpressionItem secondOperand = null;
                 if (div) {
                     secondOperand = evalPower();
                 } else {
@@ -418,11 +418,11 @@ public class ExpressionParser {
         return calculable;
     }
 
-    private iExpressionItem evalPower() throws AlgorithmException {
-        iExpressionItem calculable = evalUnaryOperation();
+    private IExpressionItem evalPower() throws AlgorithmException {
+        IExpressionItem calculable = evalUnaryOperation();
         if (m_operator == '^') {
             if (getNextOperatorAndOperand()) {
-                iExpressionItem secondOperand = evalPower();
+                IExpressionItem secondOperand = evalPower();
                 calculable = new Power(calculable, secondOperand);
             }
         }
@@ -430,8 +430,8 @@ public class ExpressionParser {
         return calculable;
     }
 
-    private iExpressionItem evalUnaryOperation() throws AlgorithmException {
-        iExpressionItem calculable = null;
+    private IExpressionItem evalUnaryOperation() throws AlgorithmException {
+        IExpressionItem calculable = null;
         if ((m_operator == '-' || m_operator == '+') && "".equals(m_operand)) {
             boolean negative = m_operator == '-';
             if (!getNextOperatorAndOperand()) {
@@ -447,8 +447,8 @@ public class ExpressionParser {
         return calculable;
     }
 
-    private iExpressionItem evalBrackets() throws AlgorithmException {
-        iExpressionItem calculable = null;
+    private IExpressionItem evalBrackets() throws AlgorithmException {
+        IExpressionItem calculable = null;
         if (m_operator == '(') {
             if (m_operand.length() == 0) {
                 //Operator '('
@@ -458,12 +458,12 @@ public class ExpressionParser {
                 }
                 getNextOperatorAndOperand();
                 if (m_operator == '(') {
-                    iExpressionItem secondOperand = evalExpression();
+                    IExpressionItem secondOperand = evalExpression();
                     calculable = new Multiplication(calculable, secondOperand);
                     getNextOperatorAndOperand();
                 } else if (m_operator == '^') {
                     getNextOperatorAndOperand();
-                    iExpressionItem secondOperand = null;
+                    IExpressionItem secondOperand = null;
                     if (m_operator == '(') {
                         secondOperand = evalBrackets();
                     } else {
@@ -474,7 +474,7 @@ public class ExpressionParser {
             } else {
                 //Function
                 if (m_functionProvider != null) {
-                    iFunction function = m_functionProvider.getFunction(m_operand);
+                    IFunction function = m_functionProvider.getFunction(m_operand);
                     if (function == null) {
                         throw new AlgorithmException("Function factory cannot create function " + m_operand);
                     }
@@ -498,8 +498,8 @@ public class ExpressionParser {
         return calculable;
     }
 
-    private iExpressionItem evalVariable() throws AlgorithmException {
-        iExpressionItem result = null;
+    private IExpressionItem evalVariable() throws AlgorithmException {
+        IExpressionItem result = null;
         /** parameter */
         if (isParameter(m_operand)) {
             result = getParameter(m_operand);
@@ -527,8 +527,8 @@ public class ExpressionParser {
         return result;
     }
 
-    private iExpressionItem getParameter(String name) throws AlgorithmException {
-        iExpressionItem result = null;
+    private IExpressionItem getParameter(String name) throws AlgorithmException {
+        IExpressionItem result = null;
 
         if (m_paramProvider != null) {
             if (mode == MODE_COPY_PARAMETER_AS_CONSTANT) {

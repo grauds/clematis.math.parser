@@ -7,7 +7,7 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.MathUtils;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -30,13 +30,13 @@ public class Sig extends aFunction2 {
      *
      * @return <code>Constant</code> with formatted value or null on error.
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() != 2) {
                 throw new AlgorithmException("Invalid number of arguments in function 'Sig': " + arguments.size());
             }
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2)) {
                 Sig retvalue = new Sig();
@@ -405,7 +405,7 @@ public class Sig extends aFunction2 {
      */
     public int getSigDigits() {
         if (arguments != null && arguments.size() == 2) {
-            iExpressionItem sigArg = arguments.get(0);
+            IExpressionItem sigArg = arguments.get(0);
             if (sigArg instanceof Constant) {
                 return (int) ((Constant) sigArg).getNumber();
             }

@@ -4,7 +4,7 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 
 import java.util.Random;
 
@@ -19,14 +19,14 @@ public class rList extends aFunction2 {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
             if (arguments.size() <= 0) {
                 throw new AlgorithmException("Invalid number of arguments in function 'rList': " + arguments.size());
             }
 
             int number = rand.nextInt(arguments.size() - 1);
-            iExpressionItem a = arguments.get(number).calculate();
+            IExpressionItem a = arguments.get(number).calculate();
             a.setMultiplier(a.getMultiplier() * getMultiplier());
             return a;
         } catch (AlgorithmException ex) {

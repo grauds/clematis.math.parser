@@ -8,8 +8,8 @@ import java.util.List;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.StringConstant;
-import org.clematis.math.v1.iExpressionItem;
 import org.clematis.math.v1.iMultivariantLogic;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.clematis.math.v2.utils.StringUtils;
@@ -99,12 +99,12 @@ public class AlgorithmUtils {
      */
     @SuppressWarnings("checkstyle:NestedIfDepth")
     public static void findStringVariants(IParameterProvider provider,
-                                          iExpressionItem exprRoot,
+                                          IExpressionItem exprRoot,
                                           HashSet<String> strList
     ) {
         if (exprRoot instanceof iMultivariantLogic logic) {
-            ArrayList<iExpressionItem> variants = logic.getVariants();
-            for (iExpressionItem variant : variants) {
+            ArrayList<IExpressionItem> variants = logic.getVariants();
+            for (IExpressionItem variant : variants) {
                 findStringVariants(provider, variant, strList);
             }
         } else if (exprRoot instanceof StringConstant) {
@@ -228,7 +228,7 @@ public class AlgorithmUtils {
      * @param item as argument candidate
      * @return true, if expression item is suitable for being an argument for a function.
      */
-    public static boolean isGoodNumericArgument(iExpressionItem item) {
+    public static boolean isGoodNumericArgument(IExpressionItem item) {
         return (item instanceof AbstractConstant) || (item instanceof SimpleFraction);
     }
 
@@ -238,7 +238,7 @@ public class AlgorithmUtils {
      * @param item as argument candidate
      * @return numeric argument for a function. Accepts either constants or simple fractions.
      */
-    public static Constant getNumericArgument(iExpressionItem item) throws AlgorithmException {
+    public static Constant getNumericArgument(IExpressionItem item) throws AlgorithmException {
         Constant result = null;
         if (item instanceof Constant) {
             result = (Constant) item;

@@ -4,8 +4,8 @@
 package org.clematis.math.v1.operations;
 
 import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.algorithm.iParameterProvider;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.algorithm.IParameterProvider;
+import org.clematis.math.v1.IExpressionItem;
 
 import java.io.Serializable;
 
@@ -13,11 +13,11 @@ import java.io.Serializable;
  * Abstract operation class. This is a base class for all operations
  * like addition, multiplication and etc.
  */
-public abstract class aOperation implements iExpressionItem, Serializable {
+public abstract class aOperation implements IExpressionItem, Serializable {
     /**
      * Operands
      */
-    private iExpressionItem[] operands = new iExpressionItem[2];
+    private IExpressionItem[] operands = new IExpressionItem[2];
     /**
      * Operation multiplier. For instance, it could be constant 2 in 2 * 5 ^ x
      */
@@ -26,7 +26,7 @@ public abstract class aOperation implements iExpressionItem, Serializable {
     protected aOperation() {
     }
 
-    public aOperation(iExpressionItem in_operand1, iExpressionItem in_operand2) {
+    public aOperation(IExpressionItem in_operand1, IExpressionItem in_operand2) {
         setOperand1(in_operand1);
         setOperand2(in_operand2);
     }
@@ -49,32 +49,32 @@ public abstract class aOperation implements iExpressionItem, Serializable {
         this.multiplier = multiplier;
     }
 
-    public iExpressionItem getOperand1() {
+    public IExpressionItem getOperand1() {
         return operands[0];
     }
 
-    public void setOperand1(iExpressionItem m_operand1) {
+    public void setOperand1(IExpressionItem m_operand1) {
         operands[0] = m_operand1;
     }
 
-    public iExpressionItem getOperand2() {
+    public IExpressionItem getOperand2() {
         return operands[1];
     }
 
-    public void setOperand2(iExpressionItem m_operand2) {
+    public void setOperand2(IExpressionItem m_operand2) {
         operands[1] = m_operand2;
     }
 
-    public void addOperand(iExpressionItem item) {
+    public void addOperand(IExpressionItem item) {
         /**
          * Temp array to store data
          */
-        iExpressionItem[] temp = new iExpressionItem[operands.length];
+        IExpressionItem[] temp = new IExpressionItem[operands.length];
         System.arraycopy(operands, 0, temp, 0, operands.length);
         /**
          * Increase array by one and restore data
          */
-        operands = new iExpressionItem[temp.length + 1];
+        operands = new IExpressionItem[temp.length + 1];
         System.arraycopy(temp, 0, operands, 0, temp.length);
         /**
          * Write the last element
@@ -82,7 +82,7 @@ public abstract class aOperation implements iExpressionItem, Serializable {
         operands[operands.length - 1] = item;
     }
 
-    public iExpressionItem[] getOperands() {
+    public IExpressionItem[] getOperands() {
         return operands;
     }
 
@@ -94,7 +94,7 @@ public abstract class aOperation implements iExpressionItem, Serializable {
      *                          and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(iParameterProvider parameterProvider)
+    public IExpressionItem calculate(IParameterProvider parameterProvider)
         throws AlgorithmException {
         return calculate();
     }

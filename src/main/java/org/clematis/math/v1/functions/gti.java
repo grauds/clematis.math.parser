@@ -5,26 +5,27 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
 
 /**
  * gti (a, b) returns a >= b ? 1.0 : 0.0
  */
+@SuppressWarnings("checkstyle:TypeName")
 public class gti extends aFunction2 {
     /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         try {
-            if (arguments.size() <= 1 || arguments.size() > 2) {
+            if (arguments.size() != 2) {
                 throw new AlgorithmException("Invalid number of arguments in function 'gti': " + arguments.size());
             }
 
-            iExpressionItem a1 = arguments.get(0).calculate();
-            iExpressionItem a2 = arguments.get(1).calculate();
+            IExpressionItem a1 = arguments.get(0).calculate();
+            IExpressionItem a2 = arguments.get(1).calculate();
 
             if (!AlgorithmUtils.isGoodNumericArgument(a1) || !AlgorithmUtils.isGoodNumericArgument(a2)) {
                 gt retvalue = new gt();

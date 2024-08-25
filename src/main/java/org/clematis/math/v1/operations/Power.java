@@ -7,7 +7,7 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 import org.jdom2.Element;
 
 /**
@@ -21,13 +21,13 @@ public class Power extends aOperation {
      * @param in_operand1 first argument
      * @param in_operand2 second argument
      */
-    public Power(iExpressionItem in_operand1, iExpressionItem in_operand2) {
+    public Power(IExpressionItem in_operand1, IExpressionItem in_operand2) {
         super(in_operand1, in_operand2);
     }
 
-    public iExpressionItem calculate() throws AlgorithmException {
-        iExpressionItem base = getOperand1().calculate();
-        iExpressionItem exponent = getOperand2().calculate();
+    public IExpressionItem calculate() throws AlgorithmException {
+        IExpressionItem base = getOperand1().calculate();
+        IExpressionItem exponent = getOperand2().calculate();
 
         if (!AlgorithmUtils.isGoodNumericArgument(exponent)) {
             return this;
@@ -39,7 +39,7 @@ public class Power extends aOperation {
             if (AlgorithmUtils.isGoodNumericArgument(base)) {
                 try {
                     if (((int) c_exponent.getNumber()) == c_exponent.getNumber()) {
-                        iExpressionItem item = AlgorithmUtils.getNumericArgument(base).pow(c_exponent);
+                        IExpressionItem item = AlgorithmUtils.getNumericArgument(base).pow(c_exponent);
                         item.setMultiplier(getMultiplier());
                         if (item != null) {
                             return item;
@@ -71,7 +71,7 @@ public class Power extends aOperation {
      * @param item expression item to add
      * @return new expression item as a product of addition
      */
-    public iExpressionItem add(iExpressionItem item) {
+    public IExpressionItem add(IExpressionItem item) {
         /**
          * Case: y^2 + y^2.
          */
@@ -93,7 +93,7 @@ public class Power extends aOperation {
      * @param item expression item to multiply
      * @return new expression item as a product of multiplication
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         /**
          * Case: C * y^3.
          */
@@ -128,7 +128,7 @@ public class Power extends aOperation {
      *
      * @return iExpressionItem power
      */
-    public iExpressionItem getPower() {
+    public IExpressionItem getPower() {
         return getOperand2();
     }
 
@@ -137,7 +137,7 @@ public class Power extends aOperation {
      *
      * @param exponent to set
      */
-    public void setPower(iExpressionItem exponent) {
+    public void setPower(IExpressionItem exponent) {
         setOperand2(exponent);
     }
 
@@ -148,7 +148,7 @@ public class Power extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         /**
          * We can multiply power functions only if
          * bases are similar.
@@ -170,7 +170,7 @@ public class Power extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (item instanceof Power p) {
             return (getOperand1().equals(p.getOperand1()) &&
                 (getPower().equals(p.getPower())) &&
@@ -186,16 +186,16 @@ public class Power extends aOperation {
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply", iExpressionItem.NS_MATH);
+        Element apply = new Element("apply", IExpressionItem.NS_MATH);
 
-        Element times = new Element("times", iExpressionItem.NS_MATH);
+        Element times = new Element("times", IExpressionItem.NS_MATH);
         apply.addContent(times);
-        Element cn = new Element("cn", iExpressionItem.NS_MATH);
+        Element cn = new Element("cn", IExpressionItem.NS_MATH);
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element("apply", iExpressionItem.NS_MATH);
-        apply2.addContent(new Element("power", iExpressionItem.NS_MATH));
+        Element apply2 = new Element("apply", IExpressionItem.NS_MATH);
+        apply2.addContent(new Element("power", IExpressionItem.NS_MATH));
         apply2.addContent(getOperand1().toMathML());
         apply2.addContent(getOperand2().toMathML());
 

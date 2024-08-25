@@ -5,15 +5,15 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.Key;
-import org.clematis.math.v1.algorithm.iFunctionProvider;
 import org.clematis.math.v1.functions.GenericFunction;
 import org.clematis.math.v1.functions.aFunction;
 
 /**
  * Factory for functions.
  */
-public class FunctionFactory implements Serializable, iFunctionProvider {
+public class FunctionFactory implements Serializable, IFunctionProvider {
     /**
      * Standard function classes
      */

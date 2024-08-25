@@ -2,7 +2,7 @@
 package org.clematis.math.v1.algorithm;
 
 import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Getter;
  * Class contains an instance of {@link Parameter} and serves as a reference to it.
  */
 @Getter
-public class ParameterReference implements iExpressionItem {
+public class ParameterReference implements IExpressionItem {
 
     Parameter origin;
 
@@ -23,7 +23,7 @@ public class ParameterReference implements iExpressionItem {
      *
      * @return expression item instance
      */
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         if (origin.getExpressionRoot() != null) {
             return origin.getExpressionRoot().calculate();
         }
@@ -38,7 +38,7 @@ public class ParameterReference implements iExpressionItem {
      *                          and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
+    public IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         return calculate();
     }
 
@@ -48,7 +48,7 @@ public class ParameterReference implements iExpressionItem {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem add(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (origin.getExpressionRoot() != null) {
             return origin.getExpressionRoot().add(item);
         }
@@ -61,7 +61,7 @@ public class ParameterReference implements iExpressionItem {
      * @param item another expression item
      * @return result expression item
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (origin.getExpressionRoot() != null) {
             return origin.getExpressionRoot().multiply(item);
         }
@@ -75,7 +75,7 @@ public class ParameterReference implements iExpressionItem {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         if (origin.getExpressionRoot() != null) {
             return origin.getExpressionRoot().aKindOf(item);
         }
@@ -89,7 +89,7 @@ public class ParameterReference implements iExpressionItem {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (origin.getExpressionRoot() != null) {
             return origin.getExpressionRoot().equals(item);
         }

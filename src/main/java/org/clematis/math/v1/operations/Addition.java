@@ -3,7 +3,7 @@ package org.clematis.math.v1.operations;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.iExpressionItem;
+import org.clematis.math.v1.IExpressionItem;
 import org.jdom2.Element;
 
 /**
@@ -16,17 +16,17 @@ public class Addition extends aOperation {
      * @param in_operand1 first operand
      * @param in_operand2 second operand
      */
-    public Addition(iExpressionItem in_operand1, iExpressionItem in_operand2) {
+    public Addition(IExpressionItem in_operand1, IExpressionItem in_operand2) {
         super(in_operand1, in_operand2);
     }
 
-    public iExpressionItem calculate() throws AlgorithmException {
+    public IExpressionItem calculate() throws AlgorithmException {
         /**
          * First try to calculate each operand
          */
-        iExpressionItem a = getOperand1().calculate();
-        iExpressionItem b = getOperand2().calculate();
-        iExpressionItem result = a.add(b);
+        IExpressionItem a = getOperand1().calculate();
+        IExpressionItem b = getOperand2().calculate();
+        IExpressionItem result = a.add(b);
 
         if (result == null) {
             result = new Addition(a, b);
@@ -43,11 +43,11 @@ public class Addition extends aOperation {
      * @param item
      * @return this or new addition
      */
-    public iExpressionItem add(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Addition a_item) {
 
-            iExpressionItem res1 = getOperand1().add(a_item.getOperand1());
-            iExpressionItem res2 = null;
+            IExpressionItem res1 = getOperand1().add(a_item.getOperand1());
+            IExpressionItem res2 = null;
 
             if (res1 == null) {
                 res1 = getOperand2().add(a_item.getOperand1());
@@ -63,7 +63,7 @@ public class Addition extends aOperation {
                 return null;
             }
         } else {
-            iExpressionItem result = getOperand1().add(item);
+            IExpressionItem result = getOperand1().add(item);
 
             if (result == null) {
                 result = getOperand2().add(item);
@@ -90,7 +90,7 @@ public class Addition extends aOperation {
      * @param item
      * @return addition or multiplication.
      */
-    public iExpressionItem multiply(iExpressionItem item) throws AlgorithmException {
+    public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Constant) {
             this.setMultiplier(((Constant) item).getNumber() * getMultiplier());
             return this;
@@ -114,10 +114,10 @@ public class Addition extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean aKindOf(iExpressionItem item) {
+    public boolean aKindOf(IExpressionItem item) {
         if (item instanceof Addition add_item) {
-            iExpressionItem op1 = add_item.getOperand1();
-            iExpressionItem op2 = add_item.getOperand2();
+            IExpressionItem op1 = add_item.getOperand1();
+            IExpressionItem op2 = add_item.getOperand2();
             return op1.aKindOf(getOperand1()) && op2.aKindOf(getOperand2())
                 ||
                 op2.aKindOf(getOperand1()) && op1.aKindOf(getOperand2());
@@ -132,10 +132,10 @@ public class Addition extends aOperation {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
-    public boolean equals(iExpressionItem item) {
+    public boolean equals(IExpressionItem item) {
         if (item instanceof Addition add_item) {
-            iExpressionItem op1 = add_item.getOperand1();
-            iExpressionItem op2 = add_item.getOperand2();
+            IExpressionItem op1 = add_item.getOperand1();
+            IExpressionItem op2 = add_item.getOperand2();
             if ((op1.equals(getOperand1()) && op2.equals(getOperand2()))
                 ||
                 (op2.equals(getOperand1()) && op1.equals(getOperand2()))) {

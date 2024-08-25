@@ -13,5 +13,5 @@ public interface iMultivariantLogic {
      *
      * @return string or other variants for choosers
      */
-    ArrayList<iExpressionItem> getVariants();
+    ArrayList<IExpressionItem> getVariants();
 }
