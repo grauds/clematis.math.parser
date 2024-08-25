@@ -3,7 +3,6 @@ package org.clematis.math.v1.algorithm;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import org.clematis.math.v1.AbstractConstant;
@@ -14,6 +13,7 @@ import org.clematis.math.v1.iExpressionItem;
 import org.clematis.math.v1.iMultivariantLogic;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.clematis.math.v2.utils.StringUtils;
+import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Text;
@@ -23,6 +23,11 @@ import org.jdom2.xpath.XPath;
  * A collection of algorithm utilities
  */
 public class AlgorithmUtils {
+
+    public static final String ATTRIBUTE_CODE = "code";
+    public static final String TOKEN_DELIMITER = "\"";
+    private static final String IN_LINE_MESSAGE = " in line ";
+    private static final String UNDEFINED_VARIABLE_MESSAGE = "Undefined variable: ";
     /**
      * Algorithm XML may be static, i.e. has only empty <algorithm> elements.
      * In this case algorithm does nothing and considered empty
@@ -32,17 +37,15 @@ public class AlgorithmUtils {
      */
     public static boolean isEmpty(Element algorithmXML) {
         try {
-            boolean qu_params = false;
             XPath path = XPath.newInstance(".//param");
-            List params = path.selectNodes(algorithmXML);
-            qu_params = (params.size() != 0);
+            List<?> params = path.selectNodes(algorithmXML);
 
-            boolean bsh_code = false;
-            if (algorithmXML.getChild("code") != null) {
-                bsh_code = !algorithmXML.getChildText("code").trim().equals("");
+            boolean hasCode = false;
+            if (algorithmXML.getChild(ATTRIBUTE_CODE) != null) {
+                hasCode = !algorithmXML.getChildText(ATTRIBUTE_CODE).trim().isEmpty();
             }
 
-            return !qu_params && !bsh_code;
+            return params.isEmpty() && !hasCode;
         } catch (JDOMException e) {
             return false;
         }
@@ -54,9 +57,8 @@ public class AlgorithmUtils {
      *
      * @param items - list of 'item' elements
      */
-    public static void removeAlgorithmicAttributes(List items) {
-        for (int i = 0; i < items.size(); i++) {
-            Element item = (Element) items.get(i);
+    public static void removeAlgorithmicAttributes(List<Element> items) {
+        for (Element item : items) {
             item.removeAttribute("algorithm");
         }
     }
@@ -68,20 +70,21 @@ public class AlgorithmUtils {
      * @param element element to process
      * @return String containing element text.
      */
-    public static String substituteParameters(iParameterProvider algorithm, Element element) {
+    public static String substituteParameters(IParameterProvider algorithm, Element element) {
         StringBuilder sb = new StringBuilder();
-        List list = element.getContent();
-        Iterator it = list.iterator();
-        while (it.hasNext()) {
-            Object contentItem = it.next();
+        List<Content> list = element.getContent();
+
+        for (Object contentItem : list) {
             if (contentItem instanceof Text) {
                 sb.append(((Text) contentItem).getText());
-            } else if (contentItem instanceof Element child) {
-                if (child.getName().equals("variable") && child.getNamespacePrefix().equals("uni")) {
-                    Parameter parameter = algorithm.getParameter(child.getAttributeValue("name"));
-                    if (parameter != null) {
-                        sb.append(parameter.getOutputValue(true));
-                    }
+            } else if (contentItem instanceof Element child
+                && child.getName().equals("variable")
+                && child.getNamespacePrefix().equals("uni")
+            ) {
+
+                Parameter parameter = algorithm.getParameter(child.getAttributeValue("name"));
+                if (parameter != null) {
+                    sb.append(parameter.getOutputValue(true));
                 }
             }
         }
@@ -93,11 +96,12 @@ public class AlgorithmUtils {
      *
      * @param exprRoot the expression root.
      * @param strList  the strings container.
-     * @throws Exception
      */
-    public static void findStringVariants(iParameterProvider provider,
-                                          iExpressionItem exprRoot, HashSet<String> strList)
-        throws Exception {
+    @SuppressWarnings("checkstyle:NestedIfDepth")
+    public static void findStringVariants(IParameterProvider provider,
+                                          iExpressionItem exprRoot,
+                                          HashSet<String> strList
+    ) {
         if (exprRoot instanceof iMultivariantLogic logic) {
             ArrayList<iExpressionItem> variants = logic.getVariants();
             for (iExpressionItem variant : variants) {
@@ -105,7 +109,7 @@ public class AlgorithmUtils {
             }
         } else if (exprRoot instanceof StringConstant) {
             String argumentString = ((StringConstant) exprRoot).getValue(null);
-            /** this argument may contain parameter which is a multivariant logic instance */
+            /* this argument may contain parameter which is a multivariant logic instance */
             if (isParameterName(argumentString)) {
                 Parameter p = provider.getParameter(argumentString);
                 if (p != null) {
@@ -132,29 +136,38 @@ public class AlgorithmUtils {
      * if flag "skipInsideStrings" is set
      *
      * @param string            the explored string
-     * @param currentLine
+     * @param currentLine       the current line of the algorithm
      * @param skipInsideStrings quoted parameters will be skipped,
      *                          if this flag is set
      * @return array list with parameter names, may be empty, never null
      */
-    public static String replaceParameters(String string, iParameterProvider provider, int currentLine,
-                                           boolean skipInsideStrings)
-        throws AlgorithmException {
-        if (provider != null && string != null && !string.trim().equals("")) {
+    @SuppressWarnings({
+        "checkstyle:NestedIfDepth",
+        "checkstyle:ParameterAssignment",
+        "checkstyle:CyclomaticComplexity",
+        "checkstyle:InnerAssignment"
+    })
+    public static String replaceParameters(String string,
+                                           IParameterProvider provider,
+                                           int currentLine,
+                                           boolean skipInsideStrings
+    ) throws AlgorithmException {
+        if (provider != null && string != null && !string.trim().isEmpty()) {
             List<String> tokens;
-            /** this parameter stops recursion if failed to find something, that looks like parameter */
+            /* this parameter stops recursion if failed to find something, that looks like parameter */
             boolean failedToFindParameter = false;
-            /** not found */
-            StringBuffer notFoundParams = new StringBuffer();
-            /** repeat until string has parameters */
+            /* not found */
+            StringBuilder notFoundParams = new StringBuilder();
+            /* repeat until string has parameters */
             while ((tokens = StringUtils.tokenizeReg(string, Parameter.FIND_EXPRESSION, false)).size() > 1
-                && !failedToFindParameter) {
-                /** number of apos signs */
+                && !failedToFindParameter
+            ) {
+                /* number of apos signs */
                 int apos = 0;
-                /** substitution step results */
+                /* substitution step results */
                 StringBuilder result = new StringBuilder();
                 for (String token : tokens) {
-                    /** filter only parameters */
+                    /* filter only parameters */
                     if (isParameterName(token) && (!skipInsideStrings || apos % 2 == 0)) {
                         Parameter param = provider.getParameter(token);
 
@@ -163,19 +176,23 @@ public class AlgorithmUtils {
                                 Key key = param.getContainer().getParameterKey(token);
                                 if (key != null && key.getLine() > currentLine) {
                                     throw new AlgorithmException(
-                                        "Undefined variable: " + param.getName() + " in line " + (currentLine + 1));
+                                        UNDEFINED_VARIABLE_MESSAGE
+                                        + param.getName()
+                                        + IN_LINE_MESSAGE
+                                        + (currentLine + 1)
+                                    );
                                 }
                             }
 
                             if (param.lessThanZero()) {
-                                result.append("(" + param.getOutputValue(false) + ")");
+                                result.append("(").append(param.getOutputValue(false)).append(")");
                             } else {
                                 result.append(param.getOutputValue(false));
                             }
                         } else {
-                            /** cannot find parameter - leave it as it is*/
+                            /* cannot find parameter - leave it as it is*/
                             int cursor = -1;
-                            while ((cursor = token.indexOf("\"", cursor + 1)) != -1) {
+                            while ((cursor = token.indexOf(TOKEN_DELIMITER, cursor + 1)) != -1) {
                                 apos++;
                             }
                             result.append(token);
@@ -185,20 +202,21 @@ public class AlgorithmUtils {
                         }
                     } else {
                         int cursor = -1;
-                        while ((cursor = token.indexOf("\"", cursor + 1)) != -1) {
+                        while ((cursor = token.indexOf(TOKEN_DELIMITER, cursor + 1)) != -1) {
                             apos++;
                         }
                         result.append(token);
                     }
                 }
-                /** save modified string */
+                /* save modified string */
                 string = result.toString();
             }
 
             if (failedToFindParameter) {
-                throw new AlgorithmException("Undefined variable: " +
-                    notFoundParams.toString().subSequence(0, notFoundParams.toString().length() - 1) + " in line " +
-                    (currentLine + 1));
+                throw new AlgorithmException(UNDEFINED_VARIABLE_MESSAGE
+                    + notFoundParams.toString().subSequence(0, notFoundParams.toString().length() - 1)
+                    + IN_LINE_MESSAGE
+                    + (currentLine + 1));
             }
         }
         return string;
@@ -221,11 +239,12 @@ public class AlgorithmUtils {
      * @return numeric argument for a function. Accepts either constants or simple fractions.
      */
     public static Constant getNumericArgument(iExpressionItem item) throws AlgorithmException {
+        Constant result = null;
         if (item instanceof Constant) {
-            return (Constant) item;
+            result = (Constant) item;
         } else if (item instanceof SimpleFraction) {
-            return ((SimpleFraction) item).getProduct();
+            result = ((SimpleFraction) item).getProduct();
         }
-        return null;
+        return result;
     }
 }

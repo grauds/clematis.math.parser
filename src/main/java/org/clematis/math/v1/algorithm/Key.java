@@ -3,10 +3,16 @@ package org.clematis.math.v1.algorithm;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Key for parameters and functions hashtable
  */
+@Setter
+@Getter
 public class Key implements Serializable {
+
     private String name = "";
     private int no = 0;
     private boolean function = false;
@@ -29,14 +35,6 @@ public class Key implements Serializable {
         return getPartId().hashCode() + getName().hashCode() * 2 + getNo() + (isFunction() ? 1 : 0);
     }
 
-    public int getLine() {
-        return line;
-    }
-
-    public void setLine(int line) {
-        this.line = line;
-    }
-
     public boolean equals(Object key) {
         if (this == key) {
             return true;
@@ -54,31 +52,8 @@ public class Key implements Serializable {
         return name != null ? name.trim() : "";
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getNo() {
-        return no;
-    }
-
-    public void setNo(int no) {
-        this.no = no;
-    }
-
-    public boolean isFunction() {
-        return function;
-    }
-
-    public void setFunction(boolean function) {
-        this.function = function;
-    }
-
     public String getPartId() {
         return partId != null ? partId.trim() : "";
     }
 
-    public void setPartId(String partId) {
-        this.partId = partId;
-    }
 }

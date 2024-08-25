@@ -5,18 +5,17 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.iExpressionItem;
 import org.jdom2.Element;
 
+import lombok.Getter;
 /**
- *
+ * Class contains an instance of {@link Parameter} and serves as a reference to it.
  */
+@Getter
 public class ParameterReference implements iExpressionItem {
-    Parameter origin = null;
+
+    Parameter origin;
 
     public ParameterReference(Parameter origin) {
         this.origin = origin;
-    }
-
-    public Parameter getOrigin() {
-        return origin;
     }
 
     /**
@@ -39,7 +38,7 @@ public class ParameterReference implements iExpressionItem {
      *                          and functions provider
      * @return expression item instance
      */
-    public iExpressionItem calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public iExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         return calculate();
     }
 
@@ -110,9 +109,9 @@ public class ParameterReference implements iExpressionItem {
     }
 
     /**
-     * Sets constant multiplier
+     * Sets constant multiplier, the expression will be multiplied by this number in calculation
      *
-     * @param multiplier
+     * @param multiplier for the expression
      */
     public void setMultiplier(double multiplier) {
         if (origin.getExpressionRoot() != null) {
@@ -121,8 +120,7 @@ public class ParameterReference implements iExpressionItem {
     }
 
     /**
-     * Provides mathml formatted element, representing
-     * expression subtree.
+     * Provides mathml formatted element, representing expression subtree.
      *
      * @return mathml formatted element
      */

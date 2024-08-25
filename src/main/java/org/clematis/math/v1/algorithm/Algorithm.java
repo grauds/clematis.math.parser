@@ -422,7 +422,7 @@ public class Algorithm extends DefaultParameterProvider {
             /**
              * Get algorithm with id of this taken algorithm
              */
-            iParameterProvider p = algorithm.getAlgorithm(this.getIdent());
+            IParameterProvider p = algorithm.getAlgorithm(this.getIdent());
 
             if (p instanceof Algorithm) {
                 algorithm = (Algorithm) p;
@@ -529,7 +529,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @return calculated algorithm instance
      * @throws AlgorithmException throws exception if algorithm cannot be created
      */
-    static Algorithm createFromAlgorithm(iParameterProvider qalg) throws AlgorithmException {
+    static Algorithm createFromAlgorithm(IParameterProvider qalg) throws AlgorithmException {
         return createFromAlgorithm(qalg, null);
     }
 
@@ -541,7 +541,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @return calculated algorithm instance
      * @throws AlgorithmException throws exception if algorithm cannot be created
      */
-    static Algorithm createFromAlgorithm(iParameterProvider qalg, HashMap<Key, iValue> params)
+    static Algorithm createFromAlgorithm(IParameterProvider qalg, HashMap<Key, iValue> params)
         throws AlgorithmException {
 
         if (qalg instanceof Algorithm) {

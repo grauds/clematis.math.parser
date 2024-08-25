@@ -12,7 +12,7 @@ import org.clematis.math.v1.Constant;
  * Default parameter provider is used to provide generic
  * random variable values to expression tree.
  */
-public class DefaultVariableProvider implements iVariableProvider {
+public class DefaultVariableProvider implements IVariableProvider {
     /**
      * Randomizer.
      */
@@ -20,6 +20,7 @@ public class DefaultVariableProvider implements iVariableProvider {
     /**
      * Maximum power
      */
+    @SuppressWarnings("checkstyle:MagicNumber")
     private static int power = 15;
     /**
      * List of parameters.

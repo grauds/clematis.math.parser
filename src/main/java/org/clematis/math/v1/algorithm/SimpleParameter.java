@@ -9,10 +9,21 @@ import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v2.utils.StringUtils;
 
+import lombok.Getter;
 /**
- * Simple parameter - the holder for value and
+ * Simple parameter - the holder for value and name of {@link Parameter}
  */
+@Getter
 public class SimpleParameter implements Serializable {
+    /**
+     * Regular expression to find parameter in a text
+     */
+    public static final String FIND_EXPRESSION = "(\\x24[a-zA-Z0-9_]+)|(\\x24\\x7B[a-zA-Z0-9_]+\\x7D)";
+    /**
+     * Regular expression to all parameters in a text
+     */
+    public static final String FIND_EXPRESSION_ALL =
+        "(\\x24[a-zA-Z_]+[0-9_]*)|(\\x24\\x7B[a-zA-Z_]+[0-9_]*\\x7D)|condition";
     /**
      * Parameter name.
      */
@@ -20,26 +31,7 @@ public class SimpleParameter implements Serializable {
     /**
      * Last calculation result of the parameter expression.
      */
-    protected AbstractConstant currentResult = null;
-    /**
-     * Regular expression to find parameter in question text
-     */
-    public final static String FIND_EXPRESSION = "(\\x24[a-zA-Z0-9_]+)|(\\x24\\x7B[a-zA-Z0-9_]+\\x7D)";
-    /**
-     * Regular expression to find parameter in question text
-     */
-    public final static String FIND_EXPRESSION_ALL =
-        "(\\x24[a-zA-Z_]+[0-9_]*)|(\\x24\\x7B[a-zA-Z_]+[0-9_]*\\x7D)|condition";
-
-    /**
-     * Gets parameter name.
-     *
-     * @return <code>String</code> containing parameter name.
-     */
-    public String getName() {
-        return name;
-    }
-
+    private AbstractConstant currentResult = null;
     /**
      * Sets parameter name
      *
@@ -50,27 +42,25 @@ public class SimpleParameter implements Serializable {
     }
 
     /**
-     * Finds parameters in string. Quoted parameters will be skipped,
-     * if flag "skipInsideStrings" is set
+     * Finds parameters in string. Quoted parameters will be skipped, if flag "skipInsideStrings" is set
      *
      * @param string            the explored string
      * @param skipInsideStrings quoted parameters will be skipped,
      *                          if this flag is set
      * @return array list with parameter names, may be empty, never null
      */
-    public static ArrayList findParameters(String string,
-                                           iParameterProvider provider,
+    public static ArrayList<String> findParameters(String string,
+                                           IParameterProvider provider,
                                            boolean skipInsideStrings) {
-        ArrayList result = new ArrayList();
-        if (provider != null && string != null && !string.trim().equals("")) {
+        ArrayList<String> result = new ArrayList<>();
+        if (provider != null && string != null && !string.trim().isEmpty()) {
             List<String> tokens = StringUtils.tokenizeReg(string, FIND_EXPRESSION, false);
             int apos = 0;
-            for (int i = 0; i < tokens.size(); i++) {
-                /** filter only parameters */
-                String token = tokens.get(i);
-
-                if (provider.getParameter(token) != null &&
-                    (!skipInsideStrings || apos % 2 == 0)) {
+            for (String token : tokens) {
+                /* filter only parameters */
+                if (provider.getParameter(token) != null
+                    && (!skipInsideStrings || apos % 2 == 0)
+                ) {
                     result.add(token);
                 } else {
                     int cursor = -1;
@@ -84,18 +74,9 @@ public class SimpleParameter implements Serializable {
     }
 
     /**
-     * Gets value wrapper.
+     * Sets result manually, usually result is being calculated
      *
-     * @return <code>iConstant</code> representing value wrapper.
-     */
-    public AbstractConstant getCurrentResult() {
-        return currentResult;
-    }
-
-    /**
-     * Sets current result violently
-     *
-     * @param currentResult
+     * @param currentResult to set
      */
     void setCurrentResult(AbstractConstant currentResult) {
         if (currentResult != null) {
@@ -118,8 +99,8 @@ public class SimpleParameter implements Serializable {
     }
 
     /**
-     * Alternate parameter name, i.e. make following
-     * transitions:
+     * Alternate parameter name, i.e. make following transitions:
+     *
      * <p>
      * $a -> ${a}
      * ${a} -> $a
@@ -127,6 +108,7 @@ public class SimpleParameter implements Serializable {
      * @param name of parameter to alternate
      * @return new parameter name
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public static String alternateParameterName(String name) {
         if (Parameter.CONDITION_NAME.equals(name)) {
             return name;

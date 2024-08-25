@@ -2,18 +2,17 @@
 // Created: Jan 21, 2003 T 11:34:43 AM
 package org.clematis.math.v1.algorithm;
 
-import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.iValue;
-
 import java.util.HashMap;
 import java.util.Iterator;
+
+import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.v1.iValue;
 
 /**
  * Provider of parameters for functions.
  */
-public interface iParameterProvider extends iSimpleParameterProvider,
-    IParameterFormatter,
-    Iterable<String> {
+public interface IParameterProvider extends ISimpleParameterProvider, IParameterFormatter, Iterable<String> {
+
     /**
      * Returns parameter names
      *
@@ -50,15 +49,17 @@ public interface iParameterProvider extends iSimpleParameterProvider,
     void calculateParameters() throws AlgorithmException;
 
     /**
-     * Calculates values of all parameters participating in algorithm.
+     * Calculates values of all parameters participating in algorithm with a map
+     * of parameters with values, so the parameters from the map are substituted to the
+     * algorithm with values from the map.
      */
     void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException;
 
     /**
-     * Returns parameter, found by custom ident.
+     * Returns parameter, found by custom identifier.
      *
      * @param ident under which some parameters may store
-     * @return parameter, found by custom ident
+     * @return parameter, found by custom identifier
      */
     Parameter getParameterByCustomIdent(String ident);
 }

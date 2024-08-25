@@ -79,7 +79,7 @@ public class AlgorithmFactory {
      *
      * @param algorithmXML - xml notation of an algorithm
      */
-    public static iParameterProvider createFromBeanShell(Element algorithmXML) {
+    public static IParameterProvider createFromBeanShell(Element algorithmXML) {
         return BshParameterProvider.createFromQuestionXML(algorithmXML);
     }
 
@@ -88,7 +88,7 @@ public class AlgorithmFactory {
      *
      * @param algorithmXML - xml notation of an algorithm
      */
-    public static iParameterProvider createAlgorithm(Element algorithmXML) {
+    public static IParameterProvider createAlgorithm(Element algorithmXML) {
         return Algorithm.createFromXML(algorithmXML);
     }
 
@@ -97,7 +97,7 @@ public class AlgorithmFactory {
      *
      * @param algorithmXML - xml notation of an algorithm
      */
-    public static iParameterProvider createAlgorithm(String algorithmXML) throws IOException, JDOMException {
+    public static IParameterProvider createAlgorithm(String algorithmXML) throws IOException, JDOMException {
         if (algorithmXML != null && !algorithmXML.trim().isEmpty()) {
             Document doc = load(new StringReader(algorithmXML));
             Element root = doc.getRootElement();
@@ -112,11 +112,11 @@ public class AlgorithmFactory {
      * @param algorithm to get a copy of
      * @return a copy of given algorithm
      */
-    public static iParameterProvider copyAlgorithm(
-        iParameterProvider algorithm, HashMap<Key, iValue> params
+    public static IParameterProvider copyAlgorithm(
+        IParameterProvider algorithm, HashMap<Key, iValue> params
     ) throws AlgorithmException {
 
-        iParameterProvider result = algorithm;
+        IParameterProvider result = algorithm;
         if (algorithm instanceof BshParameterProvider) {
             result = BshParameterProvider.createFromBshParameterProvider(algorithm, params);
         } else if (algorithm instanceof Algorithm) {
@@ -131,7 +131,7 @@ public class AlgorithmFactory {
      * @param algorithm to get a copy of
      * @return a copy of given algorithm
      */
-    public static iParameterProvider copyAlgorithm(iParameterProvider algorithm) throws AlgorithmException {
+    public static IParameterProvider copyAlgorithm(IParameterProvider algorithm) throws AlgorithmException {
         return copyAlgorithm(algorithm, null);
     }
 
@@ -141,7 +141,7 @@ public class AlgorithmFactory {
      * @param algorithm to store
      * @return xml string
      */
-    public static String toXML(iParameterProvider algorithm) throws IOException {
+    public static String toXML(IParameterProvider algorithm) throws IOException {
         return printToString(algorithm.toXML());
     }
 
@@ -153,10 +153,10 @@ public class AlgorithmFactory {
      * @param algorithmResultsXML algorithm xml from taken question
      * @return algorithm with results of calculation
      */
-    public static iParameterProvider loadAlgorithm(Element algorithmXML, Element algorithmResultsXML)
+    public static IParameterProvider loadAlgorithm(Element algorithmXML, Element algorithmResultsXML)
         throws AlgorithmException {
 
-        iParameterProvider algorithm;
+        IParameterProvider algorithm;
 
         // get version
         String version = null;
@@ -195,7 +195,7 @@ public class AlgorithmFactory {
      * @param algorithmResultsXML algorithm results xml
      * @return algorithm with results of calculation
      */
-    public static iParameterProvider loadAlgorithm(String algorithmXML, String algorithmResultsXML)
+    public static IParameterProvider loadAlgorithm(String algorithmXML, String algorithmResultsXML)
         throws IOException, JDOMException, AlgorithmException {
 
         Element algorithm = load(algorithmXML);
@@ -216,7 +216,7 @@ public class AlgorithmFactory {
      *
      * @param algorithm instance to save
      */
-    public static String saveAlgorithm(iParameterProvider algorithm) throws IOException {
+    public static String saveAlgorithm(IParameterProvider algorithm) throws IOException {
         return printToString(algorithm.save());
     }
 }

@@ -7,17 +7,14 @@ import org.clematis.math.v1.AlgorithmException;
  * Condition exception is thrown if some condition is not satisfied
  */
 public class ConditionException extends AlgorithmException {
+
+    public static final String CONDITION_FAILED_IN_MESSAGE = "Condition failed in ";
+
     String conditionName = "";
     String conditionCode = "";
 
-    ConditionException(String conditionName, String conditionCode) {
-        super("Condition failed in ");
-        this.conditionName = conditionName;
-        this.conditionCode = conditionCode;
-    }
-
     ConditionException(String conditionName, String conditionCode, int line) {
-        super("Condition failed in ", line);
+        super(CONDITION_FAILED_IN_MESSAGE, line);
         this.conditionName = conditionName;
         this.conditionCode = conditionCode;
     }
@@ -30,13 +27,5 @@ public class ConditionException extends AlgorithmException {
      */
     public String getMessage() {
         return super.getMessage() + "condition: { " + conditionName + " " + conditionCode + " }";
-    }
-
-    public String getConditionName() {
-        return conditionName;
-    }
-
-    public String getConditionCode() {
-        return conditionCode;
     }
 }

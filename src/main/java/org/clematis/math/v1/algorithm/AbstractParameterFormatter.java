@@ -8,7 +8,7 @@ import lombok.Getter;
  *
  */
 @Getter
-abstract class AbstractParameterFormatter implements iParameterProvider {
+abstract class AbstractParameterFormatter implements IParameterProvider {
 
     /**
      * Output text format settings

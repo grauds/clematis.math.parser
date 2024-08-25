@@ -8,7 +8,7 @@ import org.clematis.math.v1.functions.aFunction;
  * Provides generic functions for qu algorithms, declared earlier in
  * algorithm being calculated.
  */
-public interface iFunctionProvider {
+public interface IFunctionProvider {
     /**
      * Provides functions for qu algorithms.
      *

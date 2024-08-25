@@ -8,14 +8,15 @@ import org.clematis.math.v1.AlgorithmException;
 /**
  *
  */
-public interface iSimpleParameterProvider {
+public interface ISimpleParameterProvider {
+
     /**
      * Return parameter constant
      *
-     * @param in_varName parameter name
+     * @param name parameter name
      * @return parameter value, string or double
      */
-    AbstractConstant getParameterConstant(String in_varName) throws AlgorithmException;
+    AbstractConstant getParameterConstant(String name) throws AlgorithmException;
 
     /**
      * Provides the parameter.
