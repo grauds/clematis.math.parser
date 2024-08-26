@@ -5,13 +5,18 @@ package org.clematis.math.v1;
 
 import java.io.Serializable;
 
-import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.algorithm.IParameterProvider;
+import org.clematis.math.v1.algorithm.Parameter;
 import org.jdom2.Element;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Abstract constant, may be string or numeric
  */
+@Getter
+@Setter
 public abstract class AbstractConstant extends SimpleValue implements IExpressionItem, Serializable {
     /**
      * This flag allows application of significant digits.
@@ -71,7 +76,7 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
     /**
      * Sets constant multiplier
      *
-     * @param multiplier
+     * @param multiplier for the result of this calculation
      */
     public void setMultiplier(double multiplier) {
     }
@@ -92,13 +97,15 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
      * @return instance of <code>StringConstant</code> or <code>NumberConstant</code> classes.
      */
     public static AbstractConstant create(String value) {
+        AbstractConstant c = null;
         if (value != null) {
-            if (value.trim().equals("") || value.charAt(0) == '"') {
-                return new StringConstant(value);
+            if (value.trim().isEmpty() || value.charAt(0) == '"') {
+                c = new StringConstant(value);
+            } else {
+                c = new Constant(value);
             }
-            return new Constant(value);
         }
-        return null;
+        return c;
     }
 
     /**
@@ -110,15 +117,18 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
      * @return instance of <code>StringConstant</code> or <code>NumberConstant</code> classes.
      */
     public static AbstractConstant create(Element element) {
+        AbstractConstant c = new Constant(element);
+
         if (element != null) {
             String type = element.getAttributeValue("type");
             if ("number".equals(type)) {
-                return new Constant(element);
+                c = new Constant(element);
             } else if ("string".equals(type)) {
-                return new StringConstant(element);
+                c = new StringConstant(element);
             }
         }
-        return new Constant(element);
+
+        return c;
     }
 
     /**
@@ -127,15 +137,6 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
      * @return xml element, representing constant
      */
     public abstract Element toXML();
-
-    /**
-     * Sets the number of significant digits.
-     *
-     * @param sdNumber the number of significant digits.
-     */
-    public void setSdNumber(int sdNumber) {
-        this.sdNumber = sdNumber;
-    }
 
     /**
      * Returns the number of significant digits.
@@ -179,14 +180,5 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
         } else {
             return this.sdEnable;
         }
-    }
-
-    /**
-     * Set parameter for the constant
-     *
-     * @param parameter for the constant
-     */
-    public void setParameter(Parameter parameter) {
-        this.parameter = parameter;
     }
 }
