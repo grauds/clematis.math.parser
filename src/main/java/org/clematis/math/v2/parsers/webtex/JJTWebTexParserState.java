@@ -5,16 +5,16 @@ package org.clematis.math.v2.parsers.webtex;
 import org.clematis.math.v2.parsers.Node;
 
 class JJTWebTexParserState {
-    private final java.util.Stack nodes;
-    private final java.util.Stack marks;
+    private final java.util.Stack<Node> nodes;
+    private final java.util.Stack<Integer> marks;
 
     private int sp;        // number of nodes on stack
     private int mk;        // current mark
     private boolean node_created;
 
     JJTWebTexParserState() {
-        nodes = new java.util.Stack();
-        marks = new java.util.Stack();
+        nodes = new java.util.Stack<>();
+        marks = new java.util.Stack<>();
         sp = 0;
         mk = 0;
     }
@@ -51,14 +51,14 @@ class JJTWebTexParserState {
        stack.  */
     Node popNode() {
         if (--sp < mk) {
-            mk = ((Integer) marks.pop()).intValue();
+            mk = marks.pop();
         }
-        return (Node) nodes.pop();
+        return nodes.pop();
     }
 
     /* Returns the node currently on the top of the stack. */
     Node peekNode() {
-        return (Node) nodes.peek();
+        return nodes.peek();
     }
 
     /* Returns the number of children on the stack in the current node
@@ -72,12 +72,12 @@ class JJTWebTexParserState {
         while (sp > mk) {
             popNode();
         }
-        mk = ((Integer) marks.pop()).intValue();
+        mk = marks.pop();
     }
 
 
     void openNodeScope(Node n) {
-        marks.push(Integer.valueOf(mk));
+        marks.push(mk);
         mk = sp;
         n.jjtOpen();
     }
@@ -88,7 +88,7 @@ class JJTWebTexParserState {
        made the children of the definite node.  Then the definite node
        is pushed on to the stack. */
     void closeNodeScope(Node n, int num) {
-        mk = ((Integer) marks.pop()).intValue();
+        mk = marks.pop();
         while (num-- > 0) {
             Node c = popNode();
             c.jjtSetParent(n);
@@ -108,7 +108,7 @@ class JJTWebTexParserState {
     void closeNodeScope(Node n, boolean condition) {
         if (condition) {
             int a = nodeArity();
-            mk = ((Integer) marks.pop()).intValue();
+            mk = marks.pop();
             while (a-- > 0) {
                 Node c = popNode();
                 c.jjtSetParent(n);
@@ -118,7 +118,7 @@ class JJTWebTexParserState {
             pushNode(n);
             node_created = true;
         } else {
-            mk = ((Integer) marks.pop()).intValue();
+            mk = marks.pop();
             node_created = false;
         }
     }
