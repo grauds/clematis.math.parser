@@ -14,25 +14,31 @@ import org.jdom2.Element;
  * <p>
  * Use following code to reproduce constant behaviour
  * <code>
- * Constant c = new Constant(3.1415487987, 8);
- * c.setMultiplier( 1 );
- * c.setSdEnable( true );
- * OutputFormatSettings out = new OutputFormatSettings();
- * Parameter p = new Parameter("$d", c);
- * p.setCorrectAnswer( true );
- * p.setSdNumber( c.getSdNumber() );
- * Algorithm a = new Algorithm();
- * a.addParameter(p);
- * out.setSdEnable( false  );
- * a.setFormatSettings(out);
- * a.printParameters( System.out );
+ *      Constant c = new Constant(3.1415487987, 8);
+ *      c.setMultiplier( 1 );
+ *      c.setSdEnable( true );
+ *      OutputFormatSettings out = new OutputFormatSettings();
+ *      Parameter p = new Parameter("$d", c);
+ *      p.setCorrectAnswer( true );
+ *      p.setSdNumber( c.getSdNumber() );
+ *      Algorithm a = new Algorithm();
+ *      a.addParameter(p);
+ *      out.setSdEnable( false  );
+ *      a.setFormatSettings(out);
+ *      a.printParameters( System.out );
  * </code>
  */
 public class Constant extends AbstractConstant {
+
+    public static final String SIG_DIGITS_ATTRIBUTE = "sig";
+
+    public static final String SDENABLED_ATTRIBUTE = "sdenabled";
+
+    public static final String DEFAULT_SIGNIFICANT_DIGITS = "1";
     /**
-     * Value of the constant.
+     * Value of the constant is initialized with zero.
      */
-    private BigDecimal number = null;
+    private BigDecimal number = BigDecimal.ZERO;
 
     /**
      * Constructor.
@@ -42,18 +48,17 @@ public class Constant extends AbstractConstant {
     public Constant(Element element) {
         super();
         if (element != null) {
-            if (element.getAttribute("sig") != null) {
+            if (element.getAttribute(SIG_DIGITS_ATTRIBUTE) != null) {
                 try {
-                    setSdNumber(Integer.parseInt(element.getAttributeValue("sig")));
-                } catch (NumberFormatException ex) {
-                }
+                    setSdNumber(Integer.parseInt(element.getAttributeValue(SIG_DIGITS_ATTRIBUTE)));
+                } catch (NumberFormatException ignored) {}
             }
-            if (element.getAttribute("sdenabled") != null) {
+            if (element.getAttribute(SDENABLED_ATTRIBUTE) != null) {
                 try {
-                    setSdEnable(element.getAttributeValue("sdenabled").equals("1") ||
-                        element.getAttributeValue("sdenabled").equals("true"));
-                } catch (NumberFormatException ex) {
-                }
+                    setSdEnable(element.getAttributeValue(SDENABLED_ATTRIBUTE).equals(DEFAULT_SIGNIFICANT_DIGITS)
+                        || element.getAttributeValue(SDENABLED_ATTRIBUTE).equals(Boolean.TRUE.toString())
+                    );
+                } catch (NumberFormatException ignored) {}
             }
             this.number = new BigDecimal(element.getText());
         }
@@ -139,38 +144,34 @@ public class Constant extends AbstractConstant {
 
     /**
      * Gets double value of the constant. Applies significant digits, if enabled by algorithm.
-     * NOT for PRESENTATION purposes.
      *
      * @return <code>double</code> with constant's value.
      */
     public double getNumber() {
-        /**
+        /*
          * Apply significant digits
          */
         try {
             if (getSdNumber() > 0 && getSdEnable()) {
-                return Double.parseDouble(Sig.getSigDigits(getExactBigDecimalValue().toString(), getSdNumber()));
+                return Double.parseDouble(Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber()));
             }
-        } catch (NumberFormatException ex) {
-        }
-        /**
+        } catch (NumberFormatException ignored) {}
+        /*
          * If sig digits are not applied, provide exact number
          */
         return getExactBigDecimalValue().doubleValue();
     }
 
     /**
-     * Returns BIG DECIMAL value WITHOUT FORMATTING with SIG digits
+     * Returns BIG DECIMAL value without formatting with sig digits
      *
      * @return big decimal number
      */
     private BigDecimal getExactBigDecimalValue() {
-        if (number != null) {
-            return number;
-        } else if (value != null) {
+        if (value != null) {
             return new BigDecimal(value);
         }
-        return null;
+        return number;
     }
 
     /**
@@ -184,7 +185,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
-                return Sig.getSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
+                return Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
             }
             /**
              * Sig digits are not applied
@@ -197,7 +198,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
-                return Sig.getSigDigits(value, getSdNumber());
+                return Sig.formatWithSigDigits(value, getSdNumber());
             }
             /**
              * If sig digits are not applied - do not change the value (do not round to system precision)
@@ -223,7 +224,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
-                str = Sig.getSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
+                str = Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
             }
             /**
              * If sig digits are not applied, round to system precision
@@ -238,7 +239,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
-                str = Sig.getSigDigits(value, getSdNumber());
+                str = Sig.formatWithSigDigits(value, getSdNumber());
             }
             /**
              * If sig digits are not applied - do not change the value (round to system precision)
@@ -340,7 +341,7 @@ public class Constant extends AbstractConstant {
                  * Division is handled by simple fraction
                  */
                 if (power < 0) {
-                    return new SimpleFraction(new Constant("1"),
+                    return new SimpleFraction(new Constant(DEFAULT_SIGNIFICANT_DIGITS),
                         new Constant(new BigDecimal(ret.getValue(null)).pow(Math.abs(power))));
                 }
                 return new Constant(new BigDecimal(ret.getValue(null)).pow(Math.abs(power)));
@@ -465,10 +466,10 @@ public class Constant extends AbstractConstant {
         Element element = new Element("constant");
         element.setAttribute("type", "number");
         if (sdNumber != 0) {
-            element.setAttribute("sig", Integer.toString(sdNumber));
+            element.setAttribute(SIG_DIGITS_ATTRIBUTE, Integer.toString(sdNumber));
         }
         if (sdEnable) {
-            element.setAttribute("sdenabled", String.valueOf(sdEnable));
+            element.setAttribute(SDENABLED_ATTRIBUTE, String.valueOf(sdEnable));
         }
         element.setText(getValue(null));
         return element;

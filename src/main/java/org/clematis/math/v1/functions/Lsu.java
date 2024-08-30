@@ -55,7 +55,7 @@ public class Lsu extends aFunction2 {
     }
 
     public static double getLSU(String stringDigit, int sigDigits) {
-        String roundedDigit = Sig.getSigDigits(stringDigit, sigDigits);
+        String roundedDigit = Sig.formatWithSigDigits(stringDigit, sigDigits);
         int power = Lsu.getLsuPower(roundedDigit, sigDigits);
         return Math.pow(10, power);
     }

@@ -32,7 +32,7 @@ dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    checkstyle "com.puppycrawl.tools:checkstyle:10.9.3"
+    checkstyle "com.puppycrawl.tools:checkstyle:10.17.0"
 
     implementation "javax.xml.bind:jaxb-api:2.3.0"
     implementation group: 'org.jdom', name: 'jdom', version: '2.0.2'
@@ -40,6 +40,12 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+// ------------ Checkstyle configuration  ---------
+checkstyle {
+    configProperties.configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    configProperties.checkstyleSuppressionFile = file("${project.rootDir}/config/checkstyle/suppressions.xml")
 }
 
 test {

@@ -272,12 +272,13 @@ public class Sig extends aFunction2 {
      * @param digitsRequired required number of significant digits
      * @return resulting number string
      */
-    public static String getSigDigits(String numberString, int digitsRequired) {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public static String formatWithSigDigits(String numberString, int digitsRequired) {
         /*
          * Validate input
          */
-        if (digitsRequired <= 0 || numberString == null || numberString.trim().equals("")) {
-            return numberString;
+        if (digitsRequired <= 0 || numberString == null || numberString.trim().isEmpty()) {
+            return "";
         }
         /*
          * If number is zero, it has 1 sig digit
@@ -286,9 +287,9 @@ public class Sig extends aFunction2 {
             return "0";
         }
         /*
-         * Resulting cut string
+         * Formatted result
          */
-        String cutString = null;
+        String formatted;
         /*
          * Negative flag
          */
@@ -297,12 +298,12 @@ public class Sig extends aFunction2 {
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        numberString = MathUtils.correctAndValidateInput(numberString);
+        formatted = MathUtils.correctAndValidateInput(numberString);
         /*
          * Wrong input, return null
          */
-        if (numberString == null) {
-            return null;
+        if (formatted == null) {
+            return "";
         }
         /*
          * Find index of scientific "e" in input string and if
@@ -324,12 +325,12 @@ public class Sig extends aFunction2 {
         switch (decimalPointIndex) {
             case 0: {
                 //If the number is decimal only: -1 < n < 1
-                cutString = getSigDigitsDecimal(numberString, digitsRequired);
+                formatted = getSigDigitsDecimal(numberString, digitsRequired);
                 /*
                  * Restore 0 before .[input number]
                  */
                 numberString = "0" + numberString;
-                numberString = Decimal.addExtraDigit(cutString, numberString) + exp;
+                numberString = Decimal.addExtraDigit(formatted, numberString) + exp;
                 if (negative) {
                     return "-" + numberString;
                 } else {
@@ -356,19 +357,19 @@ public class Sig extends aFunction2 {
                         } else {
                             exp = "";
                         }
-                        cutString = numberString.substring(0, digitsRequired);
+                        formatted = numberString.substring(0, digitsRequired);
                     } else {
                         int diff = numberString.length() - digitsRequired;
                         StringBuilder sb = new StringBuilder();
                         sb.append("0".repeat(diff));
 
-                        cutString = numberString.substring(0, digitsRequired);
+                        formatted = numberString.substring(0, digitsRequired);
                         if (negative) {
-                            cutString = "-" + Decimal.addExtraDigit(cutString, numberString);
+                            formatted = "-" + Decimal.addExtraDigit(formatted, numberString);
                         } else {
-                            cutString = Decimal.addExtraDigit(cutString, numberString);
+                            formatted = Decimal.addExtraDigit(formatted, numberString);
                         }
-                        cutString += sb.toString();
+                        formatted += sb.toString();
                     }
                 } else {
                     //if there are too few significant digits, this code adds trailing
@@ -377,19 +378,19 @@ public class Sig extends aFunction2 {
                     sb.append(numberString);
                     sb.append(".");
                     sb.append("0".repeat(digitsRequired - numberString.length()));
-                    cutString = sb.toString();
+                    formatted = sb.toString();
                 }
-                return cutString + exp;
+                return formatted + exp;
             }
             default: {
                 //If it is a real number with an integer and decimal value
                 if (negative) {
-                    cutString = "-" + getSigDigitsFloat(numberString, digitsRequired);
+                    formatted = "-" + getSigDigitsFloat(numberString, digitsRequired);
                 } else {
-                    cutString = getSigDigitsFloat(numberString, digitsRequired);
+                    formatted = getSigDigitsFloat(numberString, digitsRequired);
                 }
             }
-            return cutString + exp;
+            return formatted + exp;
         }
     }
 
@@ -398,7 +399,7 @@ public class Sig extends aFunction2 {
      *
      * @return first argument of Sig function
      */
-    public int getSigDigits() {
+    public int formatWithSigDigits() {
         if (arguments != null && arguments.size() == 2) {
             IExpressionItem sigArg = arguments.get(0);
             if (sigArg instanceof Constant) {

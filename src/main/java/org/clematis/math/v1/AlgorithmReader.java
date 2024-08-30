@@ -3,12 +3,12 @@
 
 package org.clematis.math.v1;
 
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.GenericFunction;
-
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * Parses the question algrorithm used for dynamical changing of the
@@ -16,8 +16,6 @@ import java.util.StringTokenizer;
  * The algorithm code is value of "algorithm" field in question bank.
  */
 public class AlgorithmReader {
-    /** The logger. */
-//    private static final Logger log = Logger.getLogger(AlgorithmReader.class);
 
     /**
      * Parses the code and creates the list of parameters.
@@ -27,10 +25,10 @@ public class AlgorithmReader {
     public Algorithm createAlgorithm(String code)
         throws Exception {
         Algorithm algorithm = new Algorithm();
-        ArrayList statements = getStatements(code);
+        ArrayList<String> statements = getStatements(code);
         for (int i = 0; i < statements.size(); i++) {
             try {
-                parseStatement((String) statements.get(i), algorithm);
+                parseStatement(statements.get(i), algorithm);
             } catch (AlgorithmException ex) {
                 throw new AlgorithmException(ex.getMessage(), i + 1);
             }
@@ -45,15 +43,15 @@ public class AlgorithmReader {
      * @param code the parsed code.
      * @return statements list.
      */
-    private ArrayList getStatements(String code) {
-        ArrayList statements = new ArrayList();
+    private ArrayList<String> getStatements(String code) {
+        ArrayList<String> statements = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(code, ";@");
         StringBuilder previousStatements = new StringBuilder();
         boolean opened = false;
 
         while (st.hasMoreTokens()) {
             String statement = st.nextToken().trim();
-            /** if ; is inside of "quoted expression", do not treat it as end of line */
+            /* if ; is inside of "quoted expression", do not treat it as end of line */
             for (int i = 0; i < statement.length(); i++) {
                 char ch = statement.charAt(i);
                 if (ch == '\"') {
@@ -61,10 +59,10 @@ public class AlgorithmReader {
                 }
             }
             if (opened) {
-                previousStatements.append(statement + ";");
+                previousStatements.append(statement).append(";");
                 continue;
             }
-            if (previousStatements.length() > 0) {
+            if (!previousStatements.isEmpty()) {
                 statement = previousStatements + statement;
                 previousStatements = new StringBuilder();
             }
@@ -82,14 +80,13 @@ public class AlgorithmReader {
      *
      * @param statement string statement
      * @param algorithm new algorithm
-     * @throws AlgorithmException
+     * @throws AlgorithmException if parsing isn't successful
      */
-    private void parseStatement(String statement, Algorithm algorithm)
-        throws AlgorithmException {
-        String name = null;
-        String code = null;
-        StringBuilder buffer = new StringBuilder(1024);
-        /**
+    private void parseStatement(String statement, Algorithm algorithm) throws AlgorithmException {
+        String name;
+        String code;
+        StringBuilder buffer = new StringBuilder();
+        /*
          * Start position of parameter code
          */
         int pos = 0;
@@ -104,7 +101,7 @@ public class AlgorithmReader {
             param.setCondition(true);
             algorithm.addParameter(param);
         } else if (statement.startsWith(GenericFunction.GENERIC_FUNCTION_NAME)) {
-            /** add generic function to algorithm */
+            /* add generic function to algorithm */
             algorithm.addFunction(GenericFunction.create(statement));
         } else {
             pos = statement.indexOf('=');
@@ -112,7 +109,6 @@ public class AlgorithmReader {
                 throw new AlgorithmException("Operand '=' is missed: " + statement);
             }
             name = parseParameterName(statement, pos);
-            code = statement.substring(pos + 1);
             param = new Parameter(name, buffer.toString());
             algorithm.addParameter(param);
             buffer.setLength(0);
