@@ -83,15 +83,15 @@ public class AlgorithmReader {
      * @throws AlgorithmException if parsing isn't successful
      */
     private void parseStatement(String statement, Algorithm algorithm) throws AlgorithmException {
-        String name;
-        String code;
-        StringBuilder buffer = new StringBuilder();
+
         /*
          * Start position of parameter code
          */
-        int pos = 0;
-
-        Parameter param = null;
+        int pos;
+        String name;
+        String code;
+        StringBuilder buffer = new StringBuilder();
+        Parameter param;
 
         if (statement.startsWith(Parameter.CONDITION_NAME)) {
             name = Parameter.CONDITION_NAME;
@@ -130,7 +130,7 @@ public class AlgorithmReader {
         if (!name.startsWith("$")) {
             throw new AlgorithmException("Parameter name should starts with '$': " + name);
         }
-        if (name.length() <= 1) {
+        if (name.length() == 1) {
             throw new AlgorithmException("Parameter name is empty");
         }
         return name;

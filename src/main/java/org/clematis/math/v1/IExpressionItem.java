@@ -82,7 +82,7 @@ public interface IExpressionItem {
     /**
      * Sets constant multiplier
      *
-     * @param multiplier
+     * @param multiplier for expression item
      */
     void setMultiplier(double multiplier);
 

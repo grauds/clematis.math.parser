@@ -121,33 +121,6 @@ public class MathUtils {
     }
 
     /**
-     * Returns random sequence of numbers in 0 .. i limits
-     *
-     * @param i exclusive upper limit of sequence
-     * @return random sequence of numbers in 0 .. i limits
-     */
-    public static int[] shuffle(int i) {
-        /** zero filled array */
-        int[] result = new int[i];
-        /** array with ordered numbers */
-        int[] source = new int[i];
-        /** fill result array with random sequence */
-        for (int k = 0; k < i; k++) {
-            /** generate random value - position in source array */
-            int v = MathUtils.rand.nextInt(i);
-            /** if number in position is zero, take next one */
-            while (source[v] == -1) {
-                v = (v < i - 1) ? (v + 1) : 0;
-            }
-            /** copy integer */
-            result[k] = v;
-            /** this cell is used */
-            source[v] = -1;
-        }
-        return result;
-    }
-
-    /**
      * Shuffled numbers from array should be put down as comma-separated string
      *
      * @param randomNumbers

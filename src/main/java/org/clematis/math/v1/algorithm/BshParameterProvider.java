@@ -10,7 +10,7 @@ import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
-import org.clematis.math.v1.iValue;
+import org.clematis.math.v1.IValue;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -63,7 +63,7 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
     /**
      * Calculates values of all parameters participating in algorithm.
      */
-    public void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException {
+    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
     /*    parameters.clear();
         if ( code != null )
         {
@@ -153,7 +153,7 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     void load(Element algElement) throws AlgorithmException {
         /*  load parameters */
-        HashMap<Key, iValue> params = new HashMap<>();
+        HashMap<Key, IValue> params = new HashMap<>();
         List<Element> calculatedParams = algElement.getChildren("param");
         for (Element element : calculatedParams) {
             Key key = new Key(element.getAttributeValue("name"));
@@ -235,7 +235,7 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      * @param params some parameters values
      * @return calculated algorithm instance
      */
-    static BshParameterProvider createFromBshParameterProvider(IParameterProvider qalg, HashMap<Key, iValue> params)
+    static BshParameterProvider createFromBshParameterProvider(IParameterProvider qalg, HashMap<Key, IValue> params)
         throws AlgorithmException {
 
         if (qalg instanceof BshParameterProvider qalgorithm) {

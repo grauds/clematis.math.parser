@@ -13,7 +13,7 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.functions.GenericFunction;
 import org.clematis.math.v1.functions.aFunction;
-import org.clematis.math.v1.iValue;
+import org.clematis.math.v1.IValue;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -195,7 +195,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @return value from extra list
      */
     @SuppressWarnings("checkstyle:ReturnCount")
-    protected iValue findKey(String name, int no, HashMap<Key, iValue> params) {
+    protected IValue findKey(String name, int no, HashMap<Key, IValue> params) {
 
         if (params != null && name != null) {
             /*
@@ -390,7 +390,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      *
      * @throws AlgorithmException on error.
      */
-    public void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException {
+    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
     }
 
     /**

@@ -7,7 +7,7 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iMultivariantLogic;
+import org.clematis.math.v1.IOptions;
 
 /**
  * Given a whole number 0, 1, 2, ... this returns the n'th item in the list
@@ -17,7 +17,7 @@ import org.clematis.math.v1.iMultivariantLogic;
  * <p>
  * sets $prime to a random choice from the first 5 primes.
  */
-public class Switch extends aFunction2 implements iMultivariantLogic {
+public class Switch extends aFunction2 implements IOptions {
     /**
      * Calculate a subtree of expression items
      *
@@ -62,7 +62,7 @@ public class Switch extends aFunction2 implements iMultivariantLogic {
      *
      * @return switched variants list.
      */
-    public ArrayList<IExpressionItem> getVariants() {
+    public ArrayList<IExpressionItem> getOptions() {
         ArrayList<IExpressionItem> variants = new ArrayList<IExpressionItem>();
         if (arguments != null && arguments.size() > 1) {
             for (int i = 1; i < arguments.size(); i++) {

@@ -4,7 +4,7 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.MathUtils;
+import org.clematis.math.MathUtils;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
 
 /**

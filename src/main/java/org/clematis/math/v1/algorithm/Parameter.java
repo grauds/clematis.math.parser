@@ -284,7 +284,7 @@ public class Parameter extends SimpleParameter {
 
     public boolean getSdEnable() {
         if (container != null && container.getFormatSettings() != null) {
-            return isSdApplicable() && container.getFormatSettings().getSdEnable();
+            return isSdApplicable() && container.getFormatSettings().isSdEnable();
         } else {
             return this.isSdApplicable();
         }
@@ -295,7 +295,7 @@ public class Parameter extends SimpleParameter {
 
         if (container != null && container.getFormatSettings() != null) {
             if (!isSdIndependent()) {
-                return !container.getFormatSettings().isqTolerance() || pureApplicable;
+                return !container.getFormatSettings().isQTolerance() || pureApplicable;
             }
         }
 

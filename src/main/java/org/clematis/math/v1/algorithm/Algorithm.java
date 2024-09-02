@@ -16,7 +16,7 @@ import org.clematis.math.v1.OutputFormatSettings;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.iValue;
+import org.clematis.math.v1.IValue;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 
@@ -206,7 +206,7 @@ public class Algorithm extends DefaultParameterProvider {
      *
      * @throws AlgorithmException on error.
      */
-    public void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException {
+    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
         boolean success = false;
         String message = "";
         int conditionFailures = 0;
@@ -265,7 +265,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @throws ConditionException is thrown if condition is not satisfied
      * @throws AlgorithmException is thrown if error occurs in evaluating any parameter
      */
-    private boolean calculateParameters(HashMap<Key, iValue> params, boolean calculateAllParameters)
+    private boolean calculateParameters(HashMap<Key, IValue> params, boolean calculateAllParameters)
         throws ConditionException, AlgorithmException {
         boolean zero_failed = false;
         HashMap<String, Integer> randomized_params_counter = new HashMap<String, Integer>();
@@ -290,7 +290,7 @@ public class Algorithm extends DefaultParameterProvider {
                     if (randomized_params_counter.containsKey(param.getName())) {
                         c = randomized_params_counter.get(param.getName());
                     }
-                    iValue value = findKey(param.getName(), c, params);
+                    IValue value = findKey(param.getName(), c, params);
                     randomized_params_counter.put(param.getName(), c + 1);
                     /**
                      * Only abstract constants and simple values are valid input values
@@ -502,7 +502,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @return calculated algorithm instance
      * @throws AlgorithmException throws exception if algorithm cannot be created
      */
-    static Algorithm createFromAlgorithm(IParameterProvider qalg, HashMap<Key, iValue> params)
+    static Algorithm createFromAlgorithm(IParameterProvider qalg, HashMap<Key, IValue> params)
         throws AlgorithmException {
 
         if (qalg instanceof Algorithm) {
@@ -558,7 +558,7 @@ public class Algorithm extends DefaultParameterProvider {
      * Loads algorithm calculation results
      */
     void load(Element algElement) {
-        HashMap<Key, iValue> params = loadParameters(algElement);
+        HashMap<Key, IValue> params = loadParameters(algElement);
         try {
             this.calculateParameters(params);
         } catch (AlgorithmException e) {
@@ -572,9 +572,9 @@ public class Algorithm extends DefaultParameterProvider {
      * @param algElement algorithm xml
      * @return initial values map, with algorithm idents in keys
      */
-    private HashMap<Key, iValue> loadParameters(Element algElement) {
+    private HashMap<Key, IValue> loadParameters(Element algElement) {
         /**  load parameters for this algorithm */
-        HashMap<Key, iValue> params = new HashMap<Key, iValue>();
+        HashMap<Key, IValue> params = new HashMap<Key, IValue>();
         List elements = algElement.getChildren();
         for (Object element : elements) {
             if (element instanceof Element e) {

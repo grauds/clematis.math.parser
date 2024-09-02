@@ -4,9 +4,7 @@ package org.clematis.math.v1.algorithm;
 import org.clematis.math.v1.OutputFormatSettings;
 
 import lombok.Getter;
-/**
- *
- */
+
 @Getter
 abstract class AbstractParameterFormatter implements IParameterProvider {
 

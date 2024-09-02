@@ -10,7 +10,7 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.StringConstant;
-import org.clematis.math.v1.iMultivariantLogic;
+import org.clematis.math.v1.IOptions;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.clematis.math.v2.utils.StringUtils;
 import org.jdom2.Content;
@@ -102,8 +102,8 @@ public class AlgorithmUtils {
                                           IExpressionItem exprRoot,
                                           HashSet<String> strList
     ) {
-        if (exprRoot instanceof iMultivariantLogic logic) {
-            ArrayList<IExpressionItem> variants = logic.getVariants();
+        if (exprRoot instanceof IOptions logic) {
+            ArrayList<IExpressionItem> variants = logic.getOptions();
             for (IExpressionItem variant : variants) {
                 findStringVariants(provider, variant, strList);
             }

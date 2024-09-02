@@ -8,6 +8,9 @@ import org.jdom2.Element;
  * Plain string constant
  */
 public class StringConstant extends AbstractConstant {
+
+    public static final String APOS = "\"";
+
     /**
      * Constructor.
      *
@@ -45,10 +48,10 @@ public class StringConstant extends AbstractConstant {
      */
     public String getValue(OutputFormatSettings fs) {
         String returnString = this.value;
-        if (returnString.startsWith("\"")) {
+        if (returnString.startsWith(APOS)) {
             returnString = returnString.substring(1);
         }
-        if (returnString.endsWith("\"")) {
+        if (returnString.endsWith(APOS)) {
             returnString = returnString.substring(0, returnString.length() - 1);
         }
         return returnString;
@@ -138,8 +141,7 @@ public class StringConstant extends AbstractConstant {
      *
      * @param sdNumber the number of significant digits.
      */
-    public void setSdNumber(int sdNumber) {
-    }
+    public void setSdNumber(int sdNumber) {}
 
     /**
      * Set enable significant digits flag.
@@ -147,6 +149,5 @@ public class StringConstant extends AbstractConstant {
      *
      * @param flag 1 - enable, 0 - disable, -1 - not applicable
      */
-    public void setSdEnable(int flag) {
-    }
+    public void setSdEnable(int flag) {}
 }

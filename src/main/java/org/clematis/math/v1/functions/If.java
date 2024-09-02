@@ -9,12 +9,12 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.algorithm.AlgorithmUtils;
-import org.clematis.math.v1.iMultivariantLogic;
+import org.clematis.math.v1.IOptions;
 
 /**
  * if (a, b, c)    returns ( a != 0) ? b : c
  */
-public class If extends aFunction2 implements iMultivariantLogic {
+public class If extends aFunction2 implements IOptions {
 
     public static final int NUMBER_OF_ARGUMENTS = 3;
 
@@ -60,7 +60,7 @@ public class If extends aFunction2 implements iMultivariantLogic {
      *
      * @return list of possible returned values.
      */
-    public ArrayList<IExpressionItem> getVariants() {
+    public ArrayList<IExpressionItem> getOptions() {
         ArrayList<IExpressionItem> variants = new ArrayList<IExpressionItem>();
         if (arguments.size() >= 2) {
             for (int i = 1; i < arguments.size(); i++) {

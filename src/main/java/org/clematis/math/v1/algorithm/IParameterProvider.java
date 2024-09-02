@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.iValue;
+import org.clematis.math.v1.IValue;
 
 /**
  * Provider of parameters for functions.
@@ -53,7 +53,7 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
      * of parameters with values, so the parameters from the map are substituted to the
      * algorithm with values from the map.
      */
-    void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException;
+    void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException;
 
     /**
      * Returns parameter, found by custom identifier.

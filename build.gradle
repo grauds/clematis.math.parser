@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'checkstyle'
-    id 'org.javacc.javacc' version "3.0.2"
+   // id 'org.javacc.javacc' version "3.0.2"
 }
 
 group = 'org.clematis'
@@ -15,7 +15,7 @@ java {
 repositories {
     mavenCentral()
 }
-
+/*
 compileJavacc {
     inputDirectory = file('src/main/javacc')
     outputDirectory = file(project.buildDir.absolutePath + '/generated/javacc')
@@ -26,7 +26,7 @@ compileJjtree {
     outputDirectory = file(project.buildDir.absolutePath + '/generated/jjtree')
     arguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
-
+*/
 dependencies {
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'

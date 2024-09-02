@@ -7,15 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.clematis.math.v1.algorithm.DefaultParameterProvider;
-import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.algorithm.ParameterReference;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
+import org.clematis.math.v1.algorithm.Parameter;
+import org.clematis.math.v1.algorithm.ParameterReference;
 import org.clematis.math.v1.functions.aFunction;
 import org.clematis.math.v1.operations.Addition;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
+
+import lombok.Setter;
 
 /**
  * Parses mathematical expression.
@@ -30,108 +32,101 @@ public class ExpressionParser {
     /**
      * Expression
      */
-    String m_expression = null;
+    String expression;
     /**
      * Current operator
      */
-    char m_operator = '\0';
+    char operator;
     /**
      * Previous operator
      */
-    char m_prevOperator = '\0';
+    char prevOperator = '\0';
     /**
      * Operand
      */
-    String m_operand = null;
+    String operand = null;
     /**
      * Parameter provider, always not null
      */
-    ISimpleParameterProvider m_paramProvider = new DefaultParameterProvider();
+    ISimpleParameterProvider paramProvider = new DefaultParameterProvider();
     /**
      * Variable provider
      */
-    IVariableProvider m_varProvider = null;
+    IVariableProvider varProvider = null;
     /**
      * Function provider
      */
-    IFunctionProvider m_functionProvider = null;
+    IFunctionProvider functionProvider = null;
     /**
      * Buffer to pick up letters of operand
      */
-    StringBuilder m_operandBuffer = new StringBuilder();
+    StringBuilder operandBuffer = new StringBuilder();
     /**
      * String iterator
      */
-    StringCharacterIterator m_strIterator = null;
+    StringCharacterIterator strIterator;
     /**
-     * Copy constant flag. If set to false, expression root
-     * is copied in evaluation of variable
+     *  Copy constant flag. If set to false, expression root is copied in evaluation of variable
+     *  Sets parameter replacement mode
+     *  Can be either
+     *  <p/>
+     *  MODE_COPY_PARAMETER_AS_CONSTANT = 1;
+     *  MODE_COPY_PARAMETER_AS_TREE = 2;
+     *  MODE_COPY_PARAMETER_AS_REFERENCE = 3;
      */
+    @Setter
     private int mode = MODE_COPY_PARAMETER_AS_CONSTANT;
 
     /**
-     * Empty constructor
-     *
-     * @param in_expression expression to parse
+     * Constructor with only expression to be parsed
+     * @param expression to parse
      */
-    public ExpressionParser(String in_expression) {
-        m_expression = in_expression;
-        m_strIterator = new StringCharacterIterator(m_expression);
-        m_operator = CharacterIterator.DONE;
+    public ExpressionParser(String expression) {
+        this.expression = expression;
+        this.strIterator = new StringCharacterIterator(expression);
+        this.operator = CharacterIterator.DONE;
     }
 
     /**
-     * Constructor with parameter provider. Each parameter starts with
-     * dollar sign - $. This constructor is made private to avoid implicit usage
-     * without function factory.
+     * Constructor with parameter provider. Each parameter starts with dollar sign - $.
+     * This constructor is made private to avoid implicit usage without function factory.
      *
-     * @param in_expression    expression to parse
-     * @param in_paramProvider parameter provider
+     * @param expression to parse
+     * @param paramProvider parameter provider
      */
-    private ExpressionParser(String in_expression, ISimpleParameterProvider in_paramProvider) {
-        this(in_expression);
-        this.m_paramProvider = in_paramProvider;
+    private ExpressionParser(String expression, ISimpleParameterProvider paramProvider) {
+        this(expression);
+        this.paramProvider = paramProvider;
     }
 
     /**
      * Constructor with parameter and variable providers.
      *
-     * @param in_expression    expression to parse
-     * @param in_paramProvider parameter provider
-     * @param in_varProvider   parameter provider
+     * @param expression    expression to parse
+     * @param paramProvider parameter provider
+     * @param varProvider   variables provider
      */
-    public ExpressionParser(String in_expression, ISimpleParameterProvider in_paramProvider,
-                            IVariableProvider in_varProvider) {
-        this(in_expression, in_paramProvider);
-        this.m_varProvider = in_varProvider;
+    public ExpressionParser(String expression,
+                            ISimpleParameterProvider paramProvider,
+                            IVariableProvider varProvider) {
+        this(expression, paramProvider);
+        this.varProvider = varProvider;
     }
 
     /**
      * Constructor parameter, variable and function providers.
      *
-     * @param in_expression    expression to parse
-     * @param in_paramProvider parameter provider
-     * @param in_varProvider   parameter provider
+     * @param expression    expression to parse
+     * @param paramProvider parameter provider
+     * @param varProvider   variables provider
+     * @param functionProvider functions provider
      */
-    public ExpressionParser(String in_expression, ISimpleParameterProvider in_paramProvider,
-                            IVariableProvider in_varProvider,
-                            IFunctionProvider in_functionProvider) {
-        this(in_expression, in_paramProvider, in_varProvider);
-        this.m_functionProvider = in_functionProvider;
-    }
-
-    /**
-     * Sets parameter replacement mode
-     * Can be either
-     * <p/>
-     * MODE_COPY_PARAMETER_AS_CONSTANT = 1;
-     * MODE_COPY_PARAMETER_AS_TREE = 2;
-     * MODE_COPY_PARAMETER_AS_REFERENCE = 3;
-     *
-     * @param mode
-     */
-    public void setMode(int mode) {
-        this.mode = mode;
+    public ExpressionParser(String expression,
+                            ISimpleParameterProvider paramProvider,
+                            IVariableProvider varProvider,
+                            IFunctionProvider functionProvider) {
+        this(expression, paramProvider, varProvider);
+        this.functionProvider = functionProvider;
     }
 
     /**
@@ -139,35 +134,40 @@ public class ExpressionParser {
      *
      * @return true if success
      */
+    @SuppressWarnings({
+        "checkstyle:NestedIfDepth",
+        "checkstyle:CyclomaticComplexity",
+        "checkstyle:ReturnCount"
+    })
     private boolean getNextOperatorAndOperand() {
-        /**
+        /*
          * Take next char as operator
          */
-        if (m_operator == m_strIterator.current()) {
-            m_operator = m_strIterator.next();
+        if (operator == strIterator.current()) {
+            operator = strIterator.next();
         }
-        /**
+        /*
          * No operands, no operators
          */
-        if (m_strIterator.current() == CharacterIterator.DONE) {
-            m_operator = CharacterIterator.DONE;
+        if (strIterator.current() == CharacterIterator.DONE) {
+            operator = CharacterIterator.DONE;
             return false;
         }
-        /**
+        /*
          * Clean operand buffer
          */
-        m_operandBuffer = m_operandBuffer.delete(0, m_operandBuffer.length());
-        /**
+        operandBuffer.delete(0, operandBuffer.length());
+        /*
          * Remember previous char
          */
-        char prevCh = m_strIterator.current();
-        /**
+        char prevCh = strIterator.current();
+        /*
          * Adds chars as simple text, without parsing,
          * if this flag is set to true
          */
         boolean text = false;
 
-        for (char ch = m_strIterator.current(); ch != CharacterIterator.DONE; ch = m_strIterator.next()) {
+        for (char ch = strIterator.current(); ch != CharacterIterator.DONE; ch = strIterator.next()) {
             // plain text mode switcher
             if (ch == '"') {
                 text = !text;
@@ -178,31 +178,30 @@ public class ExpressionParser {
                 }
                 // chars - operators delimiters
                 if (isCharDelimeter(ch)) {
-                    m_prevOperator = m_operator;
-                    m_operator = ch;
+                    prevOperator = operator;
+                    operator = ch;
                     break;
                 }
-                /** parsing after exponent **/
+                /* parsing after exponent **/
                 if (ch == 'e' || ch == 'E') {
-                    /** only in case of for example ...8E */
+                    /* only in case of for example ...8E */
                     if (prevCh >= '0' && prevCh <= '9') {
-                        m_operandBuffer.append(ch);
-                        /** Counter of chars after E */
-                        int char_counter = 0;
-                        /** Take next chars */
+                        operandBuffer.append(ch);
+                        /* Counter of chars after E */
+                        int charCounter = 0;
+                        /* Take next chars */
                         while (true) {
-                            ch = m_strIterator.next();
-                            if (ch != CharacterIterator.DONE &&
-                                (char_counter == 0 && (ch == '+' || ch == '-'))
-                                || (ch >= '0' && ch <= '9')) {
-                                char_counter++;
-                                m_operandBuffer.append(ch);
-                            }
-                            /**
-                             * Return to previous
-                             */
-                            else {
-                                ch = m_strIterator.previous();
+                            ch = strIterator.next();
+                            if ((charCounter == 0 && (ch == '+' || ch == '-'))
+                                || (ch >= '0' && ch <= '9')
+                            ) {
+                                charCounter++;
+                                operandBuffer.append(ch);
+                            } else {
+                                /*
+                                 * Return to previous
+                                 */
+                                ch = strIterator.previous();
                                 break;
                             }
                         }
@@ -212,24 +211,39 @@ public class ExpressionParser {
                 }
             }
             // append char to operator
-            m_operandBuffer.append(ch);
+            operandBuffer.append(ch);
             prevCh = ch;
         }
-        /**
+        /*
          * Finally got operand
          */
-        m_operand = m_operandBuffer.toString();
-        /**
+        operand = operandBuffer.toString();
+        /*
          * Get last operand, no more operators
          */
-        if (m_strIterator.current() == CharacterIterator.DONE) {
-            m_operator = CharacterIterator.DONE;
+        if (strIterator.current() == CharacterIterator.DONE) {
+            operator = CharacterIterator.DONE;
             return true;
         }
-        /**
+        /*
          * Filter only valid operators
          */
-        return isOperator(m_operator);
+        return isOperator(operator);
+    }
+
+    /**
+     * This function returns true if char is operator
+     *
+     * @param ch to test
+     * @return true if char is operator
+     */
+    private boolean isOperator(char ch) {
+        return ch == '+'
+            || ch == '-'
+            || ch == '*' || ch == '/'
+            || ch == '^' || ch == '('
+            || ch == ')' || ch == ','
+            || ch == CharacterIterator.DONE;
     }
 
     /**
@@ -241,10 +255,12 @@ public class ExpressionParser {
      * chars in expressions
      */
     private boolean isCharDelimeter(char ch) {
-        return (ch < 'a' || ch > 'z') && (ch < 'A' || ch > 'Z') &&
-            (ch < '0' || ch > '9') &&
-            ch != '"' && ch != '$' && ch != '.' &&
-            ch != '{' && ch != '}' && ch != '_' || ch == ',';
+        return (ch < 'a' || ch > 'z')
+            && (ch < 'A' || ch > 'Z')
+            && (ch < '0' || ch > '9')
+            && ch != '"' && ch != '$'
+            && ch != '.' && ch != '{'
+            && ch != '}' && ch != '_';
     }
 
     /**
@@ -254,30 +270,14 @@ public class ExpressionParser {
      * @return true if string is a number
      */
     private boolean isNumber(String str) {
-        if (str == null || str.trim().equals("")) {
-            return false;
-        }
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
+        if (str != null && !str.trim().isEmpty()) {
+            try {
+                Double.parseDouble(str);
+                return true;
+            } catch (NumberFormatException ignored) {
+            }
         }
         return false;
-    }
-
-    /**
-     * This function returns true if char is operator
-     *
-     * @param ch to test
-     * @return true if char is operator
-     */
-    private boolean isOperator(char ch) {
-        return ch == '+' || ch == '-' ||
-            ch == '*' || ch == '/' ||
-            ch == '^' ||
-            ch == '(' || ch == ')' ||
-            ch == ',' || ch == Character.MAX_VALUE ||
-            ch == CharacterIterator.DONE;
     }
 
     /**
@@ -299,47 +299,28 @@ public class ExpressionParser {
      * PI or E
      */
     private Constant isMathConstant(String str) {
+        Constant result = null;
         if ("pi".equalsIgnoreCase(str)) {
-            return new Constant(Math.PI);
+            result = new Constant(Math.PI);
         } else if ("e".equalsIgnoreCase(str)) {
-            return new Constant(Math.E);
+            result = new Constant(Math.E);
         }
-        return null;
-    }
-//************************* EVALUATION AND PARSE METHODS *************************
-
-    private class InfLoopChecker {
-        private int prev;
-
-        public InfLoopChecker() {
-            prev = m_strIterator.getIndex();
-        }
-
-        public void check() throws AlgorithmException {
-            if (prev == m_strIterator.getIndex()) {
-                throw new AlgorithmException("Infinite loop detected for \"" +
-                    m_expression + "\" (" +
-                    (prev + 1) + ": \"" +
-                    m_strIterator.current() + "\")");
-            } else {
-                prev = m_strIterator.getIndex();
-            }
-        }
+        return result;
     }
 
     public IExpressionItem parse() throws AlgorithmException {
         checkBrackets();
 
-        /** array of items */
-        List<IExpressionItem> items = new ArrayList<IExpressionItem>();
-        /** add first item */
+        /* array of items */
+        List<IExpressionItem> items = new ArrayList<>();
+        /* add first item */
         IExpressionItem item = evalExpression();
         if (item != null) {
             items.add(item);
         }
-        /** iterate until all items divided by blanks are collected */
+        /* iterate until all items divided by blanks are collected */
         final InfLoopChecker checker = new InfLoopChecker();
-        while (m_strIterator.current() != CharacterIterator.DONE) {
+        while (strIterator.current() != CharacterIterator.DONE) {
             item = evalPlusMinus();
             if (item != null) {
                 items.add(item);
@@ -350,12 +331,12 @@ public class ExpressionParser {
         }
 
         if (items.size() > 1) {
-            if (m_functionProvider == null) {
-                throw new AlgorithmException("Function provider is null for \"" +
-                    m_expression + '\"');
+            if (functionProvider == null) {
+                throw new AlgorithmException("Function provider is null for \""
+                    + expression + '\"');
             }
 
-            final aFunction and = m_functionProvider.getFunction("and");
+            final aFunction and = functionProvider.getFunction("and");
             if (and != null) {
                 for (final IExpressionItem itm : items) {
                     and.addArgument(itm);
@@ -365,8 +346,8 @@ public class ExpressionParser {
         } else if (items.size() == 1) {
             return items.get(0);
         } else {
-            throw new AlgorithmException("Empty items array for \"" +
-                m_expression + '\"');
+            throw new AlgorithmException("Empty items array for \""
+                + expression + '\"');
         }
     }
 
@@ -381,8 +362,8 @@ public class ExpressionParser {
         IExpressionItem calculable = evalMultDiv();
 
         final InfLoopChecker checker = new InfLoopChecker();
-        while (m_operator == '+' || m_operator == '-') {
-            boolean sub = m_operator == '-';
+        while (operator == '+' || operator == '-') {
+            boolean sub = operator == '-';
             if (getNextOperatorAndOperand()) {
                 IExpressionItem secondOperand = evalMultDiv();
                 if (sub) {
@@ -399,10 +380,10 @@ public class ExpressionParser {
         IExpressionItem calculable = evalPower();
 
         final InfLoopChecker checker = new InfLoopChecker();
-        while (m_operator == '*' || m_operator == '/') {
-            boolean div = m_operator == '/';
+        while (operator == '*' || operator == '/') {
+            boolean div = operator == '/';
             if (getNextOperatorAndOperand()) {
-                IExpressionItem secondOperand = null;
+                IExpressionItem secondOperand;
                 if (div) {
                     secondOperand = evalPower();
                 } else {
@@ -420,7 +401,7 @@ public class ExpressionParser {
 
     private IExpressionItem evalPower() throws AlgorithmException {
         IExpressionItem calculable = evalUnaryOperation();
-        if (m_operator == '^') {
+        if (operator == '^') {
             if (getNextOperatorAndOperand()) {
                 IExpressionItem secondOperand = evalPower();
                 calculable = new Power(calculable, secondOperand);
@@ -431,9 +412,9 @@ public class ExpressionParser {
     }
 
     private IExpressionItem evalUnaryOperation() throws AlgorithmException {
-        IExpressionItem calculable = null;
-        if ((m_operator == '-' || m_operator == '+') && "".equals(m_operand)) {
-            boolean negative = m_operator == '-';
+        IExpressionItem calculable;
+        if ((operator == '-' || operator == '+') && "".equals(operand)) {
+            boolean negative = operator == '-';
             if (!getNextOperatorAndOperand()) {
                 return null;
             }
@@ -447,24 +428,25 @@ public class ExpressionParser {
         return calculable;
     }
 
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     private IExpressionItem evalBrackets() throws AlgorithmException {
         IExpressionItem calculable = null;
-        if (m_operator == '(') {
-            if (m_operand.length() == 0) {
+        if (operator == '(') {
+            if (operand.isEmpty()) {
                 //Operator '('
                 calculable = evalExpression();
-                if (m_operator != ')') {
+                //if (operator != ')') {
                     //ERROR: unclosed brackets
-                }
+                //}
                 getNextOperatorAndOperand();
-                if (m_operator == '(') {
+                if (operator == '(') {
                     IExpressionItem secondOperand = evalExpression();
                     calculable = new Multiplication(calculable, secondOperand);
                     getNextOperatorAndOperand();
-                } else if (m_operator == '^') {
+                } else if (operator == '^') {
                     getNextOperatorAndOperand();
-                    IExpressionItem secondOperand = null;
-                    if (m_operator == '(') {
+                    IExpressionItem secondOperand;
+                    if (operator == '(') {
                         secondOperand = evalBrackets();
                     } else {
                         secondOperand = evalVariable();
@@ -473,20 +455,20 @@ public class ExpressionParser {
                 }
             } else {
                 //Function
-                if (m_functionProvider != null) {
-                    IFunction function = m_functionProvider.getFunction(m_operand);
+                if (functionProvider != null) {
+                    IFunction function = functionProvider.getFunction(operand);
                     if (function == null) {
-                        throw new AlgorithmException("Function factory cannot create function " + m_operand);
+                        throw new AlgorithmException("Function factory cannot create function " + operand);
                     }
                     calculable = evalExpression();
                     function.addArgument(calculable);
                     final InfLoopChecker checker = new InfLoopChecker();
-                    while (m_operator == ',') {
+                    while (operator == ',') {
                         calculable = evalExpression();
                         function.addArgument(calculable);
                         checker.check();
                     }
-                    if (m_operator == ')') {
+                    if (operator == ')') {
                         getNextOperatorAndOperand();
                         calculable = function;
                     }
@@ -500,49 +482,46 @@ public class ExpressionParser {
 
     private IExpressionItem evalVariable() throws AlgorithmException {
         IExpressionItem result = null;
-        /** parameter */
-        if (isParameter(m_operand)) {
-            result = getParameter(m_operand);
+        /* parameter */
+        if (isParameter(operand)) {
+            result = getParameter(operand);
             if (result == null) {
                 // result = new Variable(m_operand);
-                result = Variable.create(m_operand);
+                result = Variable.create(operand);
             }
-        }
-        /** number */
-        else if (isNumber(m_operand)) {
-            result = new Constant(m_operand);
-        }
-        /** string */
-        else if (m_operand.length() > 0 && m_operand.charAt(0) == '"') {
-            result = new StringConstant(m_operand);
-        }
-        /** math constant */
-        else if (isMathConstant(m_operand) != null) {
-            result = isMathConstant(m_operand);
-        }
-        /** variable */
-        else if (m_operand != null && !m_operand.trim().equals("")) {
-            result = Variable.create(m_varProvider, m_operand);
+        } else if (isNumber(operand)) {
+            /* number */
+            result = new Constant(operand);
+        } else if (!operand.isEmpty() && operand.charAt(0) == '"') {
+            /* string */
+            result = new StringConstant(operand);
+        }  else if (isMathConstant(operand) != null) {
+            /* math constant */
+            result = isMathConstant(operand);
+        } else if (operand != null && !operand.trim().isEmpty()) {
+            /* variable */
+            result = Variable.create(varProvider, operand);
         }
         return result;
     }
 
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     private IExpressionItem getParameter(String name) throws AlgorithmException {
         IExpressionItem result = null;
 
-        if (m_paramProvider != null) {
+        if (paramProvider != null) {
             if (mode == MODE_COPY_PARAMETER_AS_CONSTANT) {
-                AbstractConstant constant = m_paramProvider.getParameterConstant(name);
+                AbstractConstant constant = paramProvider.getParameterConstant(name);
                 if (constant != null) {
                     result = constant.copy();
                 }
             } else if (mode == MODE_COPY_PARAMETER_AS_TREE) {
-                Parameter param = m_paramProvider.getParameter(name);
+                Parameter param = paramProvider.getParameter(name);
                 if (param != null) {
                     result = param.getExpressionRoot();
                 }
             } else if (mode == MODE_COPY_PARAMETER_AS_REFERENCE) {
-                Parameter param = m_paramProvider.getParameter(name);
+                Parameter param = paramProvider.getParameter(name);
                 if (param != null) {
                     result = new ParameterReference(param);
                 }
@@ -555,8 +534,8 @@ public class ExpressionParser {
         int nOpened = 0;
         int nClosed = 0;
         //Calculate '(' and ')'
-        for (int i = 0; i < m_expression.length(); i++) {
-            char ch = m_expression.charAt(i);
+        for (int i = 0; i < expression.length(); i++) {
+            char ch = expression.charAt(i);
             if (ch == '(') {
                 nOpened++;
             } else if (ch == ')') {
@@ -564,7 +543,29 @@ public class ExpressionParser {
             }
         }
         if (nOpened != nClosed) {
-            throw new AlgorithmException("Number of '(' and ')' is different in: " + m_expression);
+            throw new AlgorithmException("Number of '(' and ')' is different in: " + expression);
         }
     }
+
+
+
+    private class InfLoopChecker {
+        private int prev;
+
+        InfLoopChecker() {
+            prev = strIterator.getIndex();
+        }
+
+        public void check() throws AlgorithmException {
+            if (prev == strIterator.getIndex()) {
+                throw new AlgorithmException("Infinite loop detected for \""
+                    + expression + "\" ("
+                    + (prev + 1) + ": \""
+                    + strIterator.current() + "\")");
+            } else {
+                prev = strIterator.getIndex();
+            }
+        }
+    }
+
 }

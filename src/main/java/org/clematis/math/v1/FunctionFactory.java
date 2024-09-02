@@ -14,58 +14,26 @@ import org.clematis.math.v1.functions.aFunction;
  * Factory for functions.
  */
 public class FunctionFactory implements Serializable, IFunctionProvider {
-    /**
-     * Standard function classes
-     */
-    private static final HashMap<String, String> s_classes = new HashMap<String, String>();
 
     static {
         registerFunctions();
     }
-
-    private static void registerFunctions() {
-        s_classes.put("rand", "org.clematis.math.v1.functions.reference.Rand");
-        s_classes.put("sig", "org.clematis.math.v1.functions.reference.Sig");
-        s_classes.put("cntsig", "org.clematis.math.v1.functions.reference.cntSig");
-        s_classes.put("lsu", "org.clematis.math.v1.functions.reference.Lsu");
-        s_classes.put("abs", "org.clematis.math.v1.functions.reference.abs");
-        s_classes.put("and", "org.clematis.math.v1.functions.reference.and");
-        s_classes.put("arccos", "org.clematis.math.v1.functions.reference.arccos");
-        s_classes.put("arccosh", "org.clematis.math.v1.functions.reference.arccosh");
-        s_classes.put("arcsin", "org.clematis.math.v1.functions.reference.arcsin");
-        s_classes.put("arcsinh", "org.clematis.math.v1.functions.reference.arcsinh");
-        s_classes.put("arctan", "org.clematis.math.v1.functions.reference.arctan");
-        s_classes.put("arctanh", "org.clematis.math.v1.functions.reference.arctanh");
-        s_classes.put("cos", "org.clematis.math.v1.functions.reference.cos");
-        s_classes.put("cosh", "org.clematis.math.v1.functions.reference.cosh");
-        s_classes.put("cot", "org.clematis.math.v1.functions.reference.cot");
-        s_classes.put("csc", "org.clematis.math.v1.functions.reference.csc");
-        s_classes.put("decimal", "org.clematis.math.v1.functions.reference.Decimal");
-        s_classes.put("eq", "org.clematis.math.v1.functions.reference.eq");
-        s_classes.put("erf", "org.clematis.math.v1.functions.reference.erf");
-        s_classes.put("exp", "org.clematis.math.v1.functions.reference.exp");
-        s_classes.put("gt", "org.clematis.math.v1.functions.reference.gt");
-        s_classes.put("gti", "org.clematis.math.v1.functions.reference.gti");
-        s_classes.put("if", "org.clematis.math.v1.functions.reference.If");
-        s_classes.put("int", "org.clematis.math.v1.functions.reference.Int");
-        s_classes.put("rint", "org.clematis.math.v1.functions.reference.rInt");
-        s_classes.put("ln", "org.clematis.math.v1.functions.reference.ln");
-        s_classes.put("log", "org.clematis.math.v1.functions.reference.log");
-        s_classes.put("lt", "org.clematis.math.v1.functions.reference.lt");
-        s_classes.put("lti", "org.clematis.math.v1.functions.reference.lti");
-        s_classes.put("ne", "org.clematis.math.v1.functions.reference.ne");
-        s_classes.put("not", "org.clematis.math.v1.functions.reference.not");
-        s_classes.put("or", "org.clematis.math.v1.functions.reference.or");
-        s_classes.put("sec", "org.clematis.math.v1.functions.reference.sec");
-        s_classes.put("sin", "org.clematis.math.v1.functions.reference.sin");
-        s_classes.put("sinh", "org.clematis.math.v1.functions.reference.sinh");
-        s_classes.put("sqrt", "org.clematis.math.v1.functions.reference.sqrt");
-        s_classes.put("sum", "org.clematis.math.v1.functions.reference.sum");
-        s_classes.put("switch", "org.clematis.math.v1.functions.reference.Switch");
-        s_classes.put("tan", "org.clematis.math.v1.functions.reference.tan");
-        s_classes.put("tanh", "org.clematis.math.v1.functions.reference.tanh");
-        s_classes.put("rList", "org.clematis.math.v1.functions.reference.rList");
-    }
+    /**
+     * Standard function classes
+     */
+    private static final HashMap<String, String> CLASSES = new HashMap<>();
+    /**
+     * Extended functions codes
+     * <p/>
+     * key -> code
+     */
+    private final HashMap<Key, GenericFunction> functions = new HashMap<>();
+    /**
+     * Extended functions codes currently in use
+     * <p/>
+     * name -> code
+     */
+    private HashMap<String, GenericFunction> functionsInUse = new HashMap<>();
 
     /**
      * Return available library functions
@@ -73,53 +41,84 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @return available library functions
      */
     public static Set<String> getAvailableFunctionsNames() {
-        return s_classes.keySet();
+        return CLASSES.keySet();
     }
 
-    /**
-     * Extended functions codes
-     * <p/>
-     * key -> code
-     */
-    private final HashMap<Key, GenericFunction> ex_functions = new HashMap<Key, GenericFunction>();
-    /**
-     * Extended functions codes currently in use
-     * <p/>
-     * name -> code
-     */
-    private HashMap<String, GenericFunction> ex_functions_in_use = new HashMap<String, GenericFunction>();
+    private static void registerFunctions() {
+        CLASSES.put("rand", "org.clematis.math.v1.functions.reference.Rand");
+        CLASSES.put("sig", "org.clematis.math.v1.functions.reference.Sig");
+        CLASSES.put("cntsig", "org.clematis.math.v1.functions.reference.cntSig");
+        CLASSES.put("lsu", "org.clematis.math.v1.functions.reference.Lsu");
+        CLASSES.put("abs", "org.clematis.math.v1.functions.reference.abs");
+        CLASSES.put("and", "org.clematis.math.v1.functions.reference.and");
+        CLASSES.put("arccos", "org.clematis.math.v1.functions.reference.arccos");
+        CLASSES.put("arccosh", "org.clematis.math.v1.functions.reference.arccosh");
+        CLASSES.put("arcsin", "org.clematis.math.v1.functions.reference.arcsin");
+        CLASSES.put("arcsinh", "org.clematis.math.v1.functions.reference.arcsinh");
+        CLASSES.put("arctan", "org.clematis.math.v1.functions.reference.arctan");
+        CLASSES.put("arctanh", "org.clematis.math.v1.functions.reference.arctanh");
+        CLASSES.put("cos", "org.clematis.math.v1.functions.reference.cos");
+        CLASSES.put("cosh", "org.clematis.math.v1.functions.reference.cosh");
+        CLASSES.put("cot", "org.clematis.math.v1.functions.reference.cot");
+        CLASSES.put("csc", "org.clematis.math.v1.functions.reference.csc");
+        CLASSES.put("decimal", "org.clematis.math.v1.functions.reference.Decimal");
+        CLASSES.put("eq", "org.clematis.math.v1.functions.reference.eq");
+        CLASSES.put("erf", "org.clematis.math.v1.functions.reference.erf");
+        CLASSES.put("exp", "org.clematis.math.v1.functions.reference.exp");
+        CLASSES.put("gt", "org.clematis.math.v1.functions.reference.gt");
+        CLASSES.put("gti", "org.clematis.math.v1.functions.reference.gti");
+        CLASSES.put("if", "org.clematis.math.v1.functions.reference.If");
+        CLASSES.put("int", "org.clematis.math.v1.functions.reference.Int");
+        CLASSES.put("rint", "org.clematis.math.v1.functions.reference.rInt");
+        CLASSES.put("ln", "org.clematis.math.v1.functions.reference.ln");
+        CLASSES.put("log", "org.clematis.math.v1.functions.reference.log");
+        CLASSES.put("lt", "org.clematis.math.v1.functions.reference.lt");
+        CLASSES.put("lti", "org.clematis.math.v1.functions.reference.lti");
+        CLASSES.put("ne", "org.clematis.math.v1.functions.reference.ne");
+        CLASSES.put("not", "org.clematis.math.v1.functions.reference.not");
+        CLASSES.put("or", "org.clematis.math.v1.functions.reference.or");
+        CLASSES.put("sec", "org.clematis.math.v1.functions.reference.sec");
+        CLASSES.put("sin", "org.clematis.math.v1.functions.reference.sin");
+        CLASSES.put("sinh", "org.clematis.math.v1.functions.reference.sinh");
+        CLASSES.put("sqrt", "org.clematis.math.v1.functions.reference.sqrt");
+        CLASSES.put("sum", "org.clematis.math.v1.functions.reference.sum");
+        CLASSES.put("switch", "org.clematis.math.v1.functions.reference.Switch");
+        CLASSES.put("tan", "org.clematis.math.v1.functions.reference.tan");
+        CLASSES.put("tanh", "org.clematis.math.v1.functions.reference.tanh");
+        CLASSES.put("rList", "org.clematis.math.v1.functions.reference.rList");
+    }
 
     /**
      * Create function, either standard or extended
      *
-     * @param in_functionName function name
+     * @param functionName function name
      * @return function, either standard or extended
      * @throws AlgorithmException is thrown is function is unknown
      */
-    public aFunction getFunction(String in_functionName) throws AlgorithmException {
+    public aFunction getFunction(String functionName) throws AlgorithmException {
         aFunction f = null;
         try {
-            String className = s_classes.get(in_functionName);
+            String className = CLASSES.get(functionName);
             if (className != null) {
-                Object obj = Class.forName(className).newInstance();
+                Object obj = Class.forName(className).getDeclaredConstructor().newInstance();
                 if (obj instanceof aFunction) {
                     f = (aFunction) obj;
                     f.setFunctionFactory(this);
                 }
             } else {
-                if (ex_functions_in_use.containsKey(in_functionName)) {
-                    GenericFunction function = ex_functions_in_use.get(in_functionName);
+                if (functionsInUse.containsKey(functionName)) {
+                    GenericFunction function = functionsInUse.get(functionName);
                     f = new GenericFunction(function);
                 } else {
-                    f = getLatestFunction(in_functionName);
+                    f = getLatestFunction(functionName);
                 }
             }
             if (f != null) {
-                f.setSignature(in_functionName);
+                f.setSignature(functionName);
             }
         } catch (Exception ex) {
             f = null;
-            throw new AlgorithmException("Function factory cannot create function " + in_functionName);
+            throw new AlgorithmException("Function factory cannot create function " + functionName);
         }
         return f;
     }
@@ -127,14 +126,14 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
     /**
      * Get the latest function added to collection with the same name
      *
-     * @param in_functionName name of function
+     * @param functionName name of function
      * @return the latest function added to collection with the same name
      */
-    public aFunction getLatestFunction(String in_functionName) {
-        Key key = new Key(in_functionName);
+    public aFunction getLatestFunction(String functionName) {
+        Key key = new Key(functionName);
         GenericFunction function = null;
-        while (ex_functions.containsKey(key)) {
-            function = ex_functions.get(key);
+        while (functions.containsKey(key)) {
+            function = functions.get(key);
             key.setNo(key.getNo() + 1);
         }
         if (function != null) {
@@ -152,7 +151,7 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      */
     public void addFunction(Key key, GenericFunction function) {
         if (function != null) {
-            ex_functions.put(key, function);
+            functions.put(key, function);
         }
     }
 
@@ -163,7 +162,7 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @return true if generic function is in collection
      */
     public boolean hasFunction(Key key) {
-        return ex_functions.containsKey(key);
+        return functions.containsKey(key);
     }
 
     /**
@@ -173,7 +172,7 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @return function for this key
      */
     public GenericFunction getGenericFunction(Key key) {
-        return new GenericFunction(ex_functions.get(key));
+        return new GenericFunction(functions.get(key));
     }
 
     /**
@@ -183,9 +182,9 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @param key under which function is stored
      */
     public void loadForUse(Key key) {
-        GenericFunction function = ex_functions.get(key);
+        GenericFunction function = functions.get(key);
         if (function != null) {
-            ex_functions_in_use.put(key.getName(), function);
+            functionsInUse.put(key.getName(), function);
         }
     }
 
@@ -193,6 +192,6 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * Clear functions loaded for usage
      */
     public void clear() {
-        ex_functions_in_use = new HashMap<String, GenericFunction>();
+        functionsInUse = new HashMap<String, GenericFunction>();
     }
 }

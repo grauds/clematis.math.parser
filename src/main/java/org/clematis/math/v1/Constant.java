@@ -3,6 +3,7 @@ package org.clematis.math.v1;
 
 import java.math.BigDecimal;
 
+import org.clematis.math.MathUtils;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.Decimal;
 import org.clematis.math.v1.functions.Sig;
@@ -31,15 +32,13 @@ import org.jdom2.Element;
 public class Constant extends AbstractConstant {
 
     public static final String SIG_DIGITS_ATTRIBUTE = "sig";
-
     public static final String SDENABLED_ATTRIBUTE = "sdenabled";
-
+    public static final String CONSTANT_TYPE_ATTRIBUTE = "type";
     public static final String DEFAULT_SIGNIFICANT_DIGITS = "1";
     /**
      * Value of the constant is initialized with zero.
      */
     private BigDecimal number = BigDecimal.ZERO;
-
     /**
      * Constructor.
      *
@@ -180,93 +179,90 @@ public class Constant extends AbstractConstant {
      * @return either initial string or big decimal converted to string
      */
     private String getExactStringValue() {
+        String result = "";
+
         if (number != null) {
-            /**
+            /*
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
-                return Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
-            }
-            /**
-             * Sig digits are not applied
-             */
-            else {
-                return getExactBigDecimalValue().toString();
+                result = Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
+            } else {
+                /*
+                 * Sig digits are not applied
+                 */
+                result = getExactBigDecimalValue().toString();
             }
         } else if (value != null) {
-            /**
+            /*
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
-                return Sig.formatWithSigDigits(value, getSdNumber());
-            }
-            /**
-             * If sig digits are not applied - do not change the value (do not round to system precision)
-             */
-            else {
-                return value;
+                result = Sig.formatWithSigDigits(value, getSdNumber());
+            } else {
+                /*
+                 * If sig digits are not applied - do not change the value (do not round to system precision)
+                 */
+                result = value;
             }
         }
-        return "";
+        return result;
     }
 
     /**
      * Returns string value for PRESENTATION purposes
      *
-     * @param fs
+     * @param fs format settings for output
      * @return either initial string or big decimal converted to string
      */
     public String getValue(OutputFormatSettings fs) {
         String str = "";
 
         if (number != null) {
-            /**
+            /*
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
                 str = Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
-            }
-            /**
-             * If sig digits are not applied, round to system precision
-             */
-            else {
+            } else {
+                /*
+                 * If sig digits are not applied, round to system precision
+                 */
                 str = Decimal.round(getExactBigDecimalValue().toString(), (-1) * Parameter.PRECISION, true);
                 // get rid of trailing zeros in non formatted numbers (value does not change, formatting is ignored)
                 // str = MathUtils.cutTrailingsZeros( str );
             }
         } else if (value != null) {
-            /**
+            /*
              * Apply significant digits
              */
             if (getSdNumber() > 0 && getSdEnable()) {
                 str = Sig.formatWithSigDigits(value, getSdNumber());
-            }
-            /**
-             * If sig digits are not applied - do not change the value (round to system precision)
-             */
-            else {
+            } else {
+                /*
+                 * If sig digits are not applied - do not change the value (round to system precision)
+                 */
                 str = value;
             }
         }
-        /**
+        /*
          * Apply visual formatting
          */
         if (fs != null) {
-            /**
+            /*
              * Big decimal removes exponent notation ex.34000
              */
             if (fs.isNoExponent()) {
                 BigDecimal bd = new BigDecimal(str);
                 str = bd.toPlainString();
-            }
-            /**
-             * If scientific notation is removed, it needs to be restored
-             */
-            else {
+            } else {
+                /*
+                 * If scientific notation is removed, it needs to be restored
+                 */
                 BigDecimal bd = new BigDecimal(str);
                 str = bd.toString();
             }
-            /**
+            /*
              * Switch on grouping
              */
             if (fs.isGrouping()) {
@@ -291,13 +287,13 @@ public class Constant extends AbstractConstant {
      */
     public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Constant c) {
-            /**  apply significant digits to output */
+            /*  apply significant digits to output */
             String str1 = this.getExactStringValue();
             String str2 = c.getExactStringValue();
-            /** create big decimals */
+            /* create big decimals */
             BigDecimal bd1 = new BigDecimal(str1);
             BigDecimal bd2 = new BigDecimal(str2);
-            /** make operation */
+            /* make operation */
             return new Constant(bd1.add(bd2));
         }
         return item.add(this);
@@ -314,10 +310,10 @@ public class Constant extends AbstractConstant {
         if (item instanceof Constant c) {
             String str1 = this.getExactStringValue();
             String str2 = c.getExactStringValue();
-            /** create big decimals */
+            /* create big decimals */
             BigDecimal bd1 = new BigDecimal(str1);
             BigDecimal bd2 = new BigDecimal(str2);
-            /** make operation */
+            /* make operation */
             return new Constant(bd1.multiply(bd2));
         }
         return item.multiply(this);
@@ -333,21 +329,22 @@ public class Constant extends AbstractConstant {
      * <tt>(this<sup>n</sup>)</tt>
      */
     public IExpressionItem pow(Constant c) {
-        if (getValue(null) != null) {
-            if (((int) c.getNumber()) == c.getNumber()) {
-                Constant ret = new Constant(this);
-                int power = (int) c.getNumber();
-                /**
-                 * Division is handled by simple fraction
-                 */
-                if (power < 0) {
-                    return new SimpleFraction(new Constant(DEFAULT_SIGNIFICANT_DIGITS),
-                        new Constant(new BigDecimal(ret.getValue(null)).pow(Math.abs(power))));
-                }
-                return new Constant(new BigDecimal(ret.getValue(null)).pow(Math.abs(power)));
+        IExpressionItem result = null;
+
+        if (getValue(null) == null && ((int) c.getNumber()) == c.getNumber()) {
+            Constant ret = new Constant(this);
+            int power = (int) c.getNumber();
+            /*
+             * Division is handled by simple fraction
+             */
+            if (power < 0) {
+                result = new SimpleFraction(new Constant(DEFAULT_SIGNIFICANT_DIGITS),
+                    new Constant(new BigDecimal(ret.getValue(null)).pow(Math.abs(power))));
+            } else {
+                result = new Constant(new BigDecimal(ret.getValue(null)).pow(Math.abs(power)));
             }
         }
-        return null;
+        return result;
     }
 
     /**
@@ -358,20 +355,21 @@ public class Constant extends AbstractConstant {
      * @return <tt>Constant</tt> whose value is <tt>(this / divisor)</tt>
      */
     public IExpressionItem divide(Constant c) {
+        IExpressionItem result = null;
         if (getValue(null) != null) {
-            /**
+            /*
              * Try to divide exactly first
              */
             try {
-                return new Constant(new BigDecimal(getValue(null)).divide(new BigDecimal(c.getValue(null))));
-            }
-            /**
-             * Construct simple fraction, if division failed
-             */ catch (ArithmeticException ex) {
-                return new SimpleFraction(new Constant(getValue(null)), c);
+                result = new Constant(new BigDecimal(getValue(null)).divide(new BigDecimal(c.getValue(null))));
+            } catch (ArithmeticException ex) {
+                /*
+                 * Construct simple fraction if division failed
+                 */
+                result = new SimpleFraction(new Constant(getValue(null)), c);
             }
         }
-        return null;
+        return result;
     }
 
     /**
@@ -409,12 +407,12 @@ public class Constant extends AbstractConstant {
     }
 
     /**
-     * Sets multiplier
+     * Sets multiplier for the constant, it is a trivial math expression contained within constant itself
      *
-     * @param multiplier
+     * @param multiplier for the constant.
      */
     public void setMultiplier(double multiplier) {
-        /**
+        /*
          * Avoid trivial multiplication
          */
         if (multiplier != 1) {
@@ -430,7 +428,7 @@ public class Constant extends AbstractConstant {
      */
     public Element toMathML() {
         Element cn = new Element("cn", NS_MATH);
-        cn.setAttribute("type", "real");
+        cn.setAttribute(CONSTANT_TYPE_ATTRIBUTE, "real");
         cn.setText(getValue(null));
         return cn;
     }
@@ -464,7 +462,7 @@ public class Constant extends AbstractConstant {
      */
     public Element toXML() {
         Element element = new Element("constant");
-        element.setAttribute("type", "number");
+        element.setAttribute(CONSTANT_TYPE_ATTRIBUTE, "number");
         if (sdNumber != 0) {
             element.setAttribute(SIG_DIGITS_ATTRIBUTE, Integer.toString(sdNumber));
         }

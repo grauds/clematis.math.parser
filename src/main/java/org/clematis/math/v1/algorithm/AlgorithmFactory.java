@@ -8,7 +8,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 
 import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.iValue;
+import org.clematis.math.v1.IValue;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -113,7 +113,7 @@ public class AlgorithmFactory {
      * @return a copy of given algorithm
      */
     public static IParameterProvider copyAlgorithm(
-        IParameterProvider algorithm, HashMap<Key, iValue> params
+        IParameterProvider algorithm, HashMap<Key, IValue> params
     ) throws AlgorithmException {
 
         IParameterProvider result = algorithm;

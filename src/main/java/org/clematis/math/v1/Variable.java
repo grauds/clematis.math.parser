@@ -6,6 +6,7 @@ package org.clematis.math.v1;
 import java.io.Serializable;
 import java.util.List;
 
+import org.clematis.math.MathUtils;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.operations.Multiplication;
@@ -13,28 +14,33 @@ import org.clematis.math.v1.operations.Power;
 import org.clematis.math.v2.utils.StringUtils;
 import org.jdom2.Element;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Representation of x or y variables in formulas.
  *
  * @version 1.0
  */
+@Getter
 public class Variable implements IExpressionItem, Serializable {
+
     /**
-     * Varaiable name.
+     * Variable name.
      */
-    private String name = null;
+    private final String name;
     /**
      * Variable multiplier.
      */
+    @Setter
     private double multiplier = 1.0;
-
     /**
      * Constructor.
      *
-     * @param in_name String containing the variable name.
+     * @param name String containing the variable name.
      */
-    private Variable(String in_name) {
-        name = in_name;
+    private Variable(String name) {
+        this.name = name;
     }
 
     /**
@@ -60,14 +66,13 @@ public class Variable implements IExpressionItem, Serializable {
 
         if (arr.size() > 1) {
             String arg = arr.get(0);
-            IExpressionItem argItem = null;
+            IExpressionItem argItem;
 
             // number
             if (MathUtils.isDigit(arg.charAt(0))) {
                 argItem = new Constant(Double.parseDouble(arg));
-            }
-            // variable
-            else {
+            } else {
+                // variable
                 argItem = new Variable(arg);
             }
 
@@ -79,14 +84,12 @@ public class Variable implements IExpressionItem, Serializable {
                 if (MathUtils.isDigit(arg1.charAt(0))) {
                     try {
                         argItem1 = new Constant(Double.parseDouble(arg1));
-                    }
-                    // variable
-                    catch (NumberFormatException ex) {
+                    } catch (NumberFormatException ex) {
+                        // variable
                         argItem1 = applyVariableProvider(varProvider, arg1);
                     }
-                }
-                // variable
-                else {
+                } else {
+                    // variable
                     argItem1 = applyVariableProvider(varProvider, arg1);
                 }
 
@@ -117,15 +120,6 @@ public class Variable implements IExpressionItem, Serializable {
     }
 
     /**
-     * Gets the variable name.
-     *
-     * @return String containing the variable name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
@@ -147,24 +141,6 @@ public class Variable implements IExpressionItem, Serializable {
     }
 
     /**
-     * Return constant coefficient
-     *
-     * @return constant coefficient
-     */
-    public double getMultiplier() {
-        return multiplier;
-    }
-
-    /**
-     * Sets constant multiplier
-     *
-     * @param multiplier
-     */
-    public void setMultiplier(double multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    /**
      * Adds another expression item to this one.
      *
      * @param item another expression item
@@ -178,23 +154,6 @@ public class Variable implements IExpressionItem, Serializable {
             }
         }
         return null;
-    }
-
-    /**
-     * Set enable significant digits flag
-     *
-     * @param flag
-     */
-    public void setSdEnabled(int flag) {
-    }
-
-    /**
-     * Stub implementation of iExpressionItem interface.
-     * Does nothing.
-     *
-     * @param sdNumber the number of significant digits.
-     */
-    public void setSdNumber(int sdNumber) {
     }
 
     /**
@@ -228,26 +187,29 @@ public class Variable implements IExpressionItem, Serializable {
      * @return result expression item
      */
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
+        IExpressionItem result = null;
+
         if (item instanceof Constant c) {
+
             multiplier *= c.getNumber();
-            return this;
-        } else if (item instanceof Variable v) {
-            if (this.aKindOf(v)) {
-                Power p = new Power(this, new Constant(2));
-                p.setMultiplier(getMultiplier() * v.getMultiplier());
-                return p;
-            }
+            result = this;
+        } else if (item instanceof Variable v && this.aKindOf(v)) {
+
+            Power p = new Power(this, new Constant(2));
+            p.setMultiplier(getMultiplier() * v.getMultiplier());
+            result = p;
         } else if (item instanceof Power p) {
-            /**
+
+            /*
              * Compare roots
              */
             if (this.aKindOf(p.getOperand1())) {
                 p.changeExponent("1");
                 p.setMultiplier(getMultiplier() * p.getMultiplier());
-                return p.calculate();
+                result = p.calculate();
             }
         }
-        return null;
+        return result;
     }
 
     /**
@@ -259,8 +221,8 @@ public class Variable implements IExpressionItem, Serializable {
      */
     public boolean aKindOf(IExpressionItem item) {
         if (item instanceof Variable) {
-            String item_name = ((Variable) item).getName();
-            return item_name.equalsIgnoreCase(this.getName());
+            String itemName = ((Variable) item).getName();
+            return itemName.equalsIgnoreCase(this.getName());
         }
         return false;
     }
@@ -274,12 +236,9 @@ public class Variable implements IExpressionItem, Serializable {
      */
     public boolean equals(IExpressionItem item) {
         if (item instanceof Variable) {
-            String item_name = ((Variable) item).getName();
-            return (
-                item_name.equalsIgnoreCase(this.getName())
-                    &&
-                    (getMultiplier() == item.getMultiplier())
-            );
+            String itemName = ((Variable) item).getName();
+            return itemName.equalsIgnoreCase(this.getName())
+                   && (getMultiplier() == item.getMultiplier());
         }
         return false;
     }
