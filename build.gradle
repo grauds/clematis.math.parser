@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.7'
    // id 'org.javacc.javacc' version "3.0.2"
 }
 
@@ -28,9 +29,13 @@ compileJjtree {
 }
 */
 dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    compileOnly (
+            'org.projectlombok:lombok:1.18.20',
+            "com.github.spotbugs:spotbugs:4.8.4",
+            "com.google.code.findbugs:annotations:3.0.1u2"
+    )
 
     checkstyle "com.puppycrawl.tools:checkstyle:10.17.0"
 
@@ -84,4 +89,43 @@ jacocoTestReport {
         sourceSets it.sourceSets.main
     }
     executionData fileTree(project.rootDir.absolutePath).include("jacoco/*.exec")
+}
+
+// ------------ Spotbugs configuration  ---------
+spotbugsMain {
+    reports {
+        xml {
+            required = false
+        }
+        html {
+            required = true
+        }
+    }
+    onlyAnalyze = [
+        "org.clematis.math.v1.algorithm.*" ,
+        "org.clematis.math.v1.functions.*" ,
+        "org.clematis.math.v1.io.*" ,
+        "org.clematis.math.v1.operators.*" ,
+        "org.clematis.math.v1.utils.*" ,
+        "org.clematis.math.v1.*" ,
+        "org.clematis.math.v2.algorithm.*" ,
+        "org.clematis.math.v2.functions.*" ,
+        "org.clematis.math.v2.io.*" ,
+        "org.clematis.math.v2.operators.*" ,
+        "org.clematis.math.v2.utils.*" ,
+        "org.clematis.math.v2.*" ,
+        "org.clematis.math.*" ,
+    ]
+}
+
+spotbugsTest {
+    reports {
+        xml {
+            enabled = false
+        }
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/test/spotbugs.html")
+        }
+    }
 }
