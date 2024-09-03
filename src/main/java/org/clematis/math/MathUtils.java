@@ -4,6 +4,7 @@
 package org.clematis.math;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -13,9 +14,7 @@ import org.clematis.math.v2.io.InputFormatSettings;
  * A collection of math utils.
  */
 public class MathUtils {
-    /**
-     * Get number format locale
-     */
+
     public static final String E = "e";
     public static final char THOUSANDS_SEPARATOR = ',';
     public static final int THOUSANDS_SEPARATOR_POSITION = 4; // each 4th element
@@ -349,54 +348,57 @@ public class MathUtils {
      * @return indicated division
      */
     public static String convertRational(String rationalNumber) {
-        if (rationalNumber == null || rationalNumber.trim().equals("")) {
-            return null;
-        } else {
+
+        String result = null;
+
+        if (rationalNumber != null && !rationalNumber.trim().isEmpty()) {
             try {
-                /**
+                /*
                  * Negative
                  */
-                boolean isNegative = rationalNumber.startsWith("-");
-                /**
+                boolean isNegative = rationalNumber.startsWith(MINUS_SIGN);
+                /*
                  * Correct and validate input
                  */
-                rationalNumber = MathUtils.correctAndValidateInput(rationalNumber);
-                /**
+                result = MathUtils.correctAndValidateInput(rationalNumber);
+                /*
                  * The number of decimal places after dot
                  */
                 int decimalPlaces = 0;
-                /**
+                /*
                  * In case the number has dot
                  */
-                if (rationalNumber.indexOf(".") != -1) {
-                    decimalPlaces = rationalNumber.length() - rationalNumber.indexOf(".") - 1;
+                if (result.contains(DECIMAL_SEPARATOR)) {
+                    decimalPlaces = result.length() - result.indexOf(DECIMAL_SEPARATOR) - 1;
                 }
-                /**
+                /*
                  * Now we got decimal places -> get numenator and denominator
                  */
-                rationalNumber = rationalNumber.replace(".", "");
-                BigDecimal numenator = new BigDecimal(rationalNumber);
-                BigDecimal denominator = BigDecimal.valueOf(Math.pow(10, decimalPlaces));
-                /**
+                result = result.replace(DECIMAL_SEPARATOR, "");
+                BigDecimal numenator = new BigDecimal(result);
+                BigDecimal denominator = BigDecimal.valueOf(Math.pow(BigDecimal.TEN.intValue(), decimalPlaces));
+                /*
                  * Find greatest common divisor to simplify
                  */
                 BigDecimal gcd = getGreatestCommonDivisor(numenator, denominator);
-                /**
+                /*
                  * Simplify
                  */
                 if (!gcd.equals(new BigDecimal(0)) && !gcd.equals(new BigDecimal(1))) {
-                    numenator = numenator.divide(gcd);
-                    denominator = denominator.divide(gcd);
+                    numenator = numenator.divide(gcd, RoundingMode.CEILING);
+                    denominator = denominator.divide(gcd, RoundingMode.CEILING);
                 }
                 if (denominator.longValueExact() != 1) {
-                    return (isNegative ? "-" : "") + numenator.toPlainString() + "/" + denominator.toPlainString();
+                    result = (isNegative ? MINUS_SIGN : "")
+                        + numenator.toPlainString() + "/" + denominator.toPlainString();
                 } else {
-                    return (isNegative ? "-" : "") + numenator.toPlainString();
+                    result = (isNegative ? MINUS_SIGN : "") + numenator.toPlainString();
                 }
-            } catch (NumberFormatException e) {
-                return null;
+            } catch (NumberFormatException ignored) {
+
             }
         }
+        return result;
     }
 
     /**
@@ -422,12 +424,14 @@ public class MathUtils {
      * @return greatest common divisor
      */
     public static long getGreatestCommonDivisor(long divident, long divisor) {
+        long dividentInt = divident;
+        long divisorInt = divisor;
         long remainder = divident;
 
         while (remainder != 0) {
-            remainder = divident % divisor;
-            divident = divisor;
-            divisor = remainder;
+            remainder = dividentInt % divisorInt;
+            dividentInt = divisorInt;
+            divisorInt = remainder;
         }
 
         return divident;
@@ -457,12 +461,15 @@ public class MathUtils {
      * @return greatest common divisor
      */
     public static BigDecimal getGreatestCommonDivisor(BigDecimal divident, BigDecimal divisor) {
+
+        BigDecimal dividentInt = divident;
+        BigDecimal divisorInt = divisor;
         BigDecimal remainder = divident;
 
         while (!remainder.equals(new BigDecimal(0))) {
-            remainder = divident.divideAndRemainder(divisor)[1];
-            divident = divisor;
-            divisor = remainder;
+            remainder = dividentInt.divideAndRemainder(divisorInt)[1];
+            dividentInt = divisorInt;
+            divisorInt = remainder;
         }
 
         return divident;

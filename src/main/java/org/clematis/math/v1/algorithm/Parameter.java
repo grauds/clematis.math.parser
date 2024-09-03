@@ -3,14 +3,15 @@ package org.clematis.math.v1.algorithm;
 
 import java.util.HashSet;
 
+import org.clematis.math.StringUtils;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.ExpressionParser;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.io.OutputFormatSettings;
+import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v1.operations.SimpleFraction;
-import org.clematis.math.StringUtils;
+import org.clematis.math.v1.parsers.ExpressionParser;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
@@ -26,12 +27,7 @@ import lombok.Setter;
 @Getter
 public class Parameter extends SimpleParameter {
     /**
-     * Special condition name of parameter
-     */
-    public static final String CONDITION_NAME = "condition";
-    /**
-     * Precision of outcoming values
-     * for presentation.
+     * Precision of outcoming values for presentation.
      */
     public static final int PRECISION = 12;
     /**
@@ -42,46 +38,6 @@ public class Parameter extends SimpleParameter {
      * Colon sign constant
      */
     public static final String COLON = ": ";
-    /**
-     * Name of XML element for parameter
-     */
-    public static final String PARAM_ELEMENT_NAME = "param";
-    /**
-     * Name of the XML attribute for parameter XML element
-     */
-    public static final String NAME_ATTRIBUTE_NAME = "name";
-    /**
-     * Name of the XML element for a constant
-     */
-    public static final String CONSTANT_ELEMENT_NAME = "constant";
-    /**
-     * Name of the XML attribute for answer
-     */
-    public static final String ANSWER_ATTRIBUTE_NAME = "answer";
-    /**
-     * Name of the XML attribute for sig
-     */
-    public static final String SIG_ATTRIBUTE_NAME = "sig";
-    /**
-     * Name of the XML attribute for sd applicable
-     */
-    public static final String SDAPPLICABLE_ATTRIBUTE_NAME = "sdapplicable";
-    /**
-     * Name of the XML attribute for sd independent
-     */
-    public static final String SDINDEPENDENT_ATTRIBUTE_NAME = "sdindependent";
-    /**
-     * Name of the XML attribute for answer identifier
-     */
-    public static final String ANSWER_IDENT_ATTRIBUTE_NAME = "answer_ident";
-    /**
-     * Name of the XML attribute for MathML flag
-     */
-    public static final String CONTAINS_MATHML_ATTRIBUTE_NAME = "contains_mathml";
-    /**
-     * Name of the XML attribute for code
-     */
-    public static final String CODE_ELEMENT_NAME = "code";
     /**
      * Parameter can be a condition - the result of calculation can be taken to break
      * algorithm calculation and to start calculating over again.
@@ -258,7 +214,7 @@ public class Parameter extends SimpleParameter {
      */
     void setName(String name) {
         super.setName(name);
-        if (name.equals(Parameter.CONDITION_NAME)) {
+        if (name.equals(XMLConstants.CONDITION_NAME)) {
             condition = true;
         }
     }
@@ -335,8 +291,8 @@ public class Parameter extends SimpleParameter {
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
     public Element saveResult() {
-        Element paramElement = new Element(PARAM_ELEMENT_NAME);
-        paramElement.setAttribute(NAME_ATTRIBUTE_NAME, getName());
+        Element paramElement = new Element(XMLConstants.PARAM_ELEMENT_NAME);
+        paramElement.setAttribute(XMLConstants.NAME_ATTRIBUTE_NAME, getName());
 
         if (getCurrentResult() != null) {
             paramElement.addContent(getCurrentResult().toXML());
@@ -355,10 +311,10 @@ public class Parameter extends SimpleParameter {
      */
     static Parameter loadResult(Element paramElement) {
         if (paramElement != null) {
-            String name = paramElement.getAttributeValue(NAME_ATTRIBUTE_NAME);
+            String name = paramElement.getAttributeValue(XMLConstants.NAME_ATTRIBUTE_NAME);
             AbstractConstant c = null;
-            if (paramElement.getChild(CONSTANT_ELEMENT_NAME) != null) {
-                c = AbstractConstant.create(paramElement.getChild(CONSTANT_ELEMENT_NAME));
+            if (paramElement.getChild(XMLConstants.CONSTANT_ELEMENT_NAME) != null) {
+                c = AbstractConstant.create(paramElement.getChild(XMLConstants.CONSTANT_ELEMENT_NAME));
             }
             return new Parameter(name, c);
         }
@@ -371,32 +327,32 @@ public class Parameter extends SimpleParameter {
      * @return xml representation of this parameter
      */
     public Element toXML() {
-        Element paramElement = new Element(PARAM_ELEMENT_NAME);
+        Element paramElement = new Element(XMLConstants.PARAM_ELEMENT_NAME);
         if (getName() != null) {
-            paramElement.setAttribute(NAME_ATTRIBUTE_NAME, getName());
+            paramElement.setAttribute(XMLConstants.NAME_ATTRIBUTE_NAME, getName());
         }
         if (isCorrectAnswer()) {
-            paramElement.setAttribute(ANSWER_ATTRIBUTE_NAME, Boolean.TRUE.toString());
+            paramElement.setAttribute(XMLConstants.ANSWER_ATTRIBUTE_NAME, Boolean.TRUE.toString());
             /*
              * Store numeric policy only for correct answer
              */
-            paramElement.setAttribute(SIG_ATTRIBUTE_NAME, Integer.toString(sdNumber));
-            paramElement.setAttribute(SDAPPLICABLE_ATTRIBUTE_NAME, Boolean.toString(isSdApplicable()));
-            paramElement.setAttribute(SDINDEPENDENT_ATTRIBUTE_NAME, Boolean.toString(isSdIndependent()));
+            paramElement.setAttribute(XMLConstants.SIG_ATTRIBUTE_NAME, Integer.toString(sdNumber));
+            paramElement.setAttribute(XMLConstants.SDAPPLICABLE_ATTRIBUTE_NAME, Boolean.toString(isSdApplicable()));
+            paramElement.setAttribute(XMLConstants.SDINDEPENDENT_ATTRIBUTE_NAME, Boolean.toString(isSdIndependent()));
         }
         if (getCorrectAnswerIdent() != null) {
-            paramElement.setAttribute(ANSWER_IDENT_ATTRIBUTE_NAME, getCorrectAnswerIdent());
+            paramElement.setAttribute(XMLConstants.ANSWER_IDENT_ATTRIBUTE_NAME, getCorrectAnswerIdent());
         }
         if (isCondition()) {
-            paramElement.setAttribute(Parameter.CONDITION_NAME, Boolean.TRUE.toString());
+            paramElement.setAttribute(XMLConstants.CONDITION_NAME, Boolean.TRUE.toString());
         }
         if (containsMathML) {
-            paramElement.setAttribute(CONTAINS_MATHML_ATTRIBUTE_NAME, Boolean.TRUE.toString());
+            paramElement.setAttribute(XMLConstants.CONTAINS_MATHML_ATTRIBUTE_NAME, Boolean.TRUE.toString());
         }
         /*
          * Add formula code
          */
-        Element codeElement = new Element(CODE_ELEMENT_NAME);
+        Element codeElement = new Element(XMLConstants.CODE_ELEMENT_NAME);
         codeElement.addContent(new CDATA(code));
         paramElement.addContent(codeElement);
 
@@ -414,49 +370,51 @@ public class Parameter extends SimpleParameter {
          * Create constant
          */
         AbstractConstant constant = null;
-        if (xml.getChild(CONSTANT_ELEMENT_NAME) != null) {
-            constant = AbstractConstant.create(xml.getChild(CONSTANT_ELEMENT_NAME));
+        if (xml.getChild(XMLConstants.CONSTANT_ELEMENT_NAME) != null) {
+            constant = AbstractConstant.create(xml.getChild(XMLConstants.CONSTANT_ELEMENT_NAME));
         }
         /*
          * Create constant wrapper - parameter
          */
-        Parameter param = new Parameter(xml.getAttributeValue(NAME_ATTRIBUTE_NAME), constant);
+        Parameter param = new Parameter(xml.getAttributeValue(XMLConstants.NAME_ATTRIBUTE_NAME), constant);
         /*
          * Read parameter configuration.
          */
-        if (xml.getAttribute(ANSWER_ATTRIBUTE_NAME) != null) {
+        if (xml.getAttribute(XMLConstants.ANSWER_ATTRIBUTE_NAME) != null) {
             param.setCorrectAnswer(true);
         }
-        if (xml.getAttribute(ANSWER_IDENT_ATTRIBUTE_NAME) != null) {
-            param.setCorrectAnswerIdent(xml.getAttributeValue(ANSWER_IDENT_ATTRIBUTE_NAME));
+        if (xml.getAttribute(XMLConstants.ANSWER_IDENT_ATTRIBUTE_NAME) != null) {
+            param.setCorrectAnswerIdent(xml.getAttributeValue(XMLConstants.ANSWER_IDENT_ATTRIBUTE_NAME));
         }
-        if (xml.getAttribute(CODE_ELEMENT_NAME) != null) {
-            param.setCode(xml.getAttributeValue(CODE_ELEMENT_NAME));
-        } else if (xml.getChild(CODE_ELEMENT_NAME) != null) {
-            param.setCode(xml.getChildText(CODE_ELEMENT_NAME));
+        if (xml.getAttribute(XMLConstants.CODE_ELEMENT_NAME) != null) {
+            param.setCode(xml.getAttributeValue(XMLConstants.CODE_ELEMENT_NAME));
+        } else if (xml.getChild(XMLConstants.CODE_ELEMENT_NAME) != null) {
+            param.setCode(xml.getChildText(XMLConstants.CODE_ELEMENT_NAME));
         } else if (xml.getTextTrim() != null) {
             param.setCode(xml.getTextTrim());
         }
-        if (xml.getAttribute(Parameter.CONDITION_NAME) != null) {
+        if (xml.getAttribute(XMLConstants.CONDITION_NAME) != null) {
             param.setCondition(true);
         }
-        if (xml.getAttribute(CONTAINS_MATHML_ATTRIBUTE_NAME) != null) {
+        if (xml.getAttribute(XMLConstants.CONTAINS_MATHML_ATTRIBUTE_NAME) != null) {
             param.setContainsMathML(true);
         }
 
-        if (xml.getAttribute(SIG_ATTRIBUTE_NAME) != null) {
+        if (xml.getAttribute(XMLConstants.SIG_ATTRIBUTE_NAME) != null) {
             try {
-                param.setSdNumber(Integer.parseInt(xml.getAttributeValue(SIG_ATTRIBUTE_NAME)));
+                param.setSdNumber(Integer.parseInt(xml.getAttributeValue(XMLConstants.SIG_ATTRIBUTE_NAME)));
             } catch (NumberFormatException ignored) {}
         }
-        if (xml.getAttribute(SDAPPLICABLE_ATTRIBUTE_NAME) != null) {
+        if (xml.getAttribute(XMLConstants.SDAPPLICABLE_ATTRIBUTE_NAME) != null) {
             try {
-                param.setSdApplicable(Boolean.parseBoolean(xml.getAttributeValue(SDAPPLICABLE_ATTRIBUTE_NAME)));
+                param.setSdApplicable(Boolean.parseBoolean(xml.getAttributeValue(
+                    XMLConstants.SDAPPLICABLE_ATTRIBUTE_NAME)));
             } catch (NumberFormatException ignored) {}
         }
-        if (xml.getAttribute(SDINDEPENDENT_ATTRIBUTE_NAME) != null) {
+        if (xml.getAttribute(XMLConstants.SDINDEPENDENT_ATTRIBUTE_NAME) != null) {
             try {
-                param.setSdIndependent(Boolean.parseBoolean(xml.getAttributeValue(SDINDEPENDENT_ATTRIBUTE_NAME)));
+                param.setSdIndependent(Boolean.parseBoolean(xml.getAttributeValue(
+                    XMLConstants.SDINDEPENDENT_ATTRIBUTE_NAME)));
             } catch (NumberFormatException ignored) {}
         }
         return param;

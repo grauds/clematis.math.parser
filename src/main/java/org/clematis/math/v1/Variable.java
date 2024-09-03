@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.clematis.math.MathUtils;
+import org.clematis.math.StringUtils;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
-import org.clematis.math.StringUtils;
 import org.jdom2.Element;
 
 import lombok.Getter;

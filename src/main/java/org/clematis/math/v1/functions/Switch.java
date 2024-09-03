@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.utils.AlgorithmUtils;
 import org.clematis.math.v1.IOptions;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * Given a whole number 0, 1, 2, ... this returns the n'th item in the list

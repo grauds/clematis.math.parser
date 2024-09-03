@@ -3,10 +3,11 @@ package org.clematis.math.v2;
 
 import java.io.StringReader;
 
+import org.clematis.math.v1.parsers.ExpressionParser;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.clematis.math.v2.parsers.string.ParseException;
 import org.clematis.math.v2.parsers.string.StringMathParser;
-import org.clematis.math.v1.ExpressionParser;
+
 import org.junit.jupiter.api.Test;
 
 public class StringParserPerformanceTest {
@@ -73,7 +74,7 @@ public class StringParserPerformanceTest {
                 double o = (end - start);
               /*  System.out.println("Legacy parser: " + o + " nanosecs");
                 System.out.println("--------------------");    */
-                System.out.print(" *** " + (n / o) * 100 + "%");
+                System.out.println(" *** " + (n / o) * 100 + "%");
                 System.out.println("--------------------");
                 System.out.println("--------------------");
             } catch (Exception ex) {

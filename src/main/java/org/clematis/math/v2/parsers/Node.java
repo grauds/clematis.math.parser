@@ -87,8 +87,7 @@ public interface Node {
      * operation which this node was created for. If no operation is defined, method returns
      * the calculated first argument. Takes the values for parameters from parameter provider, if
      * they are exist.
-     *
-     * @param parameterProvider with precalculated values for some parameters
+
      * @return the calculated first argument or result of operation
      * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
@@ -99,7 +98,7 @@ public interface Node {
      *
      * @param item to add to this node
      * @return a result of addition, the Node representing either constant values or addition operation.
-     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yielded.
      */
     Node add(Node item) throws AlgorithmException;
 
@@ -109,7 +108,7 @@ public interface Node {
      * @param item to multiply this node with
      * @return a result of multiplication, the Node representing either constant values or multiplication
      * operation.
-     * @throws AlgorithmException
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yielded.
      */
     Node multiply(Node item) throws AlgorithmException;
 

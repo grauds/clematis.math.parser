@@ -5,9 +5,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.clematis.math.StringUtils;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.StringUtils;
+import org.clematis.math.v1.io.XMLConstants;
 
 import lombok.Getter;
 /**
@@ -110,7 +111,7 @@ public class SimpleParameter implements Serializable {
      */
     @SuppressWarnings("checkstyle:ReturnCount")
     public static String alternateParameterName(String name) {
-        if (Parameter.CONDITION_NAME.equals(name)) {
+        if (XMLConstants.CONDITION_NAME.equals(name)) {
             return name;
         }
         if (isNameWithBraces(name)) {

@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.utils.AlgorithmUtils;
 import org.clematis.math.v1.IOptions;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * if (a, b, c)    returns ( a != 0) ? b : c

@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.clematis.math.v1.io.XMLConstants.ALGORITHM_ATTRIBUTE_NAME;
+import static org.clematis.math.v1.io.XMLConstants.CODE_ELEMENT_NAME;
+import static org.clematis.math.v1.io.XMLConstants.IDENT_ATTRIBUTE_NAME;
+import static org.clematis.math.v1.io.XMLConstants.NAME_ATTRIBUTE_NAME;
+import static org.clematis.math.v1.io.XMLConstants.PARAM_ELEMENT_NAME;
+import static org.clematis.math.v1.io.XMLConstants.TYPE_ATTRIBUTE_NAME;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.IValue;
@@ -22,8 +28,6 @@ import lombok.Setter;
  */
 public class BshParameterProvider extends AbstractParameterFormatter implements Serializable {
 
-    public static final String ROOT_TAGE_NAME = "algorithm";
-    public static final String TYPE_ATTRIBUTE = "type";
     public static final String BSH_TYPE = "bsh";
     /**
      * Ident
@@ -121,6 +125,7 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      *
      * @param algorithmXML XML representing the algorithm.
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     static BshParameterProvider createFromXML(Element algorithmXML) {
         /*
          * Take not trivial algorithm xml element
@@ -129,19 +134,19 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
             /*
              * Create new algorithm
              */
-            Element code = algorithmXML.getChild("code");
+            Element code = algorithmXML.getChild(CODE_ELEMENT_NAME);
             if (code != null) {
                 BshParameterProvider algorithm = new BshParameterProvider();
                 algorithm.code = code.getTextTrim();
-                if (algorithmXML.getAttribute("ident") != null) {
-                    algorithm.setIdent(algorithmXML.getAttributeValue("ident"));
+                if (algorithmXML.getAttribute(IDENT_ATTRIBUTE_NAME) != null) {
+                    algorithm.setIdent(algorithmXML.getAttributeValue(IDENT_ATTRIBUTE_NAME));
                 }
                 /*
                  * Add parameters
                  */
-                List<Element> calculatedParams = algorithmXML.getChildren("param");
+                List<Element> calculatedParams = algorithmXML.getChildren(PARAM_ELEMENT_NAME);
                 for (Element element : calculatedParams) {
-                    algorithm.parameters.put(element.getAttributeValue("name"), element.getText());
+                    algorithm.parameters.put(element.getAttributeValue(NAME_ATTRIBUTE_NAME), element.getText());
                 }
                 return algorithm;
             }
@@ -155,9 +160,9 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
     void load(Element algElement) throws AlgorithmException {
         /*  load parameters */
         HashMap<Key, IValue> params = new HashMap<>();
-        List<Element> calculatedParams = algElement.getChildren("param");
+        List<Element> calculatedParams = algElement.getChildren(PARAM_ELEMENT_NAME);
         for (Element element : calculatedParams) {
-            Key key = new Key(element.getAttributeValue("name"));
+            Key key = new Key(element.getAttributeValue(NAME_ATTRIBUTE_NAME));
             params.put(key, new SimpleValue(element.getText()));
         }
         this.calculateParameters(params);
@@ -170,17 +175,17 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     @Override
     public Element save() {
-        Element algElement = new Element(ROOT_TAGE_NAME);
-        algElement.setAttribute(TYPE_ATTRIBUTE, BSH_TYPE);
+        Element algElement = new Element(ALGORITHM_ATTRIBUTE_NAME);
+        algElement.setAttribute(TYPE_ATTRIBUTE_NAME, BSH_TYPE);
         algElement.setAttribute("version", "2");
 
         if (getIdent() != null) {
-            algElement.setAttribute("ident", getIdent());
+            algElement.setAttribute(IDENT_ATTRIBUTE_NAME, getIdent());
         }
 
         /*  save parameters */
         for (String name : parameters.keySet()) {
-            Element param = new Element("param");
+            Element param = new Element(PARAM_ELEMENT_NAME);
             param.setAttribute("name", name);
             param.setText(parameters.get(name));
             algElement.addContent(param);
@@ -196,11 +201,11 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     @Override
     public Element toXML() {
-        Element algElement = new Element(ROOT_TAGE_NAME);
-        algElement.setAttribute(TYPE_ATTRIBUTE, BSH_TYPE);
+        Element algElement = new Element(ALGORITHM_ATTRIBUTE_NAME);
+        algElement.setAttribute(TYPE_ATTRIBUTE_NAME, BSH_TYPE);
 
         if (getIdent() != null) {
-            algElement.setAttribute("ident", getIdent());
+            algElement.setAttribute(IDENT_ATTRIBUTE_NAME, getIdent());
         }
 
         Element codeElement = new Element("code");

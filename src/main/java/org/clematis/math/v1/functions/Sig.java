@@ -6,6 +6,10 @@ package org.clematis.math.v1.functions;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
+import static org.clematis.math.MathUtils.E;
+import static org.clematis.math.MathUtils.MINUS_SIGN;
+import static org.clematis.math.MathUtils.ZERO_STRING;
 import org.clematis.math.MathUtils;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
@@ -69,11 +73,14 @@ public class Sig extends aFunction2 {
      * Note: zero number - 0 is considered to have one significant digit
      * and cannot be mutated to have more or less ones.
      *
-     * @param numberString   given number string
+     * @param inputString   given number string
      * @param digitsRequired number of significant digits
      * @return true if this double has these significant digits
      */
-    public static boolean validate(String numberString, int digitsRequired) {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public static boolean validate(String inputString, int digitsRequired) {
+
+        String numberString = inputString;
         /*
          * If number is zero, it has 1 sig digit
          */
@@ -100,14 +107,14 @@ public class Sig extends aFunction2 {
         /*
          * Find index of scientific "e" in input string
          */
-        int scientificIndex = numberString.toLowerCase().indexOf("e");
+        int scientificIndex = numberString.toLowerCase().indexOf(E);
         if (scientificIndex != -1) {
             numberString = numberString.substring(0, scientificIndex);
         }
         /*
          * Get decimal point to find out the type of input number string
          */
-        decimalPointIndex = numberString.indexOf(".");
+        decimalPointIndex = numberString.indexOf(DECIMAL_SEPARATOR);
         /*
          * Apply algorithms depending on decimal point index
          */
@@ -193,15 +200,13 @@ public class Sig extends aFunction2 {
                     break;
                 }
             } else {
-                sb.append("0");
+                sb.append(ZERO_STRING);
             }
         }
         if (counter < digitsRequired) {
             //if there are too few significant digits, this code adds trailing
             //zeroes to the number to the correct number of digits.
-            for (int i = 0; i < digitsRequired - counter; i++) {
-                sb.append("0");
-            }
+            sb.append(ZERO_STRING.repeat(Math.max(0, digitsRequired - counter)));
         }
         return sb.toString();
     }
@@ -252,7 +257,7 @@ public class Sig extends aFunction2 {
         if (counter < digitsRequired) {
             //if there are too few significant digits, this code adds trailing
             //zeroes to the number to the correct number of digits.
-            sb.append("0".repeat(Math.max(0, digitsRequired - counter)));
+            sb.append(ZERO_STRING.repeat(Math.max(0, digitsRequired - counter)));
         }
 
         if (round) {
@@ -268,12 +273,14 @@ public class Sig extends aFunction2 {
      * Note: zero number - 0 is considered to have one significant digit
      * and cannot be mutated to have more or less ones.
      *
-     * @param numberString   number string
+     * @param inputString   number string
      * @param digitsRequired required number of significant digits
      * @return resulting number string
      */
-    @SuppressWarnings("checkstyle:ReturnCount")
-    public static String formatWithSigDigits(String numberString, int digitsRequired) {
+    @SuppressWarnings({"checkstyle:ReturnCount", "checkstyle:NestedIfDepth"})
+    public static String formatWithSigDigits(String inputString, int digitsRequired) {
+
+        String numberString = inputString;
         /*
          * Validate input
          */
@@ -284,7 +291,7 @@ public class Sig extends aFunction2 {
          * If number is zero, it has 1 sig digit
          */
         if (MathUtils.isZero(numberString)) {
-            return "0";
+            return ZERO_STRING;
         }
         /*
          * Formatted result
@@ -309,7 +316,7 @@ public class Sig extends aFunction2 {
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
-        int scientificIndex = numberString.toLowerCase().indexOf("e");
+        int scientificIndex = numberString.toLowerCase().indexOf(E);
         String exp = "";
         if (scientificIndex != -1) {
             exp = numberString.substring(scientificIndex);
@@ -318,7 +325,7 @@ public class Sig extends aFunction2 {
         /*
          * Get decimal point to find out the type of input number string
          */
-        int decimalPointIndex = numberString.indexOf(".");
+        int decimalPointIndex = numberString.indexOf(DECIMAL_SEPARATOR);
         /*
          * Apply algorithms depending on decimal point index
          */
@@ -329,10 +336,10 @@ public class Sig extends aFunction2 {
                 /*
                  * Restore 0 before .[input number]
                  */
-                numberString = "0" + numberString;
+                numberString = ZERO_STRING + numberString;
                 numberString = Decimal.addExtraDigit(formatted, numberString) + exp;
                 if (negative) {
-                    return "-" + numberString;
+                    return MINUS_SIGN + numberString;
                 } else {
                     return numberString;
                 }
@@ -360,25 +367,21 @@ public class Sig extends aFunction2 {
                         formatted = numberString.substring(0, digitsRequired);
                     } else {
                         int diff = numberString.length() - digitsRequired;
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("0".repeat(diff));
+                        String sb = ZERO_STRING.repeat(diff);
 
                         formatted = numberString.substring(0, digitsRequired);
                         if (negative) {
-                            formatted = "-" + Decimal.addExtraDigit(formatted, numberString);
+                            formatted = MINUS_SIGN + Decimal.addExtraDigit(formatted, numberString);
                         } else {
                             formatted = Decimal.addExtraDigit(formatted, numberString);
                         }
-                        formatted += sb.toString();
+                        formatted += sb;
                     }
                 } else {
                     //if there are too few significant digits, this code adds trailing
                     //zeroes to the number till the correct number of digits.
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(numberString);
-                    sb.append(".");
-                    sb.append("0".repeat(digitsRequired - numberString.length()));
-                    formatted = sb.toString();
+                    formatted = numberString + DECIMAL_SEPARATOR
+                        + ZERO_STRING.repeat(digitsRequired - numberString.length());
                 }
                 return formatted + exp;
             }
@@ -413,9 +416,13 @@ public class Sig extends aFunction2 {
     /**
      * Count significant digits
      *
-     * @param numberString a number in which it is nessesary to count
+     * @param inputString a number in which it is nessesary to count
      */
-    public static int countSigDigits(String numberString) {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    public static int countSigDigits(String inputString) {
+
+        String numberString = inputString;
+
         int mostSignificantDigitIndex = 0;
         int leastSignificantDigitIndex = 0;
         /*

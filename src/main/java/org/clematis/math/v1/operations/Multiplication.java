@@ -1,6 +1,9 @@
 // Created: Feb 14, 2003 T 11:36:06 AM
 package org.clematis.math.v1.operations;
 
+import static org.clematis.math.v1.io.XMLConstants.APPLY_ELEMENT_NAME;
+import static org.clematis.math.v1.io.XMLConstants.TIMES_ELEMENT_NAME;
+
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
@@ -11,8 +14,6 @@ import org.jdom2.Element;
  */
 public class Multiplication extends aOperation {
 
-    public static final String APPLY_ELEMENT_NAME = "apply";
-    public static final String TIMES_ELEMENT_NAME = "times";
     public static final String MULTIPLY_SIGN = "*";
 
     /**

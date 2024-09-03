@@ -1,10 +1,11 @@
 // Created: Mar 24, 2003 T 4:01:16 PM
 package org.clematis.math;
 
-import java.awt.*;
-import java.io.BufferedReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,35 +13,8 @@ import java.util.regex.Pattern;
  * String utilities, including regular expressions search and replacement
  */
 public class StringUtils {
-    /**
-     * Interface to make additional processing of regular search results
-     * and to return proper string to substitute.
-     */
-    public interface sReplaceCallback {
-        String getString(String str);
-    }
 
-    /**
-     * This class returns ASCII coded symbol if
-     * given its hex presentation.
-     */
-    static class sASCII implements sReplaceCallback {
-        /**
-         * This methos tries to parse ASCII code
-         *
-         * @param str representation of ascii code
-         * @return ascii character
-         */
-        public String getString(String str) {
-            try {
-                int code = Integer.parseInt(str, 16);
-                char ch = (char) code;
-                return String.valueOf(ch);
-            } catch (NumberFormatException ex) {
-                return str;
-            }
-        }
-    }
+    public static final int NON_BREAKING_SPACE = 160;
 
     /**
      * Search a string for all instances of a substring and replace
@@ -48,15 +22,16 @@ public class StringUtils {
      *
      * @param search          Substring to search for
      * @param replace         String to replace it with
-     * @param source          String to search through
+     * @param sourceString          String to search through
      * @param caseIndependent flag
      * @return The source with all instances of <code>search</code>
      * replaced by <code>replace</code>
      */
-    public static String sReplace(String search, String replace, String source, boolean caseIndependent) {
+    public static String sReplace(String search, String replace, String sourceString, boolean caseIndependent) {
         int spot;
+
         String returnString;
-        final String origSource = source;
+        String source = sourceString;
 
         if (caseIndependent) {
             spot = source.toLowerCase().indexOf(search.toLowerCase());
@@ -87,7 +62,7 @@ public class StringUtils {
                 spot = source.indexOf(search);
             }
         }
-        if (!source.equals(origSource)) {
+        if (!source.equals(sourceString)) {
             return returnString.concat(source);
         } else {
             return returnString;
@@ -154,10 +129,12 @@ public class StringUtils {
      *    [:blank:]            Space and tab characters.
      *    [:cntrl:]            Control characters.
      *    [:digit:]            Numeric characters.
-     *    [:graph:]            Characters that are printable and are also visible. (A space is printable, but not visible, while an `a' is both.)
+     *    [:graph:]            Characters that are printable and are also visible.
+     *                         (A space is printable, but not visible, while an `a' is both.)
      *    [:lower:]            Lower-case alphabetic characters.
      *    [:print:]            Printable characters (characters that are not control characters.)
-     *    [:punct:]            Punctuation characters (characters that are not letter, digits, control characters, or space characters).
+     *    [:punct:]            Punctuation characters (characters that are not letter, digits,
+     *                         control characters, or space characters).
      *    [:space:]            Space characters (such as space, tab, and formfeed, to name a few).
      *    [:upper:]            Upper-case alphabetic characters.
      *    [:xdigit:]           Characters that are hexadecimal digits.
@@ -250,7 +227,7 @@ public class StringUtils {
      * </pre>
      *
      * @param search          substring to search for (regular expression)
-     * @param replace_pattern pattern to replace it with (includes \1, \2, etc to match parens)
+     * @param pattern pattern to replace it with (includes \1, \2, etc to match parens)
      * @param source          string to search through
      * @param exclusions      - the array of match cases that are not to be replaced. This can
      *                        be a regular expression. May be null.
@@ -259,36 +236,36 @@ public class StringUtils {
      * @return The source with all instances of <code>search</code>
      * replaced by <code>replace</code>
      */
-    public static String sReplaceReg(String search, String replace_pattern,
-                                     String source, String[] exclusions,
-                                     StringUtils.sReplaceCallback replaceCallback,
+    public static String sReplaceReg(String search,
+                                     String pattern,
+                                     String source,
+                                     String[] exclusions,
+                                     IReplaceCallback replaceCallback,
                                      boolean matchCase) {
-        /*    try
-        {*/
-        /**
+        /*
          * Compile regular expression
          */
         //RE regExpr = new RE(search);
-        /**
+        /*
          * Apply case independent parameter
          */
-        if (!matchCase) {
+//        if (!matchCase) {
             //    regExpr.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
-        }
-        /**
+  //      }
+        /*
          * While there are some mathes in the string,
          * cut the source remainder and make proper substitutions
          * on pieces of the source.
          */
         StringBuilder result = new StringBuilder();
-        /**
+        /*
          * Duplicate the source string to make a temp string
          * which we will cut as matching occurs.
          */
         String sourceRemainder = source;
         //  while (regExpr.match(sourceRemainder))
         // {
-        /**
+        /*
          * Replace placeholders like \1 with actual substrings (parens)
          * from next match case.
          */
@@ -301,10 +278,10 @@ public class StringUtils {
        /**
         * Make replacements via pattern and form actual replace string
         */
-        /*      String replace = replace_pattern;
+        /*      String replace = pattern;
            for (char i = 0; i < parenCount; i++)
            {
-               if (replace_pattern.indexOf(i) != -1)
+               if (pattern.indexOf(i) != -1)
                {
                    String paren = regExpr.getParen(i);
                    if (! matchCase)
@@ -323,7 +300,7 @@ public class StringUtils {
        }
        result.append(trunk);
    }     */
-        /**
+        /*
          * Here we got a remainder of a source - append it to result string buffer
          */
         //result.append(sourceRemainder);
@@ -331,7 +308,7 @@ public class StringUtils {
         /*   }     */
         /*  catch (RESyntaxException e)
         {*/
-        /**
+        /*
          * If syntax error occured,
          * return source string without
          * changes
@@ -354,7 +331,7 @@ public class StringUtils {
     public static String[] tokenizeReg(Pattern pattern, CharSequence input, int limit) {
         int index = 0;
         boolean matchLimited = limit > 0;
-        ArrayList<String> matchList = new ArrayList<String>();
+        ArrayList<String> matchList = new ArrayList<>();
         Matcher m = pattern.matcher(input);
 
         // Add segments before each match found
@@ -367,10 +344,10 @@ public class StringUtils {
                 match = input.subSequence(index, input.length()).toString();
             }
 
-            if (!match.trim().equals("")) {
+            if (match != null && !match.trim().isEmpty()) {
                 matchList.add(match);
             }
-            if (!m.group().trim().equals("")) {
+            if (!m.group().trim().isEmpty()) {
                 matchList.add(m.group());
             }
 
@@ -388,25 +365,12 @@ public class StringUtils {
         // Construct result
         int resultSize = matchList.size();
         if (limit == 0) {
-            while (resultSize > 0 && matchList.get(resultSize - 1).equals("")) {
+            while (resultSize > 0 && matchList.get(resultSize - 1).isEmpty()) {
                 resultSize--;
             }
         }
         String[] result = new String[resultSize];
         return matchList.subList(0, resultSize).toArray(result);
-    }
-
-    public static void main(String[] args) {
-        String str =
-            "</td>  </tr>  </table><br>  Enter the name without space, for example <strong>1,2-dinitrophenol</strong>.  <uni:link idref=\"sec14.1\"> Section 14.1</uni:link></br>  <uni:link idref=\"sec14.2\">Section 14.2</uni:link></p>";
-        List<String> tokens = StringUtils.tokenizeReg(str, "<[^<>]+>", false);
-        for (String token : tokens) {
-            System.out.println(token);
-        }
-        String[] tokensStrings = StringUtils.tokenizeReg(Pattern.compile("<[^<>]+>"), str, str.length());
-        for (String token : tokensStrings) {
-            System.out.println(token);
-        }
     }
 
     /**
@@ -431,7 +395,7 @@ public class StringUtils {
      * @return tokenized string array
      */
     public static List<String> tokenizeReg(String str, String search, boolean matchCase) {
-        ArrayList<String> array = new ArrayList<String>();
+        ArrayList<String> array = new ArrayList<>();
 
         Pattern pattern;
         if (matchCase) {
@@ -451,14 +415,14 @@ public class StringUtils {
      * @return true if str is found
      */
     private static boolean contains(String str, String[] array) {
-        if (str == null || array == null) {
-            return false;
-        }
-        for (final String aArray : array) {
-            Pattern pattern = Pattern.compile(aArray, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(str);
-            if (matcher.matches()) {
-                return true;
+        if (str != null && array != null) {
+
+            for (final String aArray : array) {
+                Pattern pattern = Pattern.compile(aArray, Pattern.CASE_INSENSITIVE);
+                Matcher matcher = pattern.matcher(str);
+                if (matcher.matches()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -495,35 +459,36 @@ public class StringUtils {
      * @param attrName name of required attribute
      * @return first attribute value without enclosing quotation marks, may be null
      */
+    @SuppressWarnings({"checkstyle:MultipleStringLiterals", "checkstyle:NestedIfDepth"})
     public static String getAttributeValue(String str, String attrName) {
         String attributeValue = null;
-        /** start of attribute name */
+        /* start of attribute name */
         int start = str.toLowerCase().indexOf(" " + attrName.toLowerCase());
-        /** start and end of attribute value */
+        /* start and end of attribute value */
         if (start != -1) {
             attributeValue = str.substring(start + attrName.length() + 1);
-            /** attribute begins with '=' sign */
+            /* attribute begins with '=' sign */
             start = attributeValue.indexOf("=");
             if (start != -1) {
                 attributeValue = attributeValue.substring(start + 1).trim();
             }
-            /** now check if attribute is quoted */
+            /* now check if attribute is quoted */
             boolean quoted = attributeValue.startsWith("\"");
-            /** delete first qoutation */
+            /* delete first qoutation */
             if (quoted) {
                 attributeValue = attributeValue.substring(1);
             }
-            /** attribute ends with space or quotation */
+            /* attribute ends with space or quotation */
             int end = quoted ? attributeValue.indexOf("\"") : attributeValue.indexOf(" ");
             if (end != -1) {
                 attributeValue = attributeValue.substring(0, end);
             } else {
-                /** attribute ends with slash */
+                /* attribute ends with slash */
                 end = attributeValue.indexOf("/>");
                 if (end != -1) {
                     attributeValue = attributeValue.substring(0, end);
                 } else {
-                    /** attribute ends with > */
+                    /* attribute ends with > */
                     end = attributeValue.indexOf(">");
                     if (end != -1) {
                         attributeValue = attributeValue.substring(0, end);
@@ -559,7 +524,7 @@ public class StringUtils {
      * @return string with replaced ASCII codes.
      */
     public static String replaceASCII(String str) {
-        return sReplaceReg("%([:alnum:]{2})", "\1", str, null, new sASCII(), false);
+        return sReplaceReg("%([:alnum:]{2})", "\1", str, null, new ASCII(), false);
     }
 
     /**
@@ -568,6 +533,7 @@ public class StringUtils {
      * @param ch initial char
      * @return ASCII code
      */
+    @SuppressWarnings("checkstyle:MultipleStringLiterals")
     public static String toASCII(char ch) {
         return "&#" + Integer.toString(ch) + ";";
     }
@@ -587,13 +553,13 @@ public class StringUtils {
      * it with another string. Uses regular expressions.
      *
      * @param search          substring to search for (regular expression)
-     * @param replace_pattern pattern to replace it with (includes \1, \2, etc to match parens)
+     * @param pattern  to replace it with (includes \1, \2, etc to match parens)
      * @param source          string to search through
      * @return The source with all instances of <code>search</code>
      * replaced by <code>replace</code>
      */
-    public static String sReplaceReg(String search, String replace_pattern, String source) {
-        return sReplaceReg(search, replace_pattern, source, null, null, false);
+    public static String sReplaceReg(String search, String pattern, String source) {
+        return sReplaceReg(search, pattern, source, null, null, false);
     }
 
     /**
@@ -601,26 +567,26 @@ public class StringUtils {
      * it with another string. Uses regular expressions.
      *
      * @param search          substring to search for (regular expression)
-     * @param replace_pattern pattern to replace it with (includes \1, \2, etc to match parens)
+     * @param pattern  to replace it with (includes \1, \2, etc to match parens)
      * @param source          string to search through
      * @param exclusions      - the array of match cases that are not to be replaced. This can
      *                        be a regular expression. May be null.
      * @return The source with all instances of <code>search</code>
      * replaced by <code>replace</code>
      */
-    public static String sReplaceReg(String search, String replace_pattern,
+    public static String sReplaceReg(String search, String pattern,
                                      String source, String[] exclusions) {
-        return sReplaceReg(search, replace_pattern, source, exclusions, null, false);
+        return sReplaceReg(search, pattern, source, exclusions, null, false);
     }
 
     /**
      * Remove punctuation from given string
      *
-     * @param str - the string to remove from
+     * @param inputString - the string to remove punctuation from
      * @return the string with punctuation removed
      */
-    public static String removePunctuation(String str) {
-        str = str.trim();
+    public static String removePunctuation(String inputString) {
+        String str = inputString.trim();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
@@ -634,31 +600,29 @@ public class StringUtils {
     }
 
     /**
-     * Remove all occurences of certain chars from a given string
+     * Remove all occurrences of certain chars from a given string
      *
      * @param inStr       the string to remove from
      * @param removeChars the characters to remove
      * @return the string with removeChars removed
      */
     public static String removeChars(String inStr, String removeChars) {
-        String outStr = inStr;
+        StringBuilder outStr = new StringBuilder(inStr);
         if (removeChars != null) {
             int removeLen = removeChars.length();
             int start = 0;
-            if (inStr != null) {
-                int end = inStr.indexOf(removeChars);
-                if (end > -1) {
-                    outStr = "";
-                    while (end > -1) {
-                        outStr += inStr.substring(start, end);
-                        start = end + removeLen;
-                        end = inStr.indexOf(removeChars, start);
-                    }
-                    outStr += inStr.substring(start);
+            int end = inStr.indexOf(removeChars);
+            if (end > -1) {
+                outStr = new StringBuilder();
+                while (end > -1) {
+                    outStr.append(inStr, start, end);
+                    start = end + removeLen;
+                    end = inStr.indexOf(removeChars, start);
                 }
+                outStr.append(inStr.substring(start));
             }
         }
-        return outStr;
+        return outStr.toString();
     }
 
     /**
@@ -668,11 +632,10 @@ public class StringUtils {
      * @return trimmed string
      */
     public static String trimInside(String str) {
-        /**
+        /*
          * Get rid of carriage returns.
          */
-        str = StringUtils.sReplace("\n", " ", str);
-        return StringUtils.sReplace("\r", " ", str);
+        return StringUtils.sReplace("\r", " ", StringUtils.sReplace("\n", " ", str));
     }
 
     /**
@@ -712,15 +675,15 @@ public class StringUtils {
      * Removes all whitespaces from the string
      * and carriage returns in text
      *
-     * @param str to remove whitespaces
+     * @param inputString to remove whitespaces
      * @return string with whitespaces removed
      */
-    public static String removeWhitespaces(String str) {
-        str = str.trim();
+    public static String removeWhitespaces(String inputString) {
+        String str = inputString.trim();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
-            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == 160) {
+            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == NON_BREAKING_SPACE) {
                 continue;
             }
             sb.append(ch);
@@ -732,15 +695,15 @@ public class StringUtils {
      * Replaces all whitespaces from the string
      * and carriage returns in text with _
      *
-     * @param str to replace whitespaces in
+     * @param inputString to replace whitespaces in
      * @return string with whitespaces replaced
      */
-    public static String replaceWhitespaces(String str) {
-        str = str.trim();
+    public static String replaceWhitespaces(String inputString) {
+        String str = inputString.trim();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
-            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == 160) {
+            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == NON_BREAKING_SPACE) {
                 ch = '_';
             }
             sb.append(ch);
@@ -752,16 +715,16 @@ public class StringUtils {
      * Removes all whitespaces from the string
      * and carriage returns in text with single whitespace
      *
-     * @param str to remove duplicate whitespaces
+     * @param inputString to remove duplicate whitespaces
      * @return string with duplicate whitespaces removed
      */
-    public static String removeDuplicateWhitespaces(String str) {
-        str = str.trim();
+    public static String removeDuplicateWhitespaces(String inputString) {
+        String str = inputString.trim();
         StringBuilder sb = new StringBuilder();
         boolean deleteWhitespace = false;
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
-            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == 160) {
+            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r' || ch == NON_BREAKING_SPACE) {
                 if (deleteWhitespace) {
                     continue;
                 } else {
@@ -778,163 +741,29 @@ public class StringUtils {
     /**
      * Replaces substring with new variant inside another string
      *
-     * @param SourceString source
-     * @param StringRemove to remove
-     * @param StringInsert to insert
+     * @param sourceStringInput source
+     * @param stringRemove to remove
+     * @param stringInsert to insert
      * @return modified string
      */
-    public static String replaceString(String SourceString, String StringRemove, String StringInsert) {
-        if (SourceString == null) {
-            return SourceString;
-        }
-        boolean OK = false;
-        int Position = 0;
-        while (!OK) {
-            Position = SourceString.indexOf(StringRemove, Position);
-            if (Position > -1) {
-                String Begin_SourceString = SourceString.substring(0, Position);
-                String End_SourceString = SourceString.substring(Position + StringRemove.length());
-                SourceString = Begin_SourceString + StringInsert + End_SourceString;
-                Position = Begin_SourceString.length() + StringInsert.length();
-            } else {
-                OK = true;
-            }
-        }
-        return SourceString;
-    }
-
-    /*
-     * Reads string from stream.
-     */
-    @SuppressWarnings({"ConstantConditions"})
-    public static String readString(BufferedReader m_dataStream) throws NoSuchElementException {
-        String str = null;
-        do {
-            do {
-
-                try {
-                    str = m_dataStream.readLine();
-
-                    int idx = str == null ? -1 : str.indexOf(" ");
-                    if (idx > -1) {
-                        str = str.substring(0, idx);
-                    }
-                } catch (Exception ex) {
-                    return str;
-                }
-
-
-                if (str != null) {
-                    str = str.trim();
+    public static String replaceString(String sourceStringInput, String stringRemove, String stringInsert) {
+        String sourceString = sourceStringInput;
+        if (sourceString != null) {
+            boolean ok = false;
+            int position = 0;
+            while (!ok) {
+                position = sourceString.indexOf(stringRemove, position);
+                if (position > -1) {
+                    String beginSourceString = sourceString.substring(0, position);
+                    String endSourceString = sourceString.substring(position + stringRemove.length());
+                    sourceString = beginSourceString + stringInsert + endSourceString;
+                    position = beginSourceString.length() + stringInsert.length();
                 } else {
-                    return str;
-                }
-            }
-            while (str.length() == 0);
-        }
-        while (str.startsWith("//"));
-
-        return str;
-    }
-
-    /**
-     * Converts a HTML color string to the <code>Color</code> object.
-     * The HTML color is a string in <code>#RRGGBB</code> form, where
-     * <code>RR</code> is red component (R - heximal digit in 0..F range),
-     * <code>GG</code> is green component (G - heximal digit in 0..F range)
-     * and <code>BB</code> is blue component (B - heximal digit in 0..F
-     * range). For example: <code>#000000</code> - black, <code>#FFFFFF
-     * </code> - white, <code>#FF0000</code> - red, etc.
-     *
-     * @param _htmlColor the HTML color string.
-     * @return the <code>Color</code> object if successful, <code>null
-     * </code> otherwise.
-     */
-    public static Color parseHTMLColor(String _htmlColor) {
-        Color ret = null;
-
-        // Only valid parameter is useful.
-        if (_htmlColor != null) {
-            // The HTML color is 7 characters long.
-            if (_htmlColor.length() == 7) {
-                // The HTML color starts from the '#' character.
-                if (_htmlColor.charAt(0) == '#') {
-                    int argb = 0xff000000;          // No transparency.
-                    int comp;
-
-                    // Read components.
-                    for (int i = 1; i < 7; i++) {
-                        comp = parseHexChar(_htmlColor.charAt(i));
-                        if (comp < 0) {
-                            // Not a HTML string.
-                            return (null);
-                        }
-                        argb |= comp << (((7 - i) << 2) - 4);
-                    }
-
-                    // Create the Color from our ARGB value.
-                    ret = new Color(argb);
+                    ok = true;
                 }
             }
         }
-
-        // Return result.
-        return (ret);
-    }
-
-    // PARSERS //////////////////////////////////////////////////////////////
-
-    /**
-     * Converts a heximal digit character to unsigned integer.
-     *
-     * @param _hexChar the character to convert.
-     * @return unsigned integer in the 0..15 range if successful or
-     * -1 if the character isn't a heximal digit character.
-     */
-    public static int parseHexChar(char _hexChar) {
-        switch (_hexChar) {
-            case '0':
-                return (0);
-            case '1':
-                return (1);
-            case '2':
-                return (2);
-            case '3':
-                return (3);
-            case '4':
-                return (4);
-            case '5':
-                return (5);
-            case '6':
-                return (6);
-            case '7':
-                return (7);
-            case '8':
-                return (8);
-            case '9':
-                return (9);
-            case 'a':
-            case 'A':
-                return (10);
-            case 'b':
-            case 'B':
-                return (11);
-            case 'c':
-            case 'C':
-                return (12);
-            case 'd':
-            case 'D':
-                return (13);
-            case 'e':
-            case 'E':
-                return (14);
-            case 'f':
-            case 'F':
-                return (15);
-        }
-
-        // Can't convert.
-        return (-1);
+        return sourceString;
     }
 
     /**
@@ -942,54 +771,60 @@ public class StringUtils {
      * The delimeter will be a dot. The precision will be 2 digits
      * after the delimeter.
      *
-     * @param _dval the double value.
+     * @param value the double value.
      * @return the string representation of the double value.
      */
-    public static String formatDouble(double _dval) {
-        return (formatDouble((float) _dval, 2, true));
+    public static String formatDouble(double value) {
+        return (formatDouble((float) value, 2, true));
     }
 
     /**
      * Makes a formatted string from a given double value.
      * The delimeter will be a dot.
      *
-     * @param _dval the double value.
-     * @param _prec the number of digits after the delimeter.
+     * @param value the double value.
+     * @param precision the number of digits after the delimeter.
      * @return the string representation of the double value.
      */
-    public static String formatDouble(double _dval, int _prec) {
-        return (formatDouble(_dval, _prec, true));
+    public static String formatDouble(double value, int precision) {
+        return (formatDouble(value, precision, true));
     }
 
     /**
      * Makes a formatted string from a given double value.
-     * This method returns <code>null</code> if the <code>_prec</code> is
+     * This method returns <code>null</code> if the <code>precision</code> is
      * less than zero.
      *
-     * @param _dval the double value.
-     * @param _prec the number of digits after the delimeter.
-     * @param _dot  is delimeter a dot?
+     * @param value the double value.
+     * @param precision the number of digits after the delimeter.
+     * @param isDot  is delimeter a dot?
      * @return the string representation of the double value.
      */
-    public static String formatDouble(double _dval, int _prec, boolean _dot) {
-        return formatDouble(_dval, _prec, _dot, true);
+    public static String formatDouble(double value, int precision, boolean isDot) {
+        return formatDouble(value, precision, isDot, true);
     }
 
     /**
      * Makes a formatted string from a given double value.
-     * This method returns <code>null</code> if the <code>_prec</code> is
+     * This method returns <code>null</code> if the <code>precision</code> is
      * less than zero.
      *
-     * @param _dval  the double value.
-     * @param _prec  the number of digits after the delimeter.
-     * @param _dot   is delimeter a dot?
-     * @param _round if true, the value is rounded one half up.
+     * @param value  the double value.
+     * @param precision  the number of digits after the delimeter.
+     * @param isDot   is delimeter a dot?
+     * @param round if true, the value is rounded one half up.
      * @return the string representation of the double value.
      */
-    @SuppressWarnings({"UnusedAssignment", "UnnecessaryUnboxing"})
-    public static String formatDouble(double _dval, int _prec, boolean _dot, boolean _round) {
+    @SuppressWarnings({"UnusedAssignment",
+        "UnnecessaryUnboxing",
+        "checkstyle:MagicNumber",
+        "checkstyle:InnerAssignment",
+        "checkstyle:ParameterName",
+        "checkstyle:ReturnCount"
+    })
+    public static String formatDouble(double value, int precision, boolean isDot, boolean round) {
         // Check parameters.
-        if (_prec < 0) {
+        if (precision < 0) {
             return (null);
         }
 
@@ -998,37 +833,38 @@ public class StringUtils {
 
         // Check for too big and too small values.
         int idx = -1;
-        ret = Double.toString(_dval);
+        ret = Double.toString(value);
         if ((idx = ret.indexOf("E")) > -1 || (idx = ret.indexOf("e")) > -1) {
             // x.xxxEyy...
             String dPart = ret.substring(0, idx);               // x.xxx
             String ePart = ret.substring(idx);    // Eyy
             double dv = Double.valueOf(dPart).doubleValue();
-            return (formatDouble(dv, _prec >>> 1, _dot, _round) + ePart);
+            return (formatDouble(dv, precision >>> 1, isDot, round) + ePart);
         }
         ret = null;
 
         // Get delimeter.
-        String delim = _dot ? "." : ",";
+        String delim = isDot ? "." : ",";
 
         // Get multiplyer.
         long mply = 1L;
-        for (int i = 0; i < _prec; i++) {
+        for (int i = 0; i < precision; i++) {
             mply *= 10L;
         }
 
-        long sign = _dval < 0.0 ? -1L : 1L;
-        int iround = _round ? 1 : 0;
+        long sign = value < 0.0 ? -1L : 1L;
+        int iround = round ? 1 : 0;
 
         // Get the value parts.
-        if (_prec == 0) {
-            long ipart = (long) (_dval + sign * 1.0 / 2);
+        if (precision == 0) {
+            long ipart = (long) (value + sign * 1.0 / 2);
             return (Long.toString(ipart));
         }
-        long ipart = (long) _dval;
-        String ssign = _dval < 0.0 ? "-" : "";
+        long ipart = (long) value;
+        String ssign = value < 0.0 ? "-" : "";
         ipart *= sign;
-        long fpart = (long) (_dval * (double) mply + sign * iround * 1.0 / 2) * sign - ipart * mply;
+        long fpart = (long) (value * (double) mply + sign * iround * 1.0 / 2) * sign - ipart * mply;
+
         if (fpart < 0) {
             fpart = -fpart;
         }
@@ -1037,6 +873,7 @@ public class StringUtils {
         String fpartStr = Long.toString(fpart);
         String fpartStr1 = Long.toString(mply).substring(1);
         idx = fpartStr1.length() - fpartStr.length();
+
         if (idx > 0) {
             fpartStr = fpartStr1.substring(0, idx) + fpartStr;
         } else if (idx < 0) {
@@ -1054,29 +891,28 @@ public class StringUtils {
     /*
      * stringToVectorWord.
      *
-     * @param  in_string string.
-     * @param  in_string string separate.
+     * @param  inputString string.
+     * @param  inputString string separate.
      * @return  vector of words.
      */
-    public static Vector<String> stringToVectorWord(String in_string, String in_separate) {
-        Vector<String> out_vector = new Vector<String>(1, 1);
-        int[] indx1;
-        indx1 = new int[2];
-        indx1[0] = 0;
-        int sep_len = in_separate.length();
+    public static Vector<String> stringToVectorWord(String inputString, String separator) {
+
+        Vector<String> array = new Vector<>(1, 1);
+        int[] indx1 = new int[2];
+
+        int length = separator.length();
         do {
-            indx1[1] = in_string.indexOf(in_separate, indx1[0]);
+            indx1[1] = inputString.indexOf(separator, indx1[0]);
             if (indx1[1] > -1) {
-                out_vector.addElement(in_string.substring(indx1[0], indx1[1]));
+                array.addElement(inputString.substring(indx1[0], indx1[1]));
             } else {
-                out_vector.addElement(in_string.substring(indx1[0]));
+                array.addElement(inputString.substring(indx1[0]));
                 break;
             }
-            indx1[0] = indx1[1] + sep_len;
-        }
-        while (indx1[0] < in_string.length());
+            indx1[0] = indx1[1] + length;
+        } while (indx1[0] < inputString.length());
 
-        return out_vector;
+        return array;
     }
 
     /**
@@ -1087,6 +923,7 @@ public class StringUtils {
      * @return list containing tokens.
      * @throws Exception if something
      */
+    @SuppressWarnings("checkstyle:ParameterAssignment")
     public static ArrayList<String> tokenizeByTag(String source, String tag)
         throws Exception {
         ArrayList<String> tokens = new ArrayList<String>();
@@ -1107,13 +944,15 @@ public class StringUtils {
             end += closeTag.length();
             source = source.substring(end);
         }
-        if (source.length() > 0) {
+        if (!source.isEmpty()) {
             tokens.add(source);
         }
 
         return tokens;
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
+    @Deprecated
     public static String escapeUnicodeString(String str) {
         if (str != null) {
             StringBuilder ostr = new StringBuilder();
@@ -1136,14 +975,17 @@ public class StringUtils {
         }
     }
 
-    static public String charToHex(char c) {
+
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public static String charToHex(char c) {
         // Returns hex String representation of char c
         byte hi = (byte) (c >>> 8);
         byte lo = (byte) (c & 0xff);
         return byteToHex(hi) + byteToHex(lo);
     }
 
-    static public String byteToHex(byte b) {
+    @SuppressWarnings({"checkstyle:Indentation", "checkstyle:MagicNumber"})
+    public static String byteToHex(byte b) {
         // Returns hex String representation of byte b
         char[] hexDigit =
             {
@@ -1154,7 +996,8 @@ public class StringUtils {
         return new String(array);
     }
 
-    public static String convertSymbolsToEntities(String source) {
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public static String convertSymbolsToHtmlEntities(String source) {
         if (source != null) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < source.length(); i++) {
@@ -1170,7 +1013,8 @@ public class StringUtils {
         return null;
     }
 
-    public static String convertEntitiesToSymbols(String source) {
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public static String convertHtmlEntitiesToSymbols(String source) {
         Scanner st = new Scanner(source).useDelimiter("&#");
         String tmp;
         StringBuilder sb = new StringBuilder();
@@ -1192,6 +1036,7 @@ public class StringUtils {
         return sb.toString();
     }
 
+    @SuppressWarnings({"checkstyle:MagicNumber", "checkstyle:ReturnCount"})
     public static boolean isNumberString(String source) {
         if ("".equals(source) || source == null) {
             return false;
@@ -1205,4 +1050,34 @@ public class StringUtils {
         return true;
     }
 
+    /**
+     * Interface to make additional processing of regular search results
+     * and to return proper string to substitute.
+     */
+    public interface IReplaceCallback {
+        String getString(String str);
+    }
+
+    /**
+     * This class returns ASCII coded symbol if
+     * given its hex presentation.
+     */
+    static class ASCII implements IReplaceCallback {
+        /**
+         * This methos tries to parse ASCII code
+         *
+         * @param str representation of ascii code
+         * @return ascii character
+         */
+        @SuppressWarnings("checkstyle:MagicNumber")
+        public String getString(String str) {
+            try {
+                int code = Integer.parseInt(str, 16);
+                char ch = (char) code;
+                return String.valueOf(ch);
+            } catch (NumberFormatException ex) {
+                return str;
+            }
+        }
+    }
 }

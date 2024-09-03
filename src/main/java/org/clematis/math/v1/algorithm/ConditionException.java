@@ -10,8 +10,8 @@ public class ConditionException extends AlgorithmException {
 
     public static final String CONDITION_FAILED_IN_MESSAGE = "Condition failed in ";
 
-    String conditionName = "";
-    String conditionCode = "";
+    String conditionName;
+    String conditionCode;
 
     ConditionException(String conditionName, String conditionCode, int line) {
         super(CONDITION_FAILED_IN_MESSAGE, line);

@@ -5,16 +5,16 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.ExpressionParser;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
-import org.clematis.math.v1.utils.AlgorithmUtils;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.algorithm.Parameter;
+import org.clematis.math.v1.parsers.ExpressionParser;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * Returns the result of summing the expression expr as the variable

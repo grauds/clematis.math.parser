@@ -8,10 +8,14 @@ import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.jdom2.Element;
 
+import lombok.Getter;
+
 /**
  * Representation variables, for example x, y or z. See grammar description for more details.
  */
+@Getter
 public class Variable extends SimpleNode implements Serializable {
+
     /**
      * The assigned value to this variable.
      */
@@ -29,20 +33,23 @@ public class Variable extends SimpleNode implements Serializable {
     /**
      * Constructor.
      *
-     * @param in_name String containing the variable token.
+     * @param name String containing the variable token.
      */
-    private Variable(String in_name) {
+    private Variable(String name) {
         super();
-        token = in_name;
+        token = name;
     }
 
     /**
      * Copy constructor
      *
-     * @param v
+     * @param v variable to copy
      */
     public Variable(Variable v) {
         super(v);
+        if (v.currentResult != null) {
+            this.currentResult = v.currentResult.copy();
+        }
     }
 
     /**
@@ -68,7 +75,7 @@ public class Variable extends SimpleNode implements Serializable {
     /**
      * Calculate a subtree of expression items
      *
-     * @param parameterProvider
+     * @param parameterProvider instance
      * @return expression item instance
      */
     public Node calculate(IParameterProvider parameterProvider) {
@@ -77,15 +84,6 @@ public class Variable extends SimpleNode implements Serializable {
         } else {
             return getCurrentResult().copy();
         }
-    }
-
-    /**
-     * Gets value wrapper.
-     *
-     * @return <code>iConstant</code> representing value wrapper.
-     */
-    public AbstractConstant getCurrentResult() {
-        return currentResult;
     }
 
     /**

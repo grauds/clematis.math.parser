@@ -3,21 +3,19 @@ package org.clematis.math.v1.functions;
 
 import java.math.BigDecimal;
 
+import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
+import org.clematis.math.MathUtils;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.MathUtils;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * Returns x expressed as a floating-point number rounded to n decimal places.
  */
-@SuppressWarnings("checkstyle:TodoComment")
-/* TODO: refactor to reduce cyclomatic complexity, write unit tests for this class */
 public class Decimal extends aFunction2 {
 
     public static final String MINUS_SIGNS = "-";
-    public static final String DOT = ".";
     public static final String ZERO = "0";
 
     /**
@@ -129,7 +127,7 @@ public class Decimal extends aFunction2 {
 
         String result = sb.reverse().toString();
         // get rid of dot at the end of the string, for example in "1."
-        if (result.endsWith(DOT)) {
+        if (result.endsWith(DECIMAL_SEPARATOR)) {
             result = result.substring(0, result.length() - 1);
         }
         return result;
@@ -210,7 +208,7 @@ public class Decimal extends aFunction2 {
         /*
          * Get decimal point to find out the type of input number string
          */
-        int decimalPointIndex = numberString.indexOf(DOT);
+        int decimalPointIndex = numberString.indexOf(DECIMAL_SEPARATOR);
         /*
          * Apply algorithms depending on decimal point index
          */
@@ -236,11 +234,11 @@ public class Decimal extends aFunction2 {
                     }
 
                     // if one point were added, reinitialize extra digit
-                    extraDigit = !numberString.startsWith(DOT);
+                    extraDigit = !numberString.startsWith(DECIMAL_SEPARATOR);
 
                     // cut trailing zeros
                     //numberString = cutTrailingsZeros( numberString );
-                    if (numberString.trim().equals(DOT)) {
+                    if (numberString.trim().equals(DECIMAL_SEPARATOR)) {
                         return ZERO;
                     }
                     // is resulting string empty?
@@ -306,7 +304,7 @@ public class Decimal extends aFunction2 {
                     if (place > 0) {
                         numberString = numberString + ZERO.repeat(place);
                     }
-                    if (numberString.endsWith(DOT)) {
+                    if (numberString.endsWith(DECIMAL_SEPARATOR)) {
                         numberString = numberString.substring(0, numberString.length() - 1);
                     }
                     return (negative ? MINUS_SIGNS : "") + numberString + exp;
@@ -315,7 +313,7 @@ public class Decimal extends aFunction2 {
             }
         }
         // do not change number
-        if (!numberString.startsWith(DOT)) {
+        if (!numberString.startsWith(DECIMAL_SEPARATOR)) {
             return (negative ? MINUS_SIGNS : "") +  /*cutTrailingsZeros(*/ numberString/* ) */ + exp;
         } else {
             return (negative ? MINUS_SIGNS : "") + ZERO + /*cutTrailingsZeros( */numberString /*)*/ + exp;

@@ -1,10 +1,11 @@
 // Created: 14.07.2005 T 17:54:50
 package org.clematis.math.v1;
 
+import org.clematis.math.v1.io.OutputFormatSettings;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import org.clematis.math.v1.io.OutputFormatSettings;
 
 /**
  * Bean shell algorithm value

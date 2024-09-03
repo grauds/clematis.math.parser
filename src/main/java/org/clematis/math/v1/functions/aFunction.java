@@ -11,6 +11,7 @@ import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.algorithm.IParameterProvider;
+import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v1.operations.Power;
 import org.jdom2.Element;
 
@@ -24,8 +25,6 @@ import lombok.Setter;
 @Getter
 @SuppressWarnings("checkstyle:TypeName")
 public abstract class aFunction implements IFunction, Serializable {
-
-    public static final String APPLY_ELEMENT_NAME = "apply";
 
     /**
      * The list of arguments
@@ -80,7 +79,7 @@ public abstract class aFunction implements IFunction, Serializable {
      */
     public Element toMathML() {
 
-        Element apply = new Element(APPLY_ELEMENT_NAME/*, Constants.NS_MATH*/);
+        Element apply = new Element(XMLConstants.APPLY_ELEMENT_NAME/*, Constants.NS_MATH*/);
 
         Element times = new Element("times"/*, Constants.NS_MATH*/);
         apply.addContent(times);
@@ -88,7 +87,7 @@ public abstract class aFunction implements IFunction, Serializable {
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element(APPLY_ELEMENT_NAME/*, Constants.NS_MATH*/);
+        Element apply2 = new Element(XMLConstants.APPLY_ELEMENT_NAME/*, Constants.NS_MATH*/);
 
         Element function = new Element(signature);
         apply2.addContent(function);

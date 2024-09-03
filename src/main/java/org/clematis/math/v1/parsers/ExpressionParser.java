@@ -1,11 +1,18 @@
 // Created: Jan 17, 2003 T 7:46:47 PM
-package org.clematis.math.v1;
+package org.clematis.math.v1.parsers;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.clematis.math.v1.AbstractConstant;
+import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.v1.IFunction;
+import org.clematis.math.v1.StringConstant;
+import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.DefaultParameterProvider;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;

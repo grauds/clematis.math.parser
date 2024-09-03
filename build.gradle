@@ -48,6 +48,10 @@ checkstyle {
     configProperties.checkstyleSuppressionFile = file("${project.rootDir}/config/checkstyle/suppressions.xml")
 }
 
+tasks.withType(Checkstyle).configureEach {
+    exclude '**/org/clematis/math/v2/parsers/**'
+}
+
 test {
     useJUnitPlatform()
 }

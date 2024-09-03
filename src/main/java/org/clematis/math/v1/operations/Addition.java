@@ -1,6 +1,7 @@
 // Created: Feb 14, 2003 T 11:29:25 AM
 package org.clematis.math.v1.operations;
 
+import static org.clematis.math.v1.io.XMLConstants.APPLY_ELEMENT_NAME;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
@@ -43,11 +44,12 @@ public class Addition extends aOperation {
      * @param item
      * @return this or new addition
      */
+    @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount"})
     public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Addition a_item) {
 
             IExpressionItem res1 = getOperand1().add(a_item.getOperand1());
-            IExpressionItem res2 = null;
+            IExpressionItem res2;
 
             if (res1 == null) {
                 res1 = getOperand2().add(a_item.getOperand1());
@@ -87,9 +89,10 @@ public class Addition extends aOperation {
      * we should produce a simple multiplication without any removal of
      * sum braskets.
      *
-     * @param item
+     * @param item to multiply
      * @return addition or multiplication.
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (item instanceof Constant) {
             this.setMultiplier(((Constant) item).getNumber() * getMultiplier());
@@ -152,7 +155,7 @@ public class Addition extends aOperation {
      * @return mathml formatted element
      */
     public Element toMathML() {
-        Element apply = new Element("apply");
+        Element apply = new Element(APPLY_ELEMENT_NAME);
 
         Element times = new Element("times");
         apply.addContent(times);
@@ -160,7 +163,7 @@ public class Addition extends aOperation {
         cn.setText(Double.toString(getMultiplier()));
         apply.addContent(cn);
 
-        Element apply2 = new Element("apply");
+        Element apply2 = new Element(APPLY_ELEMENT_NAME);
         apply2.addContent(new Element("plus"));
         apply2.addContent(getOperand1().toMathML());
         apply2.addContent(getOperand2().toMathML());

@@ -1,10 +1,14 @@
 // Created: Feb 18, 2003 T 6:04:16 PM
 package org.clematis.math.v1.functions;
 
+import java.math.BigDecimal;
+
+import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
+import static org.clematis.math.MathUtils.E;
+import org.clematis.math.MathUtils;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.MathUtils;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
@@ -57,43 +61,44 @@ public class Lsu extends aFunction2 {
     public static double getLSU(String stringDigit, int sigDigits) {
         String roundedDigit = Sig.formatWithSigDigits(stringDigit, sigDigits);
         int power = Lsu.getLsuPower(roundedDigit, sigDigits);
-        return Math.pow(10, power);
+        return Math.pow(BigDecimal.TEN.intValue(), power);
     }
 
     public static int getLsuPower(double number) {
         return getLsuPower(correctPlainInteger(number));
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     private static int getLsuPower(String numberString, int sigDigits) {
         /*
          * Indices for the number string
          */
-        int decimalPointIndex = 0;
+        int decimalPointIndex;
         /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        numberString = MathUtils.correctAndValidateInput(numberString);
+        String number = MathUtils.correctAndValidateInput(numberString);
         /*
          * Wrong input, return zero
          */
-        if (numberString == null) {
+        if (number == null) {
             return 0;
         }
         /*
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
-        int scientificIndex = numberString.toLowerCase().indexOf("e");
+        int scientificIndex = number.toLowerCase().indexOf(E);
         String exp = "";
         if (scientificIndex != -1) {
-            exp = numberString.substring(scientificIndex + 1);
-            numberString = numberString.substring(0, scientificIndex);
+            exp = number.substring(scientificIndex + 1);
+            number = number.substring(0, scientificIndex);
         }
         /*
          * Get decimal point to find out the type of input number string
          */
-        decimalPointIndex = numberString.indexOf(".");
+        decimalPointIndex = number.indexOf(DECIMAL_SEPARATOR);
         /*
          * Apply algorithms depending on decimal point index
          */
@@ -102,8 +107,8 @@ public class Lsu extends aFunction2 {
                 //If the number is decimal only: -1 < n < 1
                 // find non zero digit
                 boolean foundNonZero = false;
-                for (int i = 1; i < numberString.length(); i++) {
-                    if (numberString.charAt(i) != '0') {
+                for (int i = 1; i < number.length(); i++) {
+                    if (number.charAt(i) != '0') {
                         //mostSignificantDigitIndex = i;
                         foundNonZero = true;
                         break;
@@ -114,7 +119,7 @@ public class Lsu extends aFunction2 {
                  */
                 int i = exp.isEmpty() ? 0 : Integer.parseInt(exp);
                 if (foundNonZero) {
-                    return -(numberString.length() - 1) + i;
+                    return -(number.length() - 1) + i;
                 } else {
                     return i;
                 }
@@ -124,7 +129,7 @@ public class Lsu extends aFunction2 {
                 /*
                  * Return LENGTH - sigDigits - 1 + exp, ie, 1456000 -> 10^(3)
                  */
-                return numberString.length() - sigDigits + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
+                return number.length() - sigDigits + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
             }
             default: {
                 // find non zero digit
@@ -143,7 +148,7 @@ public class Lsu extends aFunction2 {
                  */
                 /*    if ( foundNonZero )
                     {*/
-                return -(numberString.length() - (decimalPointIndex + 1))
+                return -(number.length() - (decimalPointIndex + 1))
                     + (exp.isEmpty() ? 0 : Integer.parseInt(exp));
                /*     }
                     else
@@ -154,37 +159,38 @@ public class Lsu extends aFunction2 {
         }
     }
 
+    @SuppressWarnings("checkstyle:ReturnCount")
     private static int getLsuPower(String numberString) {
         /*
          * Indices for the number string
          */
-        int decimalPointIndex = 0;
+        int decimalPointIndex;
         int leastSignificantDigitIndex = 0;
         /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        numberString = MathUtils.correctAndValidateInput(numberString);
+        String number = MathUtils.correctAndValidateInput(numberString);
         /*
          * Wrong input, return zero
          */
-        if (numberString == null) {
+        if (number == null) {
             return 0;
         }
         /*
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
-        int scientificIndex = numberString.toLowerCase().indexOf("e");
+        int scientificIndex = number.toLowerCase().indexOf("e");
         String exp = "";
         if (scientificIndex != -1) {
-            exp = numberString.substring(scientificIndex + 1);
-            numberString = numberString.substring(0, scientificIndex);
+            exp = number.substring(scientificIndex + 1);
+            number = number.substring(0, scientificIndex);
         }
         /*
          * Get decimal point to find out the type of input number string
          */
-        decimalPointIndex = numberString.indexOf(".");
+        decimalPointIndex = numberString.indexOf(DECIMAL_SEPARATOR);
         /*
          * Apply algorithms depending on decimal point index
          */

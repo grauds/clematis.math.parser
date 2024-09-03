@@ -12,10 +12,12 @@ import org.jdom2.Namespace;
  * to itself, multiply or calculate subtree of expression items.
  */
 public interface IExpressionItem {
+
     /**
      * URI for the MATH XML namspace.
      */
     String NS_MATH_URI = "http://www.w3.org/1998/Math/MathML";
+
     /**
      * UNI XML namespace.
      */

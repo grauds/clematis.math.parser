@@ -12,16 +12,18 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.IFunction;
-import org.clematis.math.v1.io.OutputFormatSettings;
+import org.clematis.math.v1.IValue;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.IValue;
+import org.clematis.math.v1.io.OutputFormatSettings;
+import org.clematis.math.v1.io.XMLConstants;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 
 import lombok.Getter;
 import lombok.Setter;
+
 /**
  * A representation of algorithm in question. This is
  * a formula for obtaining random variables values
@@ -29,6 +31,7 @@ import lombok.Setter;
  */
 @Getter
 public class Algorithm extends DefaultParameterProvider {
+
     /*
      * Maximum number of algorithm iterations
      */
@@ -37,6 +40,10 @@ public class Algorithm extends DefaultParameterProvider {
      * Maximum number of algorithm iterations
      */
     protected static final int MAXIMUM_CONDITION_CHECKS = 100;
+    /**
+     * Numeric interval for condition checks
+     */
+    protected static final double TOLERANCE = 10e-9;
     /*
      * Parent algorithm
      */
@@ -215,12 +222,13 @@ public class Algorithm extends DefaultParameterProvider {
             try {
                 //attempts to get rid of zeros
                 int zeroFailures = 0;
-                boolean lastAttempt;
-                while (lastAttempt = zeroFailures <= Algorithm.MAXIMUM_ZERO_CHECKS) {
+                while (zeroFailures <= Algorithm.MAXIMUM_ZERO_CHECKS) {
                     // do not interrupt calculation if zero neighbourhood is reached
                     // in the last attempt
-                    boolean zero_failed = calculateParameters(params, lastAttempt);
-                    if (zero_failed) {
+                    boolean zeroFailed = calculateParameters(params,
+                        zeroFailures == Algorithm.MAXIMUM_ZERO_CHECKS
+                    );
+                    if (zeroFailed) {
                         zeroFailures++;
                     } else {
                         break;
@@ -263,10 +271,12 @@ public class Algorithm extends DefaultParameterProvider {
      * @throws ConditionException is thrown if condition is not satisfied
      * @throws AlgorithmException is thrown if error occurs in evaluating any parameter
      */
+    @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:CyclomaticComplexity"})
     private boolean calculateParameters(HashMap<Key, IValue> params, boolean calculateAllParameters)
-        throws ConditionException, AlgorithmException {
-        boolean zero_failed = false;
-        HashMap<String, Integer> randomized_params_counter = new HashMap<String, Integer>();
+        throws AlgorithmException {
+
+        boolean zeroFailed = false;
+        HashMap<String, Integer> randomizedParamsCounter = new HashMap<>();
         for (int i = 0; i < lines.size(); i++) {
             /* key here is always without braces */
             Key key = lines.get(i);
@@ -285,11 +295,11 @@ public class Algorithm extends DefaultParameterProvider {
                  */
                 if (param.isRandomized()) {
                     int c = 0;
-                    if (randomized_params_counter.containsKey(param.getName())) {
-                        c = randomized_params_counter.get(param.getName());
+                    if (randomizedParamsCounter.containsKey(param.getName())) {
+                        c = randomizedParamsCounter.get(param.getName());
                     }
                     IValue value = findKey(param.getName(), c, params);
-                    randomized_params_counter.put(param.getName(), c + 1);
+                    randomizedParamsCounter.put(param.getName(), c + 1);
                     /*
                      * Only abstract constants and simple values are valid input values
                      */
@@ -304,10 +314,6 @@ public class Algorithm extends DefaultParameterProvider {
                                 ac = new StringConstant(v);
                             }
                         }
-                    }
-                    if (ac != null) {
-                        System.out.println("Parameter " + param.getName() + " is loaded from initial values set with " +
-                            ac.getValue(null));
                     }
                 }
                 if (ac != null) {
@@ -325,7 +331,6 @@ public class Algorithm extends DefaultParameterProvider {
                  * If parameter is condition, check if condition passed
                  */
                 if (param.isCondition() && !param.isConditionPassed()) {
-                    //log.debug("Condition failed: " + param.getName() + " = " + param.getCode());
                     throw new ConditionException(param.getName(), param.getCode(), i + 1);
                 }
                 /*
@@ -337,9 +342,8 @@ public class Algorithm extends DefaultParameterProvider {
                     AbstractConstant result = param.getCurrentResult();
                     if (result instanceof Constant) {
                         double resV = Math.abs(((Constant) result).getNumber());
-                        if (resV > 0 && resV < 10e-9) {
-                            //log.debug("Zero failed: " + param.getName() + " = " + param.getCode() );
-                            zero_failed = true;
+                        if (resV > 0 && resV < TOLERANCE) {
+                            zeroFailed = true;
                         }
                     }
                 }
@@ -347,22 +351,19 @@ public class Algorithm extends DefaultParameterProvider {
                  * Load parameter for use
                  */
                 loadForUse(param);
-            }
-            /* function */
-            else {
+            } else {
                 /* load function for use */
                 functionFactory.loadForUse(key);
             }
             // save laps, break calculation and get another attempt
             // to get rid of zeros only if attempts remain
-            if (zero_failed && !calculateAllParameters) {
+            if (zeroFailed && !calculateAllParameters) {
                 break;
             }
         }
         finishAndClear();
-        return zero_failed;
+        return zeroFailed;
     }
-//************************ RESTORE PARAMETERS ************************
 
     /*
      * Revalidate calculated parameters to restore missing parameter
@@ -370,14 +371,15 @@ public class Algorithm extends DefaultParameterProvider {
      * <p>
      * before: code=? after: code=sig(3, 2*$k*....
      *
-     * @param alg_element question algorithm xml
+     * @param algElement question algorithm xml
      */
-    public void revalidateParameters(Element alg_element) {
-        if (alg_element != null) {
+    @SuppressWarnings("checkstyle:NestedIfDepth")
+    public void revalidateParameters(Element algElement) {
+        if (algElement != null) {
             /*
              * Create algorithm instance
              */
-            Algorithm algorithm = Algorithm.createFromQuestionXML(alg_element);
+            Algorithm algorithm = Algorithm.createFromQuestionXML(algElement);
             /*
              * Get algorithm with id of this taken algorithm
              */
@@ -419,7 +421,7 @@ public class Algorithm extends DefaultParameterProvider {
          * Process children
          */
         for (Algorithm alg : children) {
-            alg.revalidateParameters(alg_element);
+            alg.revalidateParameters(algElement);
         }
     }
 
@@ -519,24 +521,25 @@ public class Algorithm extends DefaultParameterProvider {
      * @param algorithmXML containing algorithm
      * @return algorithm object
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     static Algorithm createFromXML(Element algorithmXML) {
 
         if (algorithmXML != null && !algorithmXML.getChildren().isEmpty()) {
             Algorithm algorithm = new Algorithm();
-            if (algorithmXML.getAttribute("ident") != null) {
-                algorithm.setIdent(algorithmXML.getAttributeValue("ident"));
+            if (algorithmXML.getAttribute(XMLConstants.IDENT_ATTRIBUTE_NAME) != null) {
+                algorithm.setIdent(algorithmXML.getAttributeValue(XMLConstants.IDENT_ATTRIBUTE_NAME));
             }
             /* go through children - algorithm lines */
             List<Element> lines = algorithmXML.getChildren();
             if (lines != null) {
                 for (Element line : lines) {
-                    if (line.getName().equals("param")) {
+                    if (line.getName().equals(XMLConstants.PARAM_ELEMENT_NAME)) {
                         algorithm.addParameter(Parameter.create(line));
                     } else if (line.getName().equals("function")) {
                         algorithm.addFunction(GenericFunction.create(line));
-                    } else if (line.getName().equals("algorithm")) {
+                    } else if (line.getName().equals(XMLConstants.ALGORITHM_ATTRIBUTE_NAME)) {
                         Algorithm child = Algorithm.createFromXML(line);
-                        String key = line.getAttributeValue("ident");
+                        String key = line.getAttributeValue(XMLConstants.IDENT_ATTRIBUTE_NAME);
                         if (child != null) {
                             algorithm.addAlgorithm(key, child);
                         }
@@ -566,6 +569,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @param algElement algorithm xml
      * @return initial values map, with algorithm idents in keys
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     private HashMap<Key, IValue> loadParameters(Element algElement) {
         /*  load parameters for this algorithm */
         HashMap<Key, IValue> params = new HashMap<>();
@@ -573,13 +577,13 @@ public class Algorithm extends DefaultParameterProvider {
         for (Object element : elements) {
             if (element instanceof Element e) {
                 String name = e.getName();
-                if (name.equals("param")) {
+                if (name.equals(XMLConstants.PARAM_ELEMENT_NAME)) {
                     Parameter p = Parameter.loadResult(e);
                     /*
                      * Construct key
                      */
                     Key key = new Key(p.getName());
-                    String ident = algElement.getAttributeValue("ident");
+                    String ident = algElement.getAttributeValue(XMLConstants.IDENT_ATTRIBUTE_NAME);
                     if (ident != null && !ident.trim().isEmpty()) {
                         key.setPartId(ident);
                     }
@@ -593,7 +597,7 @@ public class Algorithm extends DefaultParameterProvider {
                      * Put key with name and number
                      */
                     params.put(key, p.getCurrentResult().copy());
-                } else if (name.equals("algorithm")) {
+                } else if (name.equals(XMLConstants.ALGORITHM_ATTRIBUTE_NAME)) {
                     params.putAll(loadParameters(e));
                 }
             }
@@ -607,11 +611,11 @@ public class Algorithm extends DefaultParameterProvider {
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
     public Element save() {
-        Element algElement = new Element("algorithm");
+        Element algElement = new Element(XMLConstants.ALGORITHM_ATTRIBUTE_NAME);
         algElement.setAttribute("version", "2");
 
         if (getIdent() != null) {
-            algElement.setAttribute("ident", getIdent());
+            algElement.setAttribute(XMLConstants.IDENT_ATTRIBUTE_NAME, getIdent());
         }
         /*
          * Add parameters
@@ -632,8 +636,8 @@ public class Algorithm extends DefaultParameterProvider {
          * Add child algorithms
          */
         for (Algorithm algorithm : children) {
-            Element calc_xml = algorithm.save();
-            algElement.addContent(calc_xml);
+            Element calcXml = algorithm.save();
+            algElement.addContent(calcXml);
         }
 
         return algElement;
@@ -645,9 +649,9 @@ public class Algorithm extends DefaultParameterProvider {
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
     public Element toXML() {
-        Element algElement = new Element("algorithm");
+        Element algElement = new Element(XMLConstants.ALGORITHM_ATTRIBUTE_NAME);
         if (getIdent() != null) {
-            algElement.setAttribute("ident", getIdent());
+            algElement.setAttribute(XMLConstants.IDENT_ATTRIBUTE_NAME, getIdent());
         }
         /*
          * Add parameters
@@ -690,9 +694,9 @@ public class Algorithm extends DefaultParameterProvider {
      * @return <code>Element</code> representing root of algorithm's JDOM.
      */
     public Element toQuestionXML() {
-        Element algElement = new Element("algorithm");
+        Element algElement = new Element(XMLConstants.ALGORITHM_ATTRIBUTE_NAME);
         if (getIdent() != null) {
-            algElement.setAttribute("ident", getIdent());
+            algElement.setAttribute(XMLConstants.IDENT_ATTRIBUTE_NAME, getIdent());
         }
         /*
          * Add parameters
@@ -703,16 +707,16 @@ public class Algorithm extends DefaultParameterProvider {
              */
             if (!key.isFunction()) {
                 Parameter param = parameters.get(key);
-                Element paramElement = new Element("param");
+                Element paramElement = new Element(XMLConstants.PARAM_ELEMENT_NAME);
                 paramElement.setAttribute("name", param.getName());
                 if (param.isContainsMathML()) {
-                    paramElement.setAttribute("contains_mathml", "true");
+                    paramElement.setAttribute("contains_mathml", Boolean.TRUE.toString());
                 }
 
                 paramElement.addContent(new CDATA(param.getCode()));
 
                 if (param.isCorrectAnswer()) {
-                    paramElement.setAttribute("answer", "true");
+                    paramElement.setAttribute("answer", Boolean.TRUE.toString());
                 }
                 algElement.addContent(paramElement);
             } else {

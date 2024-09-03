@@ -56,13 +56,13 @@ public class Algorithm extends DefaultParameterProvider {
      */
     public Parameter getParameter(String name) {
         Parameter param = super.getParameter(name);
-        /**
+        /*
          * Look for parameter in parent algorithm
          */
         if (param == null && getParent() != null) {
             param = getParent().getParameter(name);
         }
-        /**
+        /*
          * Return parameter may be null
          */
         return param;
@@ -75,14 +75,14 @@ public class Algorithm extends DefaultParameterProvider {
      * @param newParamName of new parameter
      */
     public void renameParameter(String paramName, String newParamName) {
-        /** find suffix */
+        /* find suffix */
         int no = getLastSimilarParameterNo(newParamName, 0);
         if (no != 0) {
             paramName = paramName + no;
         }
-        /** rename parameter */
+        /* rename parameter */
         super.renameParameter(paramName, newParamName);
-        /** rename parameter among children */
+        /* rename parameter among children */
         for (IParameterProvider aChildren : children) {
             if (aChildren instanceof Algorithm) {
                 ((Algorithm) aChildren).renameParameter(paramName, newParamName);
@@ -98,13 +98,13 @@ public class Algorithm extends DefaultParameterProvider {
      */
     public Parameter getParameterByCustomIdent(String answerIdent) {
         Parameter param = super.getParameterByCustomIdent(answerIdent);
-        /**
+        /*
          * Look for parameter in parent algorithm
          */
         if (param == null && getParent() != null) {
             param = getParent().getParameterByCustomIdent(answerIdent);
         }
-        /**
+        /*
          * Return parameter may be null
          */
         return param;
@@ -223,9 +223,6 @@ public class Algorithm extends DefaultParameterProvider {
                                 ac = new StringConstant(v);
                             }
                         }
-                    }
-                    if (ac != null) {
-                        //log.debug("Parameter " + param.getName() + " is loaded from initial values set with " + ac.getValue(null));
                     }
                 }
                 if (ac != null) {

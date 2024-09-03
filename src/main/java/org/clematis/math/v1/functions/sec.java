@@ -3,10 +3,10 @@
 
 package org.clematis.math.v1.functions;
 
+import org.clematis.math.XMath;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.XMath;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**

@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.GenericFunction;
+import org.clematis.math.v1.io.XMLConstants;
 
 /**
  * Parses the question algrorithm used for dynamical changing of the
@@ -93,9 +94,9 @@ public class AlgorithmReader {
         StringBuilder buffer = new StringBuilder();
         Parameter param;
 
-        if (statement.startsWith(Parameter.CONDITION_NAME)) {
-            name = Parameter.CONDITION_NAME;
-            code = statement.substring(Parameter.CONDITION_NAME.length() + 1);
+        if (statement.startsWith(XMLConstants.CONDITION_NAME)) {
+            name = XMLConstants.CONDITION_NAME;
+            code = statement.substring(XMLConstants.CONDITION_NAME.length() + 1);
 
             param = new Parameter(name, code);
             param.setCondition(true);

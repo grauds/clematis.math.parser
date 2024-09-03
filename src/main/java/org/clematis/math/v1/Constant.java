@@ -8,6 +8,7 @@ import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.Decimal;
 import org.clematis.math.v1.functions.Sig;
 import org.clematis.math.v1.io.OutputFormatSettings;
+import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.jdom2.Element;
 
@@ -32,9 +33,6 @@ import org.jdom2.Element;
  */
 public class Constant extends AbstractConstant {
 
-    public static final String SIG_DIGITS_ATTRIBUTE = "sig";
-    public static final String SDENABLED_ATTRIBUTE = "sdenabled";
-    public static final String CONSTANT_TYPE_ATTRIBUTE = "type";
     public static final String DEFAULT_SIGNIFICANT_DIGITS = "1";
     /**
      * Value of the constant is initialized with zero.
@@ -48,15 +46,17 @@ public class Constant extends AbstractConstant {
     public Constant(Element element) {
         super();
         if (element != null) {
-            if (element.getAttribute(SIG_DIGITS_ATTRIBUTE) != null) {
+            if (element.getAttribute(XMLConstants.SIG_ATTRIBUTE_NAME) != null) {
                 try {
-                    setSdNumber(Integer.parseInt(element.getAttributeValue(SIG_DIGITS_ATTRIBUTE)));
+                    setSdNumber(Integer.parseInt(element.getAttributeValue(XMLConstants.SIG_ATTRIBUTE_NAME)));
                 } catch (NumberFormatException ignored) {}
             }
-            if (element.getAttribute(SDENABLED_ATTRIBUTE) != null) {
+            if (element.getAttribute(XMLConstants.SDENABLED_ATTRIBUTE_NAME) != null) {
                 try {
-                    setSdEnable(element.getAttributeValue(SDENABLED_ATTRIBUTE).equals(DEFAULT_SIGNIFICANT_DIGITS)
-                        || element.getAttributeValue(SDENABLED_ATTRIBUTE).equals(Boolean.TRUE.toString())
+                    setSdEnable(element.getAttributeValue(XMLConstants.SDENABLED_ATTRIBUTE_NAME)
+                        .equals(DEFAULT_SIGNIFICANT_DIGITS)
+                        || element.getAttributeValue(XMLConstants.SDENABLED_ATTRIBUTE_NAME)
+                        .equals(Boolean.TRUE.toString())
                     );
                 } catch (NumberFormatException ignored) {}
             }
@@ -429,7 +429,7 @@ public class Constant extends AbstractConstant {
      */
     public Element toMathML() {
         Element cn = new Element("cn", NS_MATH);
-        cn.setAttribute(CONSTANT_TYPE_ATTRIBUTE, "real");
+        cn.setAttribute(XMLConstants.TYPE_ATTRIBUTE_NAME, "real");
         cn.setText(getValue(null));
         return cn;
     }
@@ -463,12 +463,12 @@ public class Constant extends AbstractConstant {
      */
     public Element toXML() {
         Element element = new Element("constant");
-        element.setAttribute(CONSTANT_TYPE_ATTRIBUTE, "number");
+        element.setAttribute(XMLConstants.TYPE_ATTRIBUTE_NAME, "number");
         if (sdNumber != 0) {
-            element.setAttribute(SIG_DIGITS_ATTRIBUTE, Integer.toString(sdNumber));
+            element.setAttribute(XMLConstants.SIG_ATTRIBUTE_NAME, Integer.toString(sdNumber));
         }
         if (sdEnable) {
-            element.setAttribute(SDENABLED_ATTRIBUTE, String.valueOf(sdEnable));
+            element.setAttribute(XMLConstants.SDENABLED_ATTRIBUTE_NAME, String.valueOf(sdEnable));
         }
         element.setText(getValue(null));
         return element;
