@@ -37,8 +37,8 @@ package org.clematis.math.v2.parsers.webtex;
 import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.SimpleParameter;
-import org.clematis.math.v2.algorithm.iFunctionProvider;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
+import org.clematis.math.v2.algorithm.IFunctionProvider;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.clematis.math.v2.parsers.WebTexParserTreeConstants;
 
@@ -53,11 +53,11 @@ public class WebTexParser/*@bgen(jjtree)*/
     /**
      * Instance of parameter provider
      */
-    private iParameterProvider parameterProvider = null;
+    private IParameterProvider parameterProvider = null;
     /**
      * Instance of function provider
      */
-    private iFunctionProvider functionProvider = new FunctionFactory();
+    private IFunctionProvider functionProvider = new FunctionFactory();
 
     /**
      * Parse expression
@@ -71,28 +71,28 @@ public class WebTexParser/*@bgen(jjtree)*/
     /**
      * Return an instance of parameter provider
      */
-    public iParameterProvider getParameterProvider() {
+    public IParameterProvider getParameterProvider() {
         return parameterProvider;
     }
 
     /**
      * Sets an instance of parameter provider parser
      */
-    public void setParameterProvider(iParameterProvider parameterProvider) {
+    public void setParameterProvider(IParameterProvider parameterProvider) {
         this.parameterProvider = parameterProvider;
     }
 
     /**
      * Return an instance of function provider
      */
-    public iFunctionProvider getFunctionProvider() {
+    public IFunctionProvider getFunctionProvider() {
         return functionProvider;
     }
 
     /**
      * Sets an instance of function provider parser
      */
-    public void setFunctionProvider(iFunctionProvider functionProvider) {
+    public void setFunctionProvider(IFunctionProvider functionProvider) {
         this.functionProvider = functionProvider;
     }
 

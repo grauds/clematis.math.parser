@@ -4,7 +4,7 @@ package org.clematis.math.v2.io;
 /**
  * Parameter formatter
  */
-public interface iParameterFormatter {
+public interface IParameterFormatter {
     /**
      * Get format settings from this algorithm
      *

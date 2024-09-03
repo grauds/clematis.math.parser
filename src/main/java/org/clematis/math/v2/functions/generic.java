@@ -9,10 +9,10 @@ import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.StringConstant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.algorithm.DefaultParameterProvider;
 import org.clematis.math.v2.algorithm.Parameter;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.string.ParseException;
 import org.clematis.math.v2.parsers.string.StringMathParser;
@@ -134,7 +134,7 @@ public class generic extends aFunction {
      * @param parameterProvider parameter and functions provider
      * @return expression item instance
      */
-    public Node calculate(iParameterProvider parameterProvider)
+    public Node calculate(IParameterProvider parameterProvider)
         throws AlgorithmException {
         /** parse code of this generic function, substituting actual parameters instead of formal ones */
         StringMathParser parser = new StringMathParser(new StringReader(code));

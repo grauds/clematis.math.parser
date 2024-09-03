@@ -15,9 +15,6 @@ import org.clematis.math.v1.functions.aFunction;
  */
 public class FunctionFactory implements Serializable, IFunctionProvider {
 
-    static {
-        registerFunctions();
-    }
     /**
      * Standard function classes
      */
@@ -88,6 +85,9 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
         CLASSES.put("rList", "org.clematis.math.v1.functions.reference.rList");
     }
 
+    static {
+        registerFunctions();
+    }
     /**
      * Create function, either standard or extended
      *

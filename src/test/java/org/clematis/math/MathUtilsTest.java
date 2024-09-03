@@ -36,8 +36,8 @@ public class MathUtilsTest {
         Assertions.assertEquals(".123", MathUtils.correctAndValidateInput("00000.123"));
         Assertions.assertEquals(".124", MathUtils.correctAndValidateInput("+0.124"));
         Assertions.assertEquals(".124", MathUtils.correctAndValidateInput("0.124"));
-        Assertions.assertEquals(".125", MathUtils.correctAndValidateInput("00000.125000"));
-        Assertions.assertEquals(".128", MathUtils.correctAndValidateInput("0.128000"));
+        Assertions.assertEquals(".125000", MathUtils.correctAndValidateInput("00000.125000"));
+        Assertions.assertEquals(".128000", MathUtils.correctAndValidateInput("0.128000"));
         Assertions.assertEquals("100000.126E-1",
             MathUtils.correctAndValidateInput("100000.126E-1")
         );

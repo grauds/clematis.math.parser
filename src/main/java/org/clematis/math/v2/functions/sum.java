@@ -2,6 +2,7 @@
 package org.clematis.math.v2.functions;
 
 import org.clematis.math.v2.AbstractConstant;
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.StringConstant;
@@ -25,9 +26,9 @@ import java.io.StringReader;
  * NOTE: The dummy variable in the sum MUST NOT be decorated with a $ character.
  */
 public class sum extends aFunction2 {
-    class Provider implements iSimpleParameterProvider,
+    class Provider implements ISimpleParameterProvider,
         iVariableProvider,
-        iFunctionProvider {
+        IFunctionProvider {
         /**
          * Value of variable
          */
@@ -103,7 +104,7 @@ public class sum extends aFunction2 {
      * @param parameterProvider
      * @return expression item instance
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         try {
             if (getArguments().size() <= 3 || getArguments().size() > 4) {
                 throw new AlgorithmException("Invalid number of arguments in function 'sum': " + getArguments().size());

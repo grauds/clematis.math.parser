@@ -1,6 +1,7 @@
 // Created: Mar 19, 2003 T 4:37:10 PM
 package org.clematis.math.v1;
 
+import org.clematis.math.v1.io.OutputFormatSettings;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 

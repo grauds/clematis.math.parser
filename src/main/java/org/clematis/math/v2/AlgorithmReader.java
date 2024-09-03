@@ -2,7 +2,6 @@
 package org.clematis.math.v2;
 
 import org.clematis.math.v2.algorithm.Algorithm;
-import org.clematis.math.v2.algorithm.AlgorithmException;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.generic;
 

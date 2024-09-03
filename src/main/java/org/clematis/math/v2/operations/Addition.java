@@ -4,8 +4,8 @@ package org.clematis.math.v2.operations;
 import java.util.ArrayList;
 
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.jdom2.Element;
 
@@ -46,7 +46,7 @@ public class Addition extends aOperation {
      * @return resulting node or new addition
      * @throws AlgorithmException
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         /**
          * First node from calculated arguments
          */

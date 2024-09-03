@@ -1,15 +1,14 @@
 // Created: 21.10.2003 T 10:59:38
 package org.clematis.math.v2.functions;
 
+import java.math.BigDecimal;
+
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
-import org.clematis.math.v2.io.NumberFormatter;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
-import org.clematis.math.v2.utils.MathUtils;
-
-import java.math.BigDecimal;
+import org.clematis.math.MathUtils;
 
 /**
  * Returns x expressed as a floating-point number rounded to n
@@ -24,7 +23,7 @@ public class Decimal extends aFunction2 {
      * @param parameterProvider
      * @return expression item instance
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         try {
             if (getArguments().size() != 2) {
                 throw new AlgorithmException(
@@ -192,7 +191,7 @@ public class Decimal extends aFunction2 {
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        numberString = NumberFormatter.correctAndValidateInput(numberString);
+        numberString = MathUtils.correctAndValidateInput(numberString);
         /**
          * Wrong input, return null
          */

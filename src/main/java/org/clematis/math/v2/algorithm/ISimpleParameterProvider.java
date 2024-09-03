@@ -3,7 +3,7 @@ package org.clematis.math.v2.algorithm;
 
 import org.clematis.math.v2.AbstractConstant;
 
-public interface iSimpleParameterProvider {
+public interface ISimpleParameterProvider {
     /**
      * Return parameter constant
      *

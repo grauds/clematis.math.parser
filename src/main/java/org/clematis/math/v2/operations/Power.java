@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.Variable;
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
 import org.jdom2.Element;
@@ -32,7 +32,7 @@ public class Power extends aOperation {
         super(in_operand1, in_operand2);
     }
 
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         Node base = getOperand1().calculate(parameterProvider);
         Node exponent = getOperand2().calculate(parameterProvider);
 

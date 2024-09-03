@@ -3,8 +3,8 @@ package org.clematis.math.v2;
 
 import java.io.Serializable;
 
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.algorithm.Parameter;
-import org.clematis.math.v2.algorithm.iParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.jdom2.Element;
 
@@ -60,7 +60,7 @@ public abstract class AbstractConstant extends SimpleValue implements Serializab
      * @param parameterProvider
      * @return <code>this</code> reference.
      */
-    public Node calculate(iParameterProvider parameterProvider) {
+    public Node calculate(IParameterProvider parameterProvider) {
         return copy();
     }
 

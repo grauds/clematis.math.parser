@@ -1,5 +1,5 @@
 // Created: 14.04.2005 T 11:18:19
-package org.clematis.math.v1.algorithm;
+package org.clematis.math.v1.utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,8 +11,11 @@ import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.IOptions;
+import org.clematis.math.v1.algorithm.IParameterProvider;
+import org.clematis.math.v1.algorithm.Key;
+import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.operations.SimpleFraction;
-import org.clematis.math.v2.utils.StringUtils;
+import org.clematis.math.StringUtils;
 import org.jdom2.Content;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;

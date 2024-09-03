@@ -1,4 +1,4 @@
-// $Id: iParameterProvider.java,v 1.1 2009-04-27 07:11:09 anton Exp $
+// $Id: IParameterProvider.java,v 1.1 2009-04-27 07:11:09 anton Exp $
 // Created: Jan 21, 2003 T 11:34:43 AM
 package org.clematis.math.v1.algorithm;
 
@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.IValue;
+import org.clematis.math.v1.io.IParameterFormatter;
 
 /**
  * Provider of parameters for functions.

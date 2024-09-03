@@ -5,9 +5,6 @@ package org.clematis.math.v1.algorithm;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
 
-/**
- *
- */
 public interface ISimpleParameterProvider {
 
     /**

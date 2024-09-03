@@ -3,16 +3,14 @@ package org.clematis.math.v2;
 
 import java.math.BigDecimal;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.Decimal;
 import org.clematis.math.v2.functions.Sig;
-import org.clematis.math.v2.io.NumberFormatter;
 import org.clematis.math.v2.io.OutputFormatSettings;
 import org.clematis.math.v2.operations.SimpleFraction;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.string.StringMathParserConstants;
-import org.clematis.math.v2.utils.MathUtils;
+import org.clematis.math.MathUtils;
 import org.jdom2.Element;
 
 /**
@@ -307,12 +305,12 @@ public class Constant extends AbstractConstant {
              * Switch on grouping
              */
             if (fs.isGrouping()) {
-                str = NumberFormatter.groupThousands(str);
+                str = MathUtils.groupThousands(str);
             } else {
-                str = NumberFormatter.ungroupThousands(str);
+                str = MathUtils.ungroupThousands(str);
             }
         } else {
-            BigDecimal bd = new BigDecimal(NumberFormatter.ungroupThousands(str));
+            BigDecimal bd = new BigDecimal(MathUtils.ungroupThousands(str));
             str = bd.toString();
         }
 

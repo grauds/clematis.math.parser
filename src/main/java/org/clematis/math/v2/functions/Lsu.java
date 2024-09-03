@@ -2,12 +2,11 @@
 package org.clematis.math.v2.functions;
 
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
-import org.clematis.math.v2.io.NumberFormatter;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
-import org.clematis.math.v2.utils.MathUtils;
+import org.clematis.math.MathUtils;
 
 /**
  * lsu( n, x )
@@ -23,7 +22,7 @@ public class Lsu extends aFunction2 {
      * @param parameterProvider
      * @return <code>Constant</code> with formatted value or null on error.
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         try {
             if (getArguments().size() <= 1 || getArguments().size() > 2) {
                 throw new AlgorithmException("Invalid number of arguments in function 'Lsu': " + getArguments().size());
@@ -75,7 +74,7 @@ public class Lsu extends aFunction2 {
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        numberString = NumberFormatter.correctAndValidateInput(numberString);
+        numberString = MathUtils.correctAndValidateInput(numberString);
         /**
          * Wrong input, return zero
          */
@@ -147,7 +146,7 @@ public class Lsu extends aFunction2 {
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        numberString = NumberFormatter.correctAndValidateInput(numberString);
+        numberString = MathUtils.correctAndValidateInput(numberString);
         /**
          * Wrong input, return zero
          */

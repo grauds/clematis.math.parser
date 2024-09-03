@@ -10,7 +10,7 @@ import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;

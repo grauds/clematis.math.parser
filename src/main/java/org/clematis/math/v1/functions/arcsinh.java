@@ -5,7 +5,7 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * arcsinh(x)=log( x + (x^2 + 1)^(1/2) )

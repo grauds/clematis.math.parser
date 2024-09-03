@@ -3,7 +3,7 @@ package org.clematis.math.v2;
 
 import java.io.Serializable;
 
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.jdom2.Element;
@@ -71,7 +71,7 @@ public class Variable extends SimpleNode implements Serializable {
      * @param parameterProvider
      * @return expression item instance
      */
-    public Node calculate(iParameterProvider parameterProvider) {
+    public Node calculate(IParameterProvider parameterProvider) {
         if (getCurrentResult() == null) {
             return new Variable(this);
         } else {

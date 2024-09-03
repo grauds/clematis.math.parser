@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.clematis.math.StringUtils;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.StringConstant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.algorithm.ParameterReference;
-import org.clematis.math.v2.algorithm.iParameterProvider;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.operations.SimpleFraction;
 import org.clematis.math.v2.parsers.Node;
@@ -62,7 +63,7 @@ public class AlgorithmUtils {
      * @param element element to process
      * @return String containing element text.
      */
-    public static Element substituteParametersXML(iParameterProvider algorithm, Element element) {
+    public static Element substituteParametersXML(IParameterProvider algorithm, Element element) {
         if (element != null) {
             ArrayList new_content = new ArrayList();
             List list = element.getContent();
@@ -141,7 +142,7 @@ public class AlgorithmUtils {
      * @param param the parameter from which the dependencies are searched.
      * @return ArrayList with parameters if exist or null.
      */
-    public static ArrayList findDependencies(iParameterProvider parameterProvider, Parameter param) {
+    public static ArrayList findDependencies(IParameterProvider parameterProvider, Parameter param) {
         ArrayList<Parameter> dependencies = null;
         if (param.getExpressionRoot() != null) {
             dependencies = new ArrayList<Parameter>();
@@ -156,7 +157,7 @@ public class AlgorithmUtils {
      * @param exprItem     the expression root.
      * @param dependencies container for dependencies.
      */
-    private static void findDependencies(iParameterProvider parameterProvider, Node exprItem,
+    private static void findDependencies(IParameterProvider parameterProvider, Node exprItem,
                                          ArrayList<Parameter> dependencies) {
         if (exprItem instanceof aFunction function) {
             Node[] args = function.getChildren();
@@ -187,7 +188,7 @@ public class AlgorithmUtils {
      * @return array list with parameter names, may be empty, never null
      */
     public static ArrayList<String> findParameters(String string,
-                                                   iParameterProvider provider,
+                                                   IParameterProvider provider,
                                                    boolean skipInsideStrings) {
         ArrayList<String> result = new ArrayList<String>();
         if (provider != null && string != null && !string.trim().equals("")) {
@@ -214,7 +215,7 @@ public class AlgorithmUtils {
      * @param string the explored string
      * @return array list with parameter names, may be empty, never null
      */
-    public static String replaceParameters(String string, iParameterProvider provider) {
+    public static String replaceParameters(String string, IParameterProvider provider) {
         StringBuilder result = new StringBuilder();
         if (provider != null && string != null && !string.trim().equals("")) {
             List<String> tokens = StringUtils.tokenizeReg(string, FIND_EXPRESSION, false);

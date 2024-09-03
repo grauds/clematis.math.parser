@@ -1,5 +1,5 @@
 // Created: Mar 24, 2003 T 4:01:16 PM
-package org.clematis.math.v2.utils;
+package org.clematis.math;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -37,9 +37,6 @@ public class StringUtils {
                 char ch = (char) code;
                 return String.valueOf(ch);
             } catch (NumberFormatException ex) {
-                /**
-                 * Return the same string
-                 */
                 return str;
             }
         }

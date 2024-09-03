@@ -6,11 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.clematis.math.v2.AbstractConstant;
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.Constant;
+import org.clematis.math.v2.IValue;
 import org.clematis.math.v2.SimpleValue;
 import org.clematis.math.v2.StringConstant;
 import org.clematis.math.v2.functions.generic;
-import org.clematis.math.v2.iValue;
 import org.clematis.math.v2.io.OutputFormatSettings;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
@@ -28,20 +29,16 @@ public class Algorithm extends DefaultParameterProvider {
      * Maximum number of algorithm iterations
      */
     protected static final int MAXIMUM_CONDITION_CHECKS = 100;
-//************************ FORMAT SETTINGS ********************************
-
     /**
      * Sets format settings for this algorithm
      */
     public void setFormatSettings(OutputFormatSettings fs) {
         super.setFormatSettings(fs);
         //Set format settings for children algorithms
-        for (iParameterProvider aChildren : children) {
+        for (IParameterProvider aChildren : children) {
             aChildren.setFormatSettings(fs);
         }
     }
-//************************ ADD, FIND, RENAME OR REMOVE PARAMETERS ************************
-
     /**
      * Adds parameter and sets itself as parameter container.
      *
@@ -86,7 +83,7 @@ public class Algorithm extends DefaultParameterProvider {
         /** rename parameter */
         super.renameParameter(paramName, newParamName);
         /** rename parameter among children */
-        for (iParameterProvider aChildren : children) {
+        for (IParameterProvider aChildren : children) {
             if (aChildren instanceof Algorithm) {
                 ((Algorithm) aChildren).renameParameter(paramName, newParamName);
             }
@@ -128,7 +125,7 @@ public class Algorithm extends DefaultParameterProvider {
      *
      * @throws AlgorithmException on error.
      */
-    public void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException {
+    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
         boolean success = false;
         String message = "";
         int conditionFailures = 0;
@@ -166,7 +163,7 @@ public class Algorithm extends DefaultParameterProvider {
         /**
          * Process children
          */
-        for (iParameterProvider aChildren : children) {
+        for (IParameterProvider aChildren : children) {
             /**
              * Inherit calculated parameters
              */
@@ -185,7 +182,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @throws ConditionException is thrown if condition is not satisfied
      * @throws AlgorithmException is thrown if error occurs in evaluating any parameter
      */
-    private boolean calculateParameters(HashMap<Key, iValue> params, boolean calculateAllParameters)
+    private boolean calculateParameters(HashMap<Key, IValue> params, boolean calculateAllParameters)
         throws AlgorithmException {
         boolean zero_failed = false;
         HashMap<String, Integer> randomized_params_counter = new HashMap<String, Integer>();
@@ -210,7 +207,7 @@ public class Algorithm extends DefaultParameterProvider {
                     if (randomized_params_counter.containsKey(param.getName())) {
                         c = randomized_params_counter.get(param.getName());
                     }
-                    iValue value = findKey(param.getName(), c, params);
+                    IValue value = findKey(param.getName(), c, params);
                     randomized_params_counter.put(param.getName(), c + 1);
                     /**
                      * Only abstract constants and simple values are valid input values
@@ -293,7 +290,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @return calculated original_algorithm instance
      * @throws AlgorithmException throws exception if original_algorithm cannot be created
      */
-    public static Algorithm createFromAlgorithm(iParameterProvider original_algorithm) throws AlgorithmException {
+    public static Algorithm createFromAlgorithm(IParameterProvider original_algorithm) throws AlgorithmException {
         if (original_algorithm != null && original_algorithm instanceof Algorithm) {
             Element xml = ((Algorithm) original_algorithm).toXML();
             Algorithm algorithm = Algorithm.createFromXML(xml);
@@ -316,7 +313,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @return calculated algorithm instance
      * @throws AlgorithmException throws exception if algorithm cannot be created
      */
-    public static Algorithm createFromAlgorithm(iParameterProvider original_algorithm, HashMap<Key, iValue> params)
+    public static Algorithm createFromAlgorithm(IParameterProvider original_algorithm, HashMap<Key, IValue> params)
         throws AlgorithmException {
         if (original_algorithm != null && original_algorithm instanceof Algorithm) {
             Element ser = ((Algorithm) original_algorithm).toXML();
@@ -375,7 +372,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @throws AlgorithmException if algorithm cannot be created
      */
     public void load(Element algorithmResultsXml) throws AlgorithmException {
-        HashMap<Key, iValue> params = loadParameters(algorithmResultsXml);
+        HashMap<Key, IValue> params = loadParameters(algorithmResultsXml);
         this.calculateParameters(params);
     }
 
@@ -385,9 +382,9 @@ public class Algorithm extends DefaultParameterProvider {
      * @param algElement algorithm xml
      * @return initial values map, with algorithm idents in keys
      */
-    private HashMap<Key, iValue> loadParameters(Element algElement) {
+    private HashMap<Key, IValue> loadParameters(Element algElement) {
         /**  load parameters for this algorithm */
-        HashMap<Key, iValue> params = new HashMap<Key, iValue>();
+        HashMap<Key, IValue> params = new HashMap<Key, IValue>();
         if (algElement != null) {
             List elements = algElement.getChildren();
             for (Object element : elements) {
@@ -457,7 +454,7 @@ public class Algorithm extends DefaultParameterProvider {
         /**
          * Add child algorithms
          */
-        for (iParameterProvider aChildren : children) {
+        for (IParameterProvider aChildren : children) {
             if (aChildren instanceof Algorithm) {
                 Element calc_xml = ((Algorithm) aChildren).save();
                 algElement.addContent(calc_xml);
@@ -495,7 +492,7 @@ public class Algorithm extends DefaultParameterProvider {
         /**
          * Add child algorithms
          */
-        for (iParameterProvider algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             if (algorithm instanceof Algorithm) {
                 algElement.addContent(((Algorithm) algorithm).toXML());
             }
@@ -555,7 +552,7 @@ public class Algorithm extends DefaultParameterProvider {
         /**
          * Add child algorithms
          */
-        for (iParameterProvider algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             if (algorithm instanceof Algorithm) {
                 algElement.addContent(((Algorithm) algorithm).toQuestionXML());
             }
@@ -584,7 +581,7 @@ public class Algorithm extends DefaultParameterProvider {
             }
         }
 
-        for (iParameterProvider algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             if (algorithm instanceof Algorithm) {
                 no = ((Algorithm) algorithm).getLastSimilarParameterNo(name, no);
             }

@@ -6,9 +6,9 @@ import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 
 /**
- * Simple algorithm value = Node + iValue
+ * Simple algorithm value = Node + IValue
  */
-public class SimpleValue extends SimpleNode implements iValue {
+public class SimpleValue extends SimpleNode implements IValue {
     /**
      * Empty public constructor
      */

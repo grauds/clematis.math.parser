@@ -1,8 +1,7 @@
 // Created: Mar 19, 2003 T 4:37:10 PM
 package org.clematis.math.v2;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.io.OutputFormatSettings;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
@@ -51,9 +50,9 @@ public class StringConstant extends AbstractConstant {
      *
      * @param parameterProvider with precalculated values for some parameters
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculate(iParameterProvider parameterProvider) {
+    public Node calculate(IParameterProvider parameterProvider) {
         /**
          * Find parameter references
          */

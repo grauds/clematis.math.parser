@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.clematis.math.MathUtils;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.clematis.math.v2.parsers.WebTexParserTreeConstants;
-import org.clematis.math.v2.utils.MathUtils;
 import org.jdom2.Element;
 import org.jdom2.EntityRef;
 import org.jdom2.output.XMLOutputter;

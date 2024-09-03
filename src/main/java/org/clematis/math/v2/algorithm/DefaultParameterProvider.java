@@ -10,19 +10,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.clematis.math.v2.AbstractConstant;
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.FunctionFactory;
+import org.clematis.math.v2.IValue;
 import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.functions.generic;
-import org.clematis.math.v2.iValue;
 import org.clematis.math.v2.io.AbstractParameterFormatter;
-import org.clematis.math.v2.utils.StringUtils;
+import org.clematis.math.StringUtils;
 /**
  * Default parameter provider is used to provide generic
  * parameters to expression tree.
  */
 public class DefaultParameterProvider extends AbstractParameterFormatter
-    implements iFunctionProvider, Serializable {
+    implements IFunctionProvider, Serializable {
     /**
      * Time this algorithm was last loaded from database
      */
@@ -71,7 +72,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     /**
      * Collection of algorithmic parts.
      */
-    protected ArrayList<iParameterProvider> children = new ArrayList<iParameterProvider>();
+    protected ArrayList<IParameterProvider> children = new ArrayList<IParameterProvider>();
 
     /**
      * Adds parameter.
@@ -197,7 +198,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param no   number of parameter key
      * @return value from extra list
      */
-    protected iValue findKey(String name, int no, HashMap<Key, iValue> params) {
+    protected IValue findKey(String name, int no, HashMap<Key, IValue> params) {
         if (params != null && name != null) {
             /**
              * Create normalized token without braces
@@ -495,24 +496,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Return timestamp of parameter provider
-     *
-     * @return timestamp of parameter provider
-     */
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * Sets timestamp to parameter provider
-     *
-     * @param timestamp to parameter provider
-     */
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    /**
      * Calculates values of all parameters participating in algorithm.
      *
      * @throws AlgorithmException on error.
@@ -525,7 +508,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      *
      * @throws AlgorithmException on error.
      */
-    public void calculateParameters(HashMap<Key, iValue> params) throws AlgorithmException {
+    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
     }
 
     /**
@@ -588,7 +571,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      *
      * @return parent algorithm
      */
-    public iParameterProvider getParent() {
+    public IParameterProvider getParent() {
         return parent;
     }
 
@@ -597,7 +580,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      *
      * @param parent algorithm
      */
-    public void setParent(iParameterProvider parent) {
+    public void setParent(IParameterProvider parent) {
         if (parent == null || parent instanceof DefaultParameterProvider) {
             this.parent = (DefaultParameterProvider) parent;
         }
@@ -609,7 +592,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param key       for storing algorithm
      * @param algorithm child algorithm
      */
-    public void addAlgorithm(String key, iParameterProvider algorithm) {
+    public void addAlgorithm(String key, IParameterProvider algorithm) {
         /**
          * Inherit parameters from parent algorithm
          */
@@ -629,7 +612,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      *
      * @return algorithm children
      */
-    public ArrayList<iParameterProvider> getChildren() {
+    public ArrayList<IParameterProvider> getChildren() {
         return children;
     }
 
@@ -639,14 +622,14 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param key ident of algorithm
      * @return algorithm, stored under given ident
      */
-    public iParameterProvider getAlgorithm(String key) {
-        iParameterProvider ret = null;
+    public IParameterProvider getAlgorithm(String key) {
+        IParameterProvider ret = null;
 
         if (getIdent() != null && getIdent().equals(key)) {
             return this;
         }
 
-        for (iParameterProvider child : children) {
+        for (IParameterProvider child : children) {
             ret = child.getAlgorithm(key);
             if (ret != null) {
                 return ret;
@@ -668,14 +651,14 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param key of algorithm to find
      * @return algorithm, stored under given key among children
      */
-    public iParameterProvider findAlgorithm(String key) {
-        iParameterProvider ret = null;
+    public IParameterProvider findAlgorithm(String key) {
+        IParameterProvider ret = null;
 
         if (getIdent() != null && getIdent().equals(key)) {
             return this;
         }
 
-        for (iParameterProvider child : children) {
+        for (IParameterProvider child : children) {
             ret = child.getAlgorithm(key);
             if (ret != null) {
                 return ret;
@@ -691,7 +674,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param key ident of algorithm
      */
     public void removeAlgorithm(String key) {
-        iParameterProvider algorithm = getAlgorithm(key);
+        IParameterProvider algorithm = getAlgorithm(key);
         if (algorithm != null) {
             algorithm.setParent(null);
             this.children.remove(algorithm);

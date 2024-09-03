@@ -4,6 +4,7 @@ package org.clematis.math.v2.algorithm;
 import java.io.StringReader;
 
 import org.clematis.math.v2.AbstractConstant;
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.StringConstant;
@@ -11,7 +12,7 @@ import org.clematis.math.v2.io.OutputFormatSettings;
 import org.clematis.math.v2.operations.SimpleFraction;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.string.StringMathParser;
-import org.clematis.math.v2.utils.StringUtils;
+import org.clematis.math.StringUtils;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 

@@ -1,7 +1,6 @@
 // Created: 14.04.2005 T 15:01:38
-package org.clematis.math.v1.algorithm;
+package org.clematis.math.v1.io;
 
-import org.clematis.math.v1.OutputFormatSettings;
 import org.jdom2.Element;
 
 /**

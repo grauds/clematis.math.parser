@@ -1,12 +1,13 @@
 // Created: 12.04.2005 T 16:46:49
 package org.clematis.math.v2.algorithm;
 
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.functions.aFunction;
 
 /**
  * Provides generic functions for qu algorithms, declared earlier in algorithm being calculated.
  */
-public interface iFunctionProvider {
+public interface IFunctionProvider {
     /**
      * Provides functions for qu algorithms.
      *

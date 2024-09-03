@@ -4,7 +4,7 @@ package org.clematis.math.v2;
 import java.util.ArrayList;
 
 import org.clematis.math.v2.algorithm.Algorithm;
-import org.clematis.math.v2.algorithm.AlgorithmException;
+import org.clematis.math.v2.algorithm.AlgorithmFactory;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.cases.AlgorithmTestCases;
 import org.clematis.math.v2.cases.BooleanTestCases;

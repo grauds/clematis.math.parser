@@ -1,7 +1,8 @@
 // Created: 28.06.2004 T 12:44:01
 package org.clematis.math.v2.io;
 
-import org.clematis.math.v2.utils.StringUtils;
+import org.clematis.math.MathUtils;
+import org.clematis.math.StringUtils;
 
 import java.io.Serializable;
 
@@ -100,7 +101,7 @@ public class InputFormatSettings implements Serializable {
          * Number may be delimited with commas
          */
         if (isGrouping()) {
-            ret_str = NumberFormatter.ungroupThousands(ret_str);
+            ret_str = MathUtils.ungroupThousands(ret_str);
         }
         /**
          * In case number has leading zeros and doesnt have

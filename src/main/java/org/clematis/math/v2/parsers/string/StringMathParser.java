@@ -38,8 +38,8 @@ import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.Variable;
-import org.clematis.math.v2.algorithm.iFunctionProvider;
-import org.clematis.math.v2.algorithm.iSimpleParameterProvider;
+import org.clematis.math.v2.algorithm.IFunctionProvider;
+import org.clematis.math.v2.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v2.algorithm.iVariableProvider;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.clematis.math.v2.parsers.StringMathParserTreeConstants;
@@ -55,7 +55,7 @@ public class StringMathParser/*@bgen(jjtree)*/
     /**
      * Instance of parameter provider
      */
-    private iSimpleParameterProvider parameterProvider = null;
+    private ISimpleParameterProvider parameterProvider = null;
     /**
      * Instance of variable provider
      */
@@ -63,7 +63,7 @@ public class StringMathParser/*@bgen(jjtree)*/
     /**
      * Instance of function provider
      */
-    private iFunctionProvider functionProvider = new FunctionFactory();
+    private IFunctionProvider functionProvider = new FunctionFactory();
 
     /**
      * Parse expression and print to webtex
@@ -79,14 +79,14 @@ public class StringMathParser/*@bgen(jjtree)*/
     /**
      * Return an instance of parameter provider
      */
-    public iSimpleParameterProvider getParameterProvider() {
+    public ISimpleParameterProvider getParameterProvider() {
         return parameterProvider;
     }
 
     /**
      * Sets an instance of parameter provider parser
      */
-    public void setParameterProvider(iSimpleParameterProvider parameterProvider) {
+    public void setParameterProvider(ISimpleParameterProvider parameterProvider) {
         this.parameterProvider = parameterProvider;
     }
 
@@ -107,14 +107,14 @@ public class StringMathParser/*@bgen(jjtree)*/
     /**
      * Return an instance of function provider
      */
-    public iFunctionProvider getFunctionProvider() {
+    public IFunctionProvider getFunctionProvider() {
         return functionProvider;
     }
 
     /**
      * Sets an instance of function provider parser
      */
-    public void setFunctionProvider(iFunctionProvider functionProvider) {
+    public void setFunctionProvider(IFunctionProvider functionProvider) {
         this.functionProvider = functionProvider;
     }
 

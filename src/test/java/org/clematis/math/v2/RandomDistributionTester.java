@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.clematis.math.v2.algorithm.Algorithm;
-import org.clematis.math.v2.algorithm.AlgorithmException;
 import org.clematis.math.v2.algorithm.Key;
 import org.clematis.math.v2.algorithm.Parameter;
 
@@ -30,7 +29,7 @@ public class RandomDistributionTester {
      * @param params    initial parameters
      * @throws Exception in case of error
      */
-    public void graphAlgorithm(String alg, String paramName, HashMap<Key, iValue> params) throws Exception {
+    public void graphAlgorithm(String alg, String paramName, HashMap<Key, IValue> params) throws Exception {
         Algorithm algorithm = reader.createAlgorithm(alg);
         HashMap<String, Integer> counters = new HashMap<String, Integer>();
         for (int i = 0; i < cnt; i++) {

@@ -4,5 +4,5 @@ package org.clematis.math.v2;
 /**
  * Interface denotes algorithms' internal values - numbers, strings or data structures
  */
-public interface iValue {
+public interface IValue {
 }

@@ -1,9 +1,8 @@
 // Created: 10.01.2007 T 17:26:32
 package org.clematis.math.v2;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iFunctionProvider;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
+import org.clematis.math.v2.algorithm.IFunctionProvider;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.parsers.Node;
 
@@ -16,7 +15,7 @@ public class FunctionReference extends aFunction {
     /**
      * Reference to function provider
      */
-    private iFunctionProvider functionProvider = null;
+    private IFunctionProvider functionProvider = null;
     /**
      * Abstract function
      */
@@ -27,7 +26,7 @@ public class FunctionReference extends aFunction {
      *
      * @param i - ident
      */
-    public FunctionReference(int i, iFunctionProvider functionProvider) {
+    public FunctionReference(int i, IFunctionProvider functionProvider) {
         super(i);
         this.functionProvider = functionProvider;
     }
@@ -138,7 +137,7 @@ public class FunctionReference extends aFunction {
      * @return the calculated first argument or result of operation
      * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculateArguments(iParameterProvider parameterProvider, ArrayList<Node> calculated_nodes)
+    public Node calculateArguments(IParameterProvider parameterProvider, ArrayList<Node> calculated_nodes)
         throws AlgorithmException {
         return getFunction().calculateArguments(parameterProvider, calculated_nodes);
     }
@@ -153,7 +152,7 @@ public class FunctionReference extends aFunction {
      * @return the calculated first argument or result of operation
      * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         return getFunction().calculate(parameterProvider);
     }
 

@@ -1,12 +1,12 @@
 // Created: 14.04.2005 T 14:56:28
 package org.clematis.math.v2.io;
 
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 
 /**
  * This class is a format provider and also formats output
  */
-public abstract class AbstractParameterFormatter implements iParameterProvider {
+public abstract class AbstractParameterFormatter implements IParameterProvider {
     /**
      * Output text format settings
      */

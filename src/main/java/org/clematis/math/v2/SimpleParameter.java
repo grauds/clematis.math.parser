@@ -1,9 +1,8 @@
 // Created: 11.04.2005 T 15:51:27
 package org.clematis.math.v2;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
 import org.clematis.math.v2.algorithm.Parameter;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 
@@ -135,9 +134,9 @@ public class SimpleParameter extends SimpleNode implements Serializable {
      *
      * @param parameterProvider
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         if (currentResult != null) {
             return currentResult.copy();
         } else {

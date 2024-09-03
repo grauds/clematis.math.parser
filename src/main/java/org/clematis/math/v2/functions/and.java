@@ -2,8 +2,8 @@
 package org.clematis.math.v2.functions;
 
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
 
@@ -19,7 +19,7 @@ public class and extends aFunction2 {
      * @param parameterProvider
      * @return expression item instance
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         try {
             boolean good_arguments = true;
             boolean result = true;

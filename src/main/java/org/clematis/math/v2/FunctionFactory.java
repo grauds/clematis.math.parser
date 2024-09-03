@@ -1,9 +1,8 @@
 // Created: Jan 20, 2003 T 9:26:15 AM
 package org.clematis.math.v2;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
 import org.clematis.math.v2.algorithm.Key;
-import org.clematis.math.v2.algorithm.iFunctionProvider;
+import org.clematis.math.v2.algorithm.IFunctionProvider;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.functions.generic;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 /**
  * Factory for functions, either standard or declared in algorithm.
  */
-public class FunctionFactory implements Serializable, iFunctionProvider {
+public class FunctionFactory implements Serializable, IFunctionProvider {
     /**
      * Standard function classes
      */

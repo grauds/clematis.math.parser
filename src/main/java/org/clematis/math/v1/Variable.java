@@ -11,7 +11,7 @@ import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
-import org.clematis.math.v2.utils.StringUtils;
+import org.clematis.math.StringUtils;
 import org.jdom2.Element;
 
 import lombok.Getter;

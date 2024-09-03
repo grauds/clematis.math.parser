@@ -1,6 +1,7 @@
 // Created: 16.07.2004 T 12:49:06
 package org.clematis.math.v2.algorithm;
 
+import org.clematis.math.v2.AlgorithmException;
 import org.jdom2.Element;
 
 import org.clematis.math.v2.parsers.Node;
@@ -31,7 +32,7 @@ public class ParameterReference extends SimpleNode {
      * @param parameterProvider
      * @return expression item instance
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         if (origin.getExpressionRoot() != null) {
             return origin.getExpressionRoot().calculate(parameterProvider);
         }

@@ -7,7 +7,7 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.MathUtils;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * Returns x expressed as a floating-point number rounded to n decimal places.

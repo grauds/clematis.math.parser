@@ -8,9 +8,10 @@ import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.ExpressionParser;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.OutputFormatSettings;
+import org.clematis.math.v1.io.OutputFormatSettings;
 import org.clematis.math.v1.operations.SimpleFraction;
-import org.clematis.math.v2.utils.StringUtils;
+import org.clematis.math.StringUtils;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 

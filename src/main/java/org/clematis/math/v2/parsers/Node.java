@@ -2,8 +2,8 @@
 
 package org.clematis.math.v2.parsers;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
@@ -78,9 +78,9 @@ public interface Node {
      *
      * @param parameterProvider with precalculated values for some parameters
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    Node calculate(iParameterProvider parameterProvider) throws AlgorithmException;
+    Node calculate(IParameterProvider parameterProvider) throws AlgorithmException;
 
     /**
      * Calculate the value of this node. It calls calculate() on every child and then makes
@@ -90,7 +90,7 @@ public interface Node {
      *
      * @param parameterProvider with precalculated values for some parameters
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
     Node calculate() throws AlgorithmException;
 

@@ -3,8 +3,8 @@ package org.clematis.math.v2.parsers;
 
 import java.util.ArrayList;
 
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.jdom2.Element;
 
 /**
@@ -134,9 +134,9 @@ public class SimpleNode implements Node {
      * Calculates the values of children of this node. It calls calculate() on every child.
      *
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculateArguments(iParameterProvider parameterProvider, ArrayList<Node> calculated_nodes)
+    public Node calculateArguments(IParameterProvider parameterProvider, ArrayList<Node> calculated_nodes)
         throws AlgorithmException {
         if (jjtGetNumChildren() > 0) {
             /**
@@ -164,7 +164,7 @@ public class SimpleNode implements Node {
      *
      * @param parameterProvider with precalculated values for some parameters
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
     public Node calculate() throws AlgorithmException {
         return calculate(null);
@@ -178,9 +178,9 @@ public class SimpleNode implements Node {
      *
      * @param parameterProvider with precalculated values for some parameters
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculate(iParameterProvider parameterProvider) throws AlgorithmException {
+    public Node calculate(IParameterProvider parameterProvider) throws AlgorithmException {
         Node result = calculateArguments(parameterProvider, new ArrayList<Node>());
         if (result != null) {
             return result;
@@ -194,7 +194,7 @@ public class SimpleNode implements Node {
      *
      * @param item to add to this node
      * @return a result of addition, the Node representing either constant values or addition operation.
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
     public Node add(Node item) throws AlgorithmException {
         return null;
@@ -206,7 +206,7 @@ public class SimpleNode implements Node {
      * @param item to multiply this node with
      * @return a result of multiplication, the Node representing either constant values or multiplication
      * operation.
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException
+     * @throws AlgorithmException
      */
     public Node multiply(Node item) throws AlgorithmException {
         return null;

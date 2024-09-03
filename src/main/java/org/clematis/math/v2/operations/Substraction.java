@@ -4,8 +4,8 @@ package org.clematis.math.v2.operations;
 import java.util.ArrayList;
 
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.algorithm.AlgorithmException;
-import org.clematis.math.v2.algorithm.iParameterProvider;
+import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.jdom2.Element;
 
@@ -34,9 +34,9 @@ public class Substraction extends Addition {
      * Calculates the values of children of this node. It calls calculate() on every child.
      *
      * @return the calculated first argument or result of operation
-     * @throws org.clematis.math.v2.algorithm.AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
+     * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
-    public Node calculateArguments(iParameterProvider parameterProvider,
+    public Node calculateArguments(IParameterProvider parameterProvider,
                                    ArrayList<Node> calculated_nodes) throws AlgorithmException {
         if (jjtGetNumChildren() > 0) {
             /**

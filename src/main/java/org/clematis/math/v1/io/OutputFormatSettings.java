@@ -1,5 +1,5 @@
 // Created: 31.05.2004 T 14:59:58
-package org.clematis.math.v1;
+package org.clematis.math.v1.io;
 
 import java.io.Serializable;
 

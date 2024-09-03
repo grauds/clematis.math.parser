@@ -5,7 +5,7 @@ package org.clematis.math.v1.functions;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * sinh(x) = ( e^x - e^(-x) ) / 2

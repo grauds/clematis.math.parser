@@ -6,7 +6,7 @@ import org.apache.commons.math3.special.Erf;
 import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IExpressionItem;
-import org.clematis.math.v1.algorithm.AlgorithmUtils;
+import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * Returns the error function erf(x).

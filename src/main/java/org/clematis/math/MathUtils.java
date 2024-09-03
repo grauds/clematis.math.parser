@@ -3,6 +3,7 @@
 
 package org.clematis.math;
 
+import java.math.BigDecimal;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -307,7 +308,7 @@ public class MathUtils {
                         result = DECIMAL_SEPARATOR + result;
                     }
                 }
-                return cutTrailingZeros(result);
+                return result;
             } catch (NumberFormatException e) {
                 return null;
             }
@@ -339,5 +340,131 @@ public class MathUtils {
             source[v] = -1;
         }
         return result;
+    }
+
+    /**
+     * Convert rational number to indicated division
+     *
+     * @param rationalNumber to convert
+     * @return indicated division
+     */
+    public static String convertRational(String rationalNumber) {
+        if (rationalNumber == null || rationalNumber.trim().equals("")) {
+            return null;
+        } else {
+            try {
+                /**
+                 * Negative
+                 */
+                boolean isNegative = rationalNumber.startsWith("-");
+                /**
+                 * Correct and validate input
+                 */
+                rationalNumber = MathUtils.correctAndValidateInput(rationalNumber);
+                /**
+                 * The number of decimal places after dot
+                 */
+                int decimalPlaces = 0;
+                /**
+                 * In case the number has dot
+                 */
+                if (rationalNumber.indexOf(".") != -1) {
+                    decimalPlaces = rationalNumber.length() - rationalNumber.indexOf(".") - 1;
+                }
+                /**
+                 * Now we got decimal places -> get numenator and denominator
+                 */
+                rationalNumber = rationalNumber.replace(".", "");
+                BigDecimal numenator = new BigDecimal(rationalNumber);
+                BigDecimal denominator = BigDecimal.valueOf(Math.pow(10, decimalPlaces));
+                /**
+                 * Find greatest common divisor to simplify
+                 */
+                BigDecimal gcd = getGreatestCommonDivisor(numenator, denominator);
+                /**
+                 * Simplify
+                 */
+                if (!gcd.equals(new BigDecimal(0)) && !gcd.equals(new BigDecimal(1))) {
+                    numenator = numenator.divide(gcd);
+                    denominator = denominator.divide(gcd);
+                }
+                if (denominator.longValueExact() != 1) {
+                    return (isNegative ? "-" : "") + numenator.toPlainString() + "/" + denominator.toPlainString();
+                } else {
+                    return (isNegative ? "-" : "") + numenator.toPlainString();
+                }
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * This method takes advantage of Euclid's algorithm to find greatest common divisor
+     * <p>
+     * In Euclid's Elements (Book VII) we find a way of calculating the gcd of two numbers,
+     * without listing the divisors of either number. It is now called Euclid's Algorithm.
+     * [An algorithm is a step by step process (or recipe) for doing something.]
+     * General example:
+     * <p>
+     * a/b gives a remainder of r
+     * b/r gives a remainder of s
+     * r/s gives a remainder of t
+     * ...
+     * w/x gives a remainder of y
+     * x/y gives no remainder
+     * <p>
+     * In this case, y is the gcd of a and b. If the first step produced no remainder,
+     * then b (the lesser of the two numbers) is the gcd.
+     *
+     * @param divident integer number
+     * @param divisor  integer number
+     * @return greatest common divisor
+     */
+    public static long getGreatestCommonDivisor(long divident, long divisor) {
+        long remainder = divident;
+
+        while (remainder != 0) {
+            remainder = divident % divisor;
+            divident = divisor;
+            divisor = remainder;
+        }
+
+        return divident;
+    }
+
+    /**
+     * This method takes advantage of Euclid's algorithm to find greatest common divisor
+     * Capable of carrying out big numbers
+     * <p>
+     * In Euclid's Elements (Book VII) we find a way of calculating the gcd of two numbers,
+     * without listing the divisors of either number. It is now called Euclid's Algorithm.
+     * [An algorithm is a step by step process (or recipe) for doing something.]
+     * General example:
+     * <p>
+     * a/b gives a remainder of r
+     * b/r gives a remainder of s
+     * r/s gives a remainder of t
+     * ...
+     * w/x gives a remainder of y
+     * x/y gives no remainder
+     * <p>
+     * In this case, y is the gcd of a and b. If the first step produced no remainder,
+     * then b (the lesser of the two numbers) is the gcd.
+     *
+     * @param divident integer number
+     * @param divisor  integer number
+     * @return greatest common divisor
+     */
+    public static BigDecimal getGreatestCommonDivisor(BigDecimal divident, BigDecimal divisor) {
+        BigDecimal remainder = divident;
+
+        while (!remainder.equals(new BigDecimal(0))) {
+            remainder = divident.divideAndRemainder(divisor)[1];
+            divident = divisor;
+            divisor = remainder;
+        }
+
+        return divident;
     }
 }

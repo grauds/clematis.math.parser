@@ -4,6 +4,8 @@ package org.clematis.math.v1;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.clematis.math.v1.io.OutputFormatSettings;
+
 /**
  * Bean shell algorithm value
  */

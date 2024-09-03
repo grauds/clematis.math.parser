@@ -17,7 +17,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 /**
- * Factory to create algorithms froms xml
+ * Factory to create algorithms from xml
  */
 public class AlgorithmFactory {
 
@@ -43,34 +43,6 @@ public class AlgorithmFactory {
     static Document load(Reader in) throws IOException, JDOMException {
         try (in) {
             return BUILDER.build(in);
-        }
-    }
-
-    /**
-     * Prints the document into a string.
-     *
-     * @param doc the document.
-     * @return the string representation of the document.
-     * @throws IOException on I/O error.
-     */
-    public static String printToString(Document doc) throws IOException {
-        try (StringWriter out = new StringWriter()) {
-            new XMLOutputter(Format.getCompactFormat()).output(doc, out);
-            return out.toString();
-        }
-    }
-
-    /**
-     * Prints the document into a string.
-     *
-     * @param doc the document.
-     * @return the string representation of the document.
-     * @throws java.io.IOException on I/O error.
-     */
-    public static String printToString(Element doc) throws IOException {
-        try (StringWriter out = new StringWriter()) {
-            new XMLOutputter(Format.getCompactFormat()).output(doc, out);
-            return out.toString();
         }
     }
 
@@ -219,4 +191,33 @@ public class AlgorithmFactory {
     public static String saveAlgorithm(IParameterProvider algorithm) throws IOException {
         return printToString(algorithm.save());
     }
+
+    /**
+     * Prints the document into a string.
+     *
+     * @param doc the document.
+     * @return the string representation of the document.
+     * @throws IOException on I/O error.
+     */
+    public static String printToString(Document doc) throws IOException {
+        try (StringWriter out = new StringWriter()) {
+            new XMLOutputter(Format.getCompactFormat()).output(doc, out);
+            return out.toString();
+        }
+    }
+
+    /**
+     * Prints the document into a string.
+     *
+     * @param doc the document.
+     * @return the string representation of the document.
+     * @throws java.io.IOException on I/O error.
+     */
+    public static String printToString(Element doc) throws IOException {
+        try (StringWriter out = new StringWriter()) {
+            new XMLOutputter(Format.getCompactFormat()).output(doc, out);
+            return out.toString();
+        }
+    }
+
 }
