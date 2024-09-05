@@ -1,6 +1,7 @@
 // Created: Jan 17, 2003 T 5:13:06 PM
 package org.clematis.math.v2;
 
+import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.generic;
@@ -89,9 +90,9 @@ public class AlgorithmReader {
 
         Parameter param = null;
 
-        if (statement.startsWith(Parameter.CONDITION_NAME)) {
-            name = Parameter.CONDITION_NAME;
-            code = statement.substring(Parameter.CONDITION_NAME.length() + 1);
+        if (statement.startsWith(XMLConstants.CONDITION_NAME)) {
+            name = XMLConstants.CONDITION_NAME;
+            code = statement.substring(XMLConstants.CONDITION_NAME.length() + 1);
 
             param = new Parameter(name, code);
             param.setCondition(true);

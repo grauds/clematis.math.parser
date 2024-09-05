@@ -2,6 +2,7 @@
 package org.clematis.math.v2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.AlgorithmFactory;
@@ -64,18 +65,18 @@ public class BackwardCompatibilityTest {
             /** output parameters */
             algorithm.printParameters(System.out);
             if (calculate) {
-                /** save algorithm and initial conditions */
+                /* save algorithm and initial conditions */
                 String alg = AlgorithmFactory.toXML(algorithm);
                 String save = AlgorithmFactory.saveAlgorithm(algorithm);
-                /** create reference algorithms */
+                /* create reference algorithms */
                 ReferenceAlgorithmLoader loader = new ReferenceAlgorithmLoader();
                 org.clematis.math.v1.algorithm.Algorithm reference = loader.getAlgorithmReference(alg, save);
-                /** go through tested algorithm parameters */
-                ArrayList<Parameter> params = algorithm.getParameters();
-                for (int k = 0; k < params.size(); k++) {
-                    Parameter p = params.get(k);
+                /* go through tested algorithm parameters */
+                Parameter[] params = algorithm.getParameters();
+                for (int k = 0; k < params.length; k++) {
+                    Parameter p = params[k];
                     if (p != null && reference.getParameter(p.getName()) != null) {
-                        /** new and old abstract constants */
+                        /* new and old abstract constants */
                         AbstractConstant ac_NEW = p.getCurrentResult();
                         if (reference.getParameter(p.getName()).getCurrentResult() != null) {
                             String NEW_STRING;

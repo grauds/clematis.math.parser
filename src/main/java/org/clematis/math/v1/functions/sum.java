@@ -86,6 +86,11 @@ public class sum extends aFunction2 {
             return functionFactory.getFunction(name);
         }
 
+        @Override
+        public boolean hasFunction(String name) {
+            return functionFactory.hasFunction(name);
+        }
+
         public AbstractConstant getVariableConstant(String name) {
             return new Constant(variable);
         }

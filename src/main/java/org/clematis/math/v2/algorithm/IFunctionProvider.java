@@ -5,7 +5,8 @@ import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.functions.aFunction;
 
 /**
- * Provides generic functions for qu algorithms, declared earlier in algorithm being calculated.
+ * Provides generic functions for qu algorithms, declared earlier in
+ * algorithm being calculated.
  */
 public interface IFunctionProvider {
     /**

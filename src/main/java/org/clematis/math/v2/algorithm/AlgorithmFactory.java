@@ -46,41 +46,6 @@ public class AlgorithmFactory {
         }
     }
 
-    /**
-     * Create either bsh algorithm or qu algorithm from xml element
-     * in question.
-     *
-     * @param algorithmXML
-     */
-    public static IParameterProvider createFromQuestionAlgorithm(String algorithmXML)
-        throws AlgorithmException, IOException, JDOMException {
-        Element root = null;
-
-        if (algorithmXML != null && !algorithmXML.trim().equals("")) {
-            Document doc = load(new StringReader(algorithmXML));
-            root = doc.getRootElement();
-            return createFromQuestionAlgorithm(root);
-        }
-        return null;
-    }
-
-    /**
-     * Create either bsh algorithm or qu algorithm from xml element
-     * in question.
-     *
-     * @param algorithmXML
-     */
-    public static IParameterProvider createFromQuestionAlgorithm(Element algorithmXML)
-        throws AlgorithmException {
-        if (algorithmXML != null) {
-            if ("bsh".equals(algorithmXML.getAttributeValue("type"))) {
-                return BshParameterProvider.createFromQuestionXML(algorithmXML);
-            } else {
-                return Algorithm.createFromQuestionXML(algorithmXML);
-            }
-        }
-        return null;
-    }
 
     /**
      * Create algorithm from xml notation
@@ -120,31 +85,11 @@ public class AlgorithmFactory {
     /**
      * Returns a copy of given algorithm
      *
-     * @param algorithm
+     * @param algorithm to get a copy of
      * @return a copy of given algorithm
      */
     public static IParameterProvider copyAlgorithm(IParameterProvider algorithm) throws AlgorithmException {
-        if (algorithm instanceof BshParameterProvider) {
-            return BshParameterProvider.createFromBshParameterProvider(algorithm);
-        } else if (algorithm instanceof Algorithm) {
-            return Algorithm.createFromAlgorithm(algorithm);
-        }
-        return algorithm;
-    }
-
-    /**
-     * Store algorithm in xml string
-     *
-     * @param algorithm to store
-     * @return xml string
-     */
-    public static String toXML(IParameterProvider algorithm) throws IOException {
-        if (algorithm instanceof BshParameterProvider) {
-            return printToString(((BshParameterProvider) algorithm).toXML());
-        } else if (algorithm instanceof Algorithm) {
-            return printToString(((Algorithm) algorithm).toXML());
-        }
-        return "";
+        return copyAlgorithm(algorithm, null);
     }
 
     /**
@@ -157,31 +102,34 @@ public class AlgorithmFactory {
      */
     public static IParameterProvider loadAlgorithm(Element algorithmXML, Element algorithmResultsXML)
         throws AlgorithmException {
-        IParameterProvider algorithm = null;
+
+        IParameterProvider algorithm;
+
         // get version
         String version = null;
         if (algorithmResultsXML != null) {
             version = algorithmResultsXML.getAttributeValue("version");
         }
-        /** second version of algorithm storage */
-        boolean secondVersion = (version != null && version.trim().equals("2")) || (algorithmResultsXML == null);
-        /** load algorithm */
-        if (algorithmXML != null && secondVersion) {
-            /**
+
+        /* second version of algorithm storage */
+        if (algorithmXML != null && version != null && version.trim().equals(VERSION_2)) {
+            /*
              * Create algorithm from question xml
              */
             algorithm = AlgorithmFactory.createAlgorithm(algorithmXML);
-            /**
+            /*
              * Load algorithm results from taken algorithm xml
              */
-            loadAlgorithm(algorithm, algorithmResultsXML);
-            /**
+            if (algorithm instanceof BshParameterProvider) {
+                ((BshParameterProvider) algorithm).load(algorithmResultsXML);
+            } else if (algorithm instanceof Algorithm) {
+                ((Algorithm) algorithm).load(algorithmResultsXML);
+            }
+            /*
              * Set version 2 to loaded algorithm
              */
-            algorithm.setVersion("2");
-        }
-        /** first version of algorithm storage */
-        else {
+            algorithm.setVersion(VERSION_2);
+        } else {
             algorithm = AlgorithmFactory.createAlgorithm(algorithmResultsXML);
         }
         return algorithm;
@@ -275,6 +223,21 @@ public class AlgorithmFactory {
             return printToString(((Algorithm) algorithm).save());
         }
 
+        return "";
+    }
+
+    /**
+     * Store algorithm in xml string
+     *
+     * @param algorithm to store
+     * @return xml string
+     */
+    public static String toXML(IParameterProvider algorithm) throws IOException {
+        if (algorithm instanceof BshParameterProvider) {
+            return printToString(((BshParameterProvider) algorithm).toXML());
+        } else if (algorithm instanceof Algorithm) {
+            return printToString(((Algorithm) algorithm).toXML());
+        }
         return "";
     }
 

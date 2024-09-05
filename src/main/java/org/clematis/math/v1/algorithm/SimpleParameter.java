@@ -20,12 +20,7 @@ public class SimpleParameter implements Serializable {
      * Regular expression to find parameter in a text
      */
     public static final String FIND_EXPRESSION = "(\\x24[a-zA-Z0-9_]+)|(\\x24\\x7B[a-zA-Z0-9_]+\\x7D)";
-    /**
-     * Regular expression to all parameters in a text
-     */
-    public static final String FIND_EXPRESSION_ALL =
-        "(\\x24[a-zA-Z_]+[0-9_]*)|(\\x24\\x7B[a-zA-Z_]+[0-9_]*\\x7D)|condition";
-    /**
+   /**
      * Parameter name.
      */
     private String name = null;
@@ -38,40 +33,8 @@ public class SimpleParameter implements Serializable {
      *
      * @param name of parameter
      */
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name.trim();
-    }
-
-    /**
-     * Finds parameters in string. Quoted parameters will be skipped, if flag "skipInsideStrings" is set
-     *
-     * @param string            the explored string
-     * @param skipInsideStrings quoted parameters will be skipped,
-     *                          if this flag is set
-     * @return array list with parameter names, may be empty, never null
-     */
-    public static ArrayList<String> findParameters(String string,
-                                           IParameterProvider provider,
-                                           boolean skipInsideStrings) {
-        ArrayList<String> result = new ArrayList<>();
-        if (provider != null && string != null && !string.trim().isEmpty()) {
-            List<String> tokens = StringUtils.tokenizeReg(string, FIND_EXPRESSION, false);
-            int apos = 0;
-            for (String token : tokens) {
-                /* filter only parameters */
-                if (provider.getParameter(token) != null
-                    && (!skipInsideStrings || apos % 2 == 0)
-                ) {
-                    result.add(token);
-                } else {
-                    int cursor = -1;
-                    while ((cursor = token.indexOf("\"", cursor + 1)) != -1) {
-                        apos++;
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     /**
@@ -79,7 +42,7 @@ public class SimpleParameter implements Serializable {
      *
      * @param currentResult to set
      */
-    void setCurrentResult(AbstractConstant currentResult) {
+    public void setCurrentResult(AbstractConstant currentResult) {
         if (currentResult != null) {
             this.currentResult = currentResult.copy();
         } else {
@@ -133,5 +96,37 @@ public class SimpleParameter implements Serializable {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Finds parameters in string. Quoted parameters will be skipped, if flag "skipInsideStrings" is set
+     *
+     * @param string            the explored string
+     * @param skipInsideStrings quoted parameters will be skipped,
+     *                          if this flag is set
+     * @return array list with parameter names, may be empty, never null
+     */
+    public static ArrayList<String> findParameters(String string,
+                                                   IParameterProvider provider,
+                                                   boolean skipInsideStrings) {
+        ArrayList<String> result = new ArrayList<>();
+        if (provider != null && string != null && !string.trim().isEmpty()) {
+            List<String> tokens = StringUtils.tokenizeReg(string, FIND_EXPRESSION, false);
+            int apos = 0;
+            for (String token : tokens) {
+                /* filter only parameters */
+                if (provider.getParameter(token) != null
+                    && (!skipInsideStrings || apos % 2 == 0)
+                ) {
+                    result.add(token);
+                } else {
+                    int cursor = -1;
+                    while ((cursor = token.indexOf("\"", cursor + 1)) != -1) {
+                        apos++;
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

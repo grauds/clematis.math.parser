@@ -3,6 +3,8 @@ package org.clematis.math.v1.algorithm;
 
 import java.io.Serializable;
 
+import org.clematis.math.v2.SimpleParameter;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,12 +50,19 @@ public class Key implements Serializable {
         return false;
     }
 
-    public String getName() {
-        return name != null ? name.trim() : "";
+    /**
+     * Create key to find in parameter provider. This method
+     * alternates names with braces like ${a} to $a
+     *
+     * @param inputName of desired parameter
+     * @return key to find
+     */
+    public static Key create(String inputName) {
+        /* normalize parameter token */
+        String name = inputName;
+        if (SimpleParameter.isNameWithBraces(name)) {
+            name = SimpleParameter.alternateParameterName(name);
+        }
+        return new Key(name);
     }
-
-    public String getPartId() {
-        return partId != null ? partId.trim() : "";
-    }
-
 }

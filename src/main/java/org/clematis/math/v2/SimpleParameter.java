@@ -1,26 +1,28 @@
 // Created: 11.04.2005 T 15:51:27
 package org.clematis.math.v2;
 
-import org.clematis.math.v2.algorithm.Parameter;
+import java.io.Serializable;
+
+import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v2.algorithm.IParameterProvider;
+import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 
-import java.io.Serializable;
-
+import lombok.Getter;
 /**
- * Simple parameter - the holder for value and token
+ * Simple parameter - the holder for value and name of {@link Parameter}
  */
+@Getter
 public class SimpleParameter extends SimpleNode implements Serializable {
     /**
      * Last calculation result of the parameter expression.
      */
     protected AbstractConstant currentResult = null;
-    /**
-     * Regular expression to find parameter in text
-     */
-    public final static String FIND_EXPRESSION_ALL =
-        "((\\x24)?[a-zA-Z_]+[0-9_]*)|((\\x24)?\\x7B[a-zA-Z_]+[0-9_]*\\x7D)|condition";
+
+    public SimpleParameter() {
+        super(0);
+    }
 
     /**
      * Simple parameter constructor to match one of simple node
@@ -51,7 +53,7 @@ public class SimpleParameter extends SimpleNode implements Serializable {
     }
 
     /**
-     * Sets parameter token
+     * Sets parameter name
      *
      * @param name of parameter
      */
@@ -60,18 +62,9 @@ public class SimpleParameter extends SimpleNode implements Serializable {
     }
 
     /**
-     * Gets value wrapper.
+     * Sets result manually, usually result is being calculated
      *
-     * @return <code>iConstant</code> representing value wrapper.
-     */
-    public AbstractConstant getCurrentResult() {
-        return currentResult;
-    }
-
-    /**
-     * Sets current result violently
-     *
-     * @param currentResult
+     * @param currentResult to set
      */
     public void setCurrentResult(AbstractConstant currentResult) {
         if (currentResult != null) {
@@ -94,17 +87,18 @@ public class SimpleParameter extends SimpleNode implements Serializable {
     }
 
     /**
-     * Alternate parameter token, i.e. make following
-     * transitions:
+     * Alternate parameter name, i.e. make following transitions:
+     *
      * <p>
      * $a -> ${a}
      * ${a} -> $a
      *
      * @param name of parameter to alternate
-     * @return new parameter token
+     * @return new parameter name
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public static String alternateParameterName(String name) {
-        if (Parameter.CONDITION_NAME.equals(name)) {
+        if (XMLConstants.CONDITION_NAME.equals(name)) {
             return name;
         }
         if (isNameWithBraces(name)) {
@@ -115,10 +109,10 @@ public class SimpleParameter extends SimpleNode implements Serializable {
     }
 
     /**
-     * Returns true if token is with braces, like ${k1}
+     * Returns true if name is with braces, like ${k1}
      *
-     * @param name parameter token
-     * @return true if token is with braces, like ${k1}
+     * @param name parameter name
+     * @return true if name is with braces, like ${k1}
      */
     public static boolean isNameWithBraces(String name) {
         if (name != null && name.length() > 1) {

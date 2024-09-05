@@ -1,14 +1,13 @@
 // Created: Jan 21, 2003 T 11:34:43 AM
 package org.clematis.math.v2.algorithm;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.IValue;
 import org.clematis.math.v2.io.IParameterFormatter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
 /**
  * Provider of parameters for functions.
  */
@@ -56,15 +55,17 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
     void calculateParameters() throws AlgorithmException;
 
     /**
-     * Calculates values of all parameters participating in algorithm.
+     * Calculates values of all parameters participating in algorithm with a map
+     * of parameters with values, so the parameters from the map are substituted to the
+     * algorithm with values from the map.
      */
-    void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException;
+    void calculateParameters(Map<Key, IValue> params) throws AlgorithmException;
 
     /**
-     * Returns parameter, found by custom ident.
+     * Returns parameter, found by custom identifier.
      *
      * @param ident under which some parameters may store
-     * @return parameter, found by custom ident
+     * @return parameter, found by custom identifier
      */
     Parameter getParameterByCustomIdent(String ident);
 
@@ -103,7 +104,7 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
      *
      * @return a list of children
      */
-    ArrayList<IParameterProvider> getChildren();
+    List<IParameterProvider> getChildren();
 
     /**
      * Return child parameter provider by key
@@ -127,4 +128,9 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
      * @param key to search child parameter provider
      */
     void removeAlgorithm(String key);
+
+    /**
+     * Clear all the parameters calculation results
+     */
+    void clear();
 }

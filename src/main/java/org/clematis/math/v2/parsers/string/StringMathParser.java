@@ -40,7 +40,7 @@ import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.Variable;
 import org.clematis.math.v2.algorithm.IFunctionProvider;
 import org.clematis.math.v2.algorithm.ISimpleParameterProvider;
-import org.clematis.math.v2.algorithm.iVariableProvider;
+import org.clematis.math.v2.algorithm.IVariableProvider;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.clematis.math.v2.parsers.StringMathParserTreeConstants;
 
@@ -59,7 +59,7 @@ public class StringMathParser/*@bgen(jjtree)*/
     /**
      * Instance of variable provider
      */
-    private iVariableProvider variableProvider = null;
+    private IVariableProvider variableProvider = null;
     /**
      * Instance of function provider
      */
@@ -93,14 +93,14 @@ public class StringMathParser/*@bgen(jjtree)*/
     /**
      * Return an instance of variable provider
      */
-    public iVariableProvider getVariableProvider() {
+    public IVariableProvider getVariableProvider() {
         return variableProvider;
     }
 
     /**
      * Sets an instance of variable provider parser
      */
-    public void setVariableProvider(iVariableProvider variableProvider) {
+    public void setVariableProvider(IVariableProvider variableProvider) {
         this.variableProvider = variableProvider;
     }
 

@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.clematis.math.StringUtils;
 import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.FunctionFactory;
@@ -17,7 +20,10 @@ import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.functions.generic;
 import org.clematis.math.v2.io.AbstractParameterFormatter;
-import org.clematis.math.StringUtils;
+
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Default parameter provider is used to provide generic
  * parameters to expression tree.
@@ -25,54 +31,54 @@ import org.clematis.math.StringUtils;
 public class DefaultParameterProvider extends AbstractParameterFormatter
     implements IFunctionProvider, Serializable {
     /**
-     * Time this algorithm was last loaded from database
-     */
-    long timestamp = 0L;
-    /**
      * List of ordered parameters and functions ids
-     * <p>
-     * parameterId
-     * functionIds
      */
-    protected ArrayList<Key> lines = new ArrayList<>();
+    protected List<Key> lines = new ArrayList<>();
     /**
      * List of parameters.
      * <p>
      * parameterId -> parameter
      */
-    protected HashMap<Key, Parameter> parameters = new HashMap<>();
-    /**
-     * List of parameters currently in use
-     * <p>
-     * parameternam -> parameter
-     */
-    private HashMap<String, Parameter> parameters_in_use = new HashMap<>();
+    protected Map<Key, Parameter> parameters = new HashMap<>();
     /**
      * List of answer idents - ids of parameters
      * <p>
      * answerIdent -> parameterId
      */
-    protected HashMap<String, Key> idents = new HashMap<>();
+    protected Map<String, Key> idents = new HashMap<>();
     /**
      * Function factory
      */
+    @Setter
+    @Getter
     protected FunctionFactory functionFactory = new FunctionFactory();
     /**
      * Ident
      */
+    @Getter
+    @Setter
     protected String ident = null;
     /**
      * Version of originating persistent storage
      */
+    @Getter
+    @Setter
     protected String version = "1";
     /**
      * Parent algorithm
      */
-    private DefaultParameterProvider parent = null;
+    protected DefaultParameterProvider parent = null;
     /**
      * Collection of algorithmic parts.
      */
-    protected ArrayList<IParameterProvider> children = new ArrayList<IParameterProvider>();
+    @Getter
+    protected List<IParameterProvider> children = new ArrayList<>();
+    /**
+     * List of parameters currently in use
+     * <p>
+     * parameternam -> parameter
+     */
+    private Map<String, Parameter> cache = new HashMap<>();
 
     /**
      * Adds parameter.
@@ -86,7 +92,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
              */
             Key key = Key.create(p.getName());
             /*
-             * Set new token to parameter
+             * Set new name to parameter
              */
             p.setName(key.getName());
             /*
@@ -132,53 +138,41 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             while (this.functionFactory.hasFunction(key)) {
                 key.setNo(key.getNo() + 1);
             }
-            /**
+            /*
              * Put function and write its key to
              * lines sequence.
              */
             addKey(key);
-            /**
+            /*
              * Set a link to a function factory
              */
             f.setFunctionFactory(this.getFunctionFactory());
-            /**
+            /*
              * Add function
              */
             this.functionFactory.addFunction(key, f);
         }
     }
 
-    public FunctionFactory getFunctionFactory() {
-        return functionFactory;
-    }
-
-    public void setFunctionFactory(FunctionFactory functionFactory) {
-        this.functionFactory = functionFactory;
-    }
-
     /**
-     * Returns parameter, found by its token
+     * Returns parameter, found by its name
      *
-     * @return parameter, found by its token
+     * @return parameter, found by its name
      */
     public Parameter getParameter(String name) {
         if (name != null) {
-            /**
-             * Create normalized token without braces
-             */
             Key key = Key.create(name);
-            /**
+            /*
              * Seek for parameter in this algorithm
              */
             Parameter param = null;
-            /**
+            /*
              * Get currently loaded parameter for use
              */
-            if (parameters_in_use.containsKey(key.getName())) {
-                return parameters_in_use.get(key.getName());
-            }
-            /** get latest parameter */
-            else {
+            if (cache.containsKey(key.getName())) {
+                param = cache.get(key.getName());
+            } else {
+                /* get latest parameter */
                 while (parameters.containsKey(key)) {
                     param = parameters.get(key);
                     key.setNo(key.getNo() + 1);
@@ -198,35 +192,37 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param no   number of parameter key
      * @return value from extra list
      */
-    protected IValue findKey(String name, int no, HashMap<Key, IValue> params) {
+    @SuppressWarnings("checkstyle:ReturnCount")
+    protected IValue findKey(String name, int no, Map<Key, IValue> params) {
+
         if (params != null && name != null) {
-            /**
-             * Create normalized token without braces
+            /*
+             * Create normal key to find
              */
             Key toFind = Key.create(name);
-            /**
+            /*
              * Initialize key number
              */
             toFind.setNo(no);
             if (params.containsKey(toFind)) {
                 return params.get(toFind);
             }
-            /**
-             * Alternate token
+            /*
+             * Alternate name
              */
             toFind.setName(SimpleParameter.alternateParameterName(toFind.getName()));
             if (params.containsKey(toFind)) {
                 return params.get(toFind);
             }
-            /**
+            /*
              * Find key with part ident
              */
             toFind.setPartId(this.ident);
             if (params.containsKey(toFind)) {
                 return params.get(toFind);
             }
-            /**
-             * Alternate token
+            /*
+             * Alternate name
              */
             toFind.setName(SimpleParameter.alternateParameterName(toFind.getName()));
             return params.get(toFind);
@@ -237,7 +233,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     /**
      * Provides function.
      *
-     * @param name the function token
+     * @param name the function name
      * @return function or null
      */
     public aFunction getFunction(String name) throws AlgorithmException {
@@ -255,27 +251,28 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Returns parameter key, found by its token
+     * Returns parameter key, found by its name
      *
-     * @return parameter key, found by its token
+     * @return parameter key, found by its name
      */
     public Key getParameterKey(String name) {
         if (name != null) {
-            /**
+            /*
              * Find param with key with no=0
              */
+            String n;
             if (SimpleParameter.isNameWithBraces(name)) {
-                name = SimpleParameter.alternateParameterName(name);
+                n = SimpleParameter.alternateParameterName(name);
+            } else {
+                n = name;
             }
-            Key key = new Key(name);
+            Key key = new Key(n);
             while (parameters.containsKey(key)) {
                 key.setNo(key.getNo() + 1);
             }
             key.setNo(key.getNo() - 1);
             Set<Key> keys = parameters.keySet();
-            Iterator<Key> iter = keys.iterator();
-            while (iter.hasNext()) {
-                Key k = iter.next();
+            for (Key k : keys) {
                 if (k.equals(key)) {
                     key.setLine(k.getLine());
                 }
@@ -301,43 +298,36 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Returns the list of all keys in this algorithm only
+     * Returns the array of all keys in this algorithm only
      *
-     * @return the list of all keys in this algorithm only
+     * @return the array of all keys in this algorithm only
      */
     public Key[] getKeys() {
-        ArrayList<Key> keysArray = new ArrayList<Key>();
-        Iterator<Key> names = lines.iterator();
-        while (names.hasNext()) {
-            /**
-             * Get instance of parameter
-             */
-            keysArray.add(names.next());
-        }
-        Key[] ret = new Key[keysArray.size()];
-        System.arraycopy(keysArray.toArray(), 0, ret, 0, ret.length);
+        /*
+         * Get instance of parameter
+         */
+        Key[] ret = new Key[lines.size()];
+        System.arraycopy(lines.toArray(new Key[0]), 0, ret, 0, ret.length);
         return ret;
     }
 
     /**
      * Get the list of all parameters in this algorithm only
      *
-     * @return list of all parameters in this algorithm only
+     * @return array of all parameters in this algorithm only
      */
-    public ArrayList<Parameter> getParameters() {
-        ArrayList<Parameter> parametersArray = new ArrayList<Parameter>();
-        Iterator<Key> names = lines.iterator();
-        while (names.hasNext()) {
-            /**
+    public Parameter[] getParameters() {
+        ArrayList<Parameter> parametersArray = new ArrayList<>();
+        for (Key key : lines) {
+            /*
              * Get instance of parameter
              */
-            Key key = names.next();
             if (!key.isFunction()) {
                 Parameter param = parameters.get(key);
                 parametersArray.add(param);
             }
         }
-        return parametersArray;
+        return parametersArray.toArray(Parameter[]::new);
     }
 
     /**
@@ -347,15 +337,11 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @return parameter
      */
     public Parameter getParameter(Key key) {
-        /**
-         * Get parameter for the current line
-         */
         return parameters.get(key);
     }
 
     /**
-     * Loads parameter for usage from the pile of
-     * parameters with the same token
+     * Loads parameter for usage from the pile of parameters with the same name
      *
      * @param p parameter to use
      */
@@ -365,18 +351,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             name = SimpleParameter.alternateParameterName(name);
             p.setName(name);
         }
-        this.parameters_in_use.put(name, p);
-    }
-
-    /**
-     * Removes all parameters from this parameter provider
-     */
-    public void clear() {
-        lines = new ArrayList<Key>();
-        parameters = new HashMap<Key, Parameter>();
-        parameters_in_use = new HashMap<String, Parameter>();
-        idents = new HashMap<String, Key>();
-        functionFactory.clear();
+        this.cache.put(name, p);
     }
 
     /**
@@ -384,18 +359,18 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * use functions
      */
     protected void finishAndClear() {
-        parameters_in_use = new HashMap<String, Parameter>();
+        cache = new HashMap<>();
         functionFactory.clear();
     }
 
     /**
      * Return the calculated value of algorithmic parameter
      *
-     * @param paramName the token of required parameter
+     * @param name the name of required parameter
      * @return the value of required parameter
      */
-    public AbstractConstant getParameterConstant(String paramName) {
-        Parameter param = getParameter(paramName);
+    public AbstractConstant getParameterConstant(String name) {
+        Parameter param = getParameter(name);
         if (param != null) {
             return param.getCurrentResult();
         }
@@ -405,8 +380,8 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     /**
      * Checks whether this provider has specified parameter.
      *
-     * @param paramName the token of parameter.
-     * @return <code>true</code> if this provider has parameter or <code>false</code> in otherwise.
+     * @param paramName the name of parameter.
+     * @return <code>true</code> if it is a parameter name or <code>false</code> in otherwise.
      */
     public boolean hasParameter(String paramName) {
         Parameter param = getParameter(paramName);
@@ -419,27 +394,26 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param paramName    of existing parameter
      * @param newParamName of new parameter
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     protected void renameParameter(String paramName, String newParamName) {
-        /**
+        /*
          * Sanity check
          */
         if (!paramName.equals(newParamName)) {
-            /**
+            /*
              * Iterate through our parameters
              */
-            Iterator<Key> it = lines.iterator();
-            while (it.hasNext()) {
-                Key key = it.next();
-                /** parameter */
+            for (Key key : lines) {
+                /* parameter */
                 if (!key.isFunction()) {
-                    /** directly get parameter */
+                    /* directly get parameter */
                     Parameter param = getParameter(key);
-                    /** replace names */
+                    /* replace names */
                     if (param.getName().equals(paramName)) {
                         key.setName(newParamName);
                         param.setName(newParamName);
                     }
-                    /** replace occurences in code of any parameter */
+                    /* replace occurences in code of any parameter */
                     param.setCode(StringUtils.replaceString(param.getCode(), paramName, newParamName));
                 }
             }
@@ -458,44 +432,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Returns algorithm ident
-     *
-     * @return algorithm ident
-     */
-    public String getIdent() {
-        return ident;
-    }
-
-    /**
-     * Sets algorithm ident
-     *
-     * @param ident algorithm ident
-     */
-    public void setIdent(String ident) {
-        this.ident = ident;
-    }
-
-    /**
-     * Returns version of parameter provider
-     * (for persistent storage versioning purposes)
-     *
-     * @return version of parameter provider
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets version of parameter provider
-     * (for persistent storage versioning purposes)
-     *
-     * @param version of parameter provider
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    /**
      * Calculates values of all parameters participating in algorithm.
      *
      * @throws AlgorithmException on error.
@@ -508,7 +444,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      *
      * @throws AlgorithmException on error.
      */
-    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
+    public void calculateParameters(Map<Key, IValue> params) throws AlgorithmException {
     }
 
     /**
@@ -517,7 +453,8 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @return parameter names
      */
     public Iterator<String> iterator() {
-        Set<String> nameSet = new HashSet<String>(parameters.size());
+        Set<String> nameSet = new HashSet<>(parameters.size());
+
         for (Key key : parameters.keySet()) {
             nameSet.add(key.getName());
         }
@@ -528,9 +465,8 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * Add key to this parameter provider
      *
      * @param key to add
-     * @throws AlgorithmException
      */
-    void addKey(Key key) throws AlgorithmException {
+    public void addKey(Key key) {
         key.setLine(lines.size());
         lines.add(key);
     }
@@ -543,14 +479,15 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     public void printParameters(PrintStream ps) {
         ps.println("Algorithm ( ident='" + getIdent() + "' ) parameters:");
 
-        Iterator<Key> it = lines.iterator();
-        while (it.hasNext()) {
-            /**
+        /*
+         * Get instance of parameter
+         */
+        for (Key key : lines) {
+            /*
              * Get instance of parameter
              */
-            Key key = it.next();
             if (!key.isFunction()) {
-                /** directly get parameter */
+                /* directly get parameter */
                 Parameter param = getParameter(key);
                 ps.println(param.getName() + " = " + param.getOutputValue(true));
             } else {
@@ -558,7 +495,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             }
         }
 
-        if (parent != null && parent.parameters.size() > 0) {
+        if (parent != null && !parent.parameters.isEmpty()) {
             ps.println("Parent parameters:");
             parent.printParameters(ps);
         }
@@ -593,27 +530,18 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param algorithm child algorithm
      */
     public void addAlgorithm(String key, IParameterProvider algorithm) {
-        /**
+        /*
          * Inherit parameters from parent algorithm
          */
         algorithm.setParent(this);
-        /**
+        /*
          * Set ident to calculated algorithm
          */
         algorithm.setIdent(key);
-        /**
+        /*
          * Store algorithm
          */
         children.add(algorithm);
-    }
-
-    /**
-     * Returns algorithm children
-     *
-     * @return algorithm children
-     */
-    public ArrayList<IParameterProvider> getChildren() {
-        return children;
     }
 
     /**
@@ -622,6 +550,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param key ident of algorithm
      * @return algorithm, stored under given ident
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IParameterProvider getAlgorithm(String key) {
         IParameterProvider ret = null;
 
@@ -651,6 +580,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param key of algorithm to find
      * @return algorithm, stored under given key among children
      */
+    @SuppressWarnings("checkstyle:ReturnCount")
     public IParameterProvider findAlgorithm(String key) {
         IParameterProvider ret = null;
 
@@ -679,5 +609,13 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             algorithm.setParent(null);
             this.children.remove(algorithm);
         }
+    }
+
+    /**
+     * Clear all the parameters calculation results
+     */
+    @Override
+    public void clear() {
+        this.parameters.clear();
     }
 }

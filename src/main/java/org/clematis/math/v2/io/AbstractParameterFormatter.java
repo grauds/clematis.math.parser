@@ -3,28 +3,14 @@ package org.clematis.math.v2.io;
 
 import org.clematis.math.v2.algorithm.IParameterProvider;
 
-/**
- * This class is a format provider and also formats output
- */
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public abstract class AbstractParameterFormatter implements IParameterProvider {
     /**
      * Output text format settings
      */
     protected OutputFormatSettings formatSettings = new OutputFormatSettings();
-
-    /**
-     * Get format settings from this algorithm
-     *
-     * @return format settings from this algorithm
-     */
-    public OutputFormatSettings getFormatSettings() {
-        return formatSettings;
-    }
-
-    /**
-     * Sets format settings for this algorithm
-     */
-    public void setFormatSettings(OutputFormatSettings fs) {
-        this.formatSettings = new OutputFormatSettings(fs);
-    }
 }

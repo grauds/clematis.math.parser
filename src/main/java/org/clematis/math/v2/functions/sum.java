@@ -27,7 +27,7 @@ import java.io.StringReader;
  */
 public class sum extends aFunction2 {
     class Provider implements ISimpleParameterProvider,
-        iVariableProvider,
+        IVariableProvider,
         IFunctionProvider {
         /**
          * Value of variable

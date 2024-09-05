@@ -18,7 +18,6 @@ import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;
 import org.clematis.math.v1.io.OutputFormatSettings;
 import org.clematis.math.v1.io.XMLConstants;
-import org.jdom2.CDATA;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -52,13 +51,13 @@ public class Algorithm extends DefaultParameterProvider {
     /*
      * Collection of algorithmic parts.
      */
-    protected ArrayList<Algorithm> children = new ArrayList<Algorithm>();
+    protected List<IParameterProvider> children = new ArrayList<>();
     /*
      * Sets format settings for this algorithm
      */
     public void setFormatSettings(OutputFormatSettings fs) {
         super.setFormatSettings(fs);
-        for (Algorithm algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             algorithm.setFormatSettings(fs);
         }
     }
@@ -67,7 +66,7 @@ public class Algorithm extends DefaultParameterProvider {
      *
      * @param p the parameter.
      */
-    public void addParameter(Parameter p) {
+    public void addParameter(Parameter p) throws AlgorithmException {
         super.addParameter(p);
         p.setContainer(this);
     }
@@ -166,15 +165,15 @@ public class Algorithm extends DefaultParameterProvider {
      * @param key ident of algorithm
      * @return algorithm, stored under given ident
      */
-    public Algorithm getAlgorithm(String key) {
+    public IParameterProvider getAlgorithm(String key) {
 
-        Algorithm ret = null;
+        IParameterProvider ret = null;
 
         if (getIdent() != null && getIdent().equals(key)) {
             return this;
         }
 
-        for (Algorithm algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             if (algorithm != null) {
                 ret = algorithm.getAlgorithm(key);
                 if (ret != null) {
@@ -192,7 +191,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @param key ident of algorithm
      */
     public void removeAlgorithm(String key) {
-        Algorithm algorithm = getAlgorithm(key);
+        IParameterProvider algorithm = getAlgorithm(key);
         if (algorithm != null) {
             algorithm.setParent(null);
             this.children.remove(algorithm);
@@ -252,7 +251,7 @@ public class Algorithm extends DefaultParameterProvider {
         /*
          * Process children
          */
-        for (Algorithm algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             /*
              * Inherit calculated parameters
              */
@@ -374,16 +373,16 @@ public class Algorithm extends DefaultParameterProvider {
      * @param algElement question algorithm xml
      */
     @SuppressWarnings("checkstyle:NestedIfDepth")
-    public void revalidateParameters(Element algElement) {
+    public void revalidateParameters(Element algElement) throws AlgorithmException {
         if (algElement != null) {
             /*
              * Create algorithm instance
              */
-            Algorithm algorithm = Algorithm.createFromQuestionXML(algElement);
+            IParameterProvider algorithm = Algorithm.createFromQuestionXML(algElement);
             /*
              * Get algorithm with id of this taken algorithm
              */
-            Algorithm p = algorithm.getAlgorithm(this.getIdent());
+            IParameterProvider p = algorithm.getAlgorithm(this.getIdent());
             if (p != null) {
                 algorithm = p;
             }
@@ -420,7 +419,7 @@ public class Algorithm extends DefaultParameterProvider {
         /*
          * Process children
          */
-        for (Algorithm alg : children) {
+        for (IParameterProvider alg : children) {
             alg.revalidateParameters(algElement);
         }
     }
@@ -504,7 +503,7 @@ public class Algorithm extends DefaultParameterProvider {
 
         if (qalg instanceof Algorithm) {
 
-            Element ser = qalg.toXML();
+            Element ser = ((Algorithm) qalg).toXML();
             Algorithm algorithm = Algorithm.createFromXML(ser);
             if (algorithm != null) {
                 algorithm.setFormatSettings(qalg.getFormatSettings());
@@ -522,7 +521,7 @@ public class Algorithm extends DefaultParameterProvider {
      * @return algorithm object
      */
     @SuppressWarnings("checkstyle:NestedIfDepth")
-    static Algorithm createFromXML(Element algorithmXML) {
+    static Algorithm createFromXML(Element algorithmXML) throws AlgorithmException {
 
         if (algorithmXML != null && !algorithmXML.getChildren().isEmpty()) {
             Algorithm algorithm = new Algorithm();
@@ -635,7 +634,7 @@ public class Algorithm extends DefaultParameterProvider {
         /*
          * Add child algorithms
          */
-        for (Algorithm algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             Element calcXml = algorithm.save();
             algElement.addContent(calcXml);
         }
@@ -643,7 +642,7 @@ public class Algorithm extends DefaultParameterProvider {
         return algElement;
     }
 
-    /*
+    /**
      * Converts algorithm to JDOM.
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
@@ -671,7 +670,7 @@ public class Algorithm extends DefaultParameterProvider {
         /*
          * Add child algorithms
          */
-        for (Algorithm algorithm : children) {
+        for (IParameterProvider algorithm : children) {
             algElement.addContent(algorithm.toXML());
         }
 
@@ -684,54 +683,8 @@ public class Algorithm extends DefaultParameterProvider {
      *
      * @param algorithmXML XML representing the algorithm.
      */
-    static Algorithm createFromQuestionXML(Element algorithmXML) {
+    static Algorithm createFromQuestionXML(Element algorithmXML) throws AlgorithmException {
         return createFromXML(algorithmXML);
-    }
-
-    /*
-     * Saves algorithm to QUESTION XML.
-     *
-     * @return <code>Element</code> representing root of algorithm's JDOM.
-     */
-    public Element toQuestionXML() {
-        Element algElement = new Element(XMLConstants.ALGORITHM_ATTRIBUTE_NAME);
-        if (getIdent() != null) {
-            algElement.setAttribute(XMLConstants.IDENT_ATTRIBUTE_NAME, getIdent());
-        }
-        /*
-         * Add parameters
-         */
-        for (Key key : lines) {
-            /*
-             * Get instance of parameter
-             */
-            if (!key.isFunction()) {
-                Parameter param = parameters.get(key);
-                Element paramElement = new Element(XMLConstants.PARAM_ELEMENT_NAME);
-                paramElement.setAttribute("name", param.getName());
-                if (param.isContainsMathML()) {
-                    paramElement.setAttribute("contains_mathml", Boolean.TRUE.toString());
-                }
-
-                paramElement.addContent(new CDATA(param.getCode()));
-
-                if (param.isCorrectAnswer()) {
-                    paramElement.setAttribute("answer", Boolean.TRUE.toString());
-                }
-                algElement.addContent(paramElement);
-            } else {
-                GenericFunction function = functionFactory.getGenericFunction(key);
-                algElement.addContent(function.toXML());
-            }
-        }
-        /*
-         * Add child algorithms
-         */
-        for (Algorithm algorithm : children) {
-            algElement.addContent(algorithm.toQuestionXML());
-        }
-
-        return algElement;
     }
 
     /*

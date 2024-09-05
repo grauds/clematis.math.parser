@@ -2,6 +2,7 @@
 package org.clematis.math.v1.functions;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.clematis.math.v1.AbstractConstant;
@@ -71,11 +72,11 @@ public class GenericFunction extends aFunction {
         argumentsProvider.addKey(new Key(name));
     }
 
-    public ArrayList<Key> getFormalArguments() {
+    public List<Key> getFormalArguments() {
         return argumentsProvider.getLines();
     }
 
-    public void setFormalArguments(ArrayList<Key> lines) {
+    public void setFormalArguments(List<Key> lines) {
         this.argumentsProvider.setLines(lines);
     }
 
@@ -207,12 +208,13 @@ public class GenericFunction extends aFunction {
      * arguments instead of formal ones.
      */
     class ArgumentsProvider extends DefaultParameterProvider {
-        public ArrayList<Key> getLines() {
+
+        public List<Key> getLines() {
             return this.lines;
         }
 
-        public void setLines(ArrayList<Key> lines) {
-            this.lines = new ArrayList<Key>();
+        public void setLines(List<Key> lines) {
+            this.lines = new ArrayList<>();
             this.lines.addAll(lines);
         }
 

@@ -16,4 +16,12 @@ public interface IFunctionProvider {
      * @return function or null
      */
     aFunction getFunction(String name) throws AlgorithmException;
+
+    /**
+     * This method returns true if function provider has function with given signature
+     *
+     * @param name of the function
+     * @return true if function provider has function with given signature
+     */
+    boolean hasFunction(String name);
 }

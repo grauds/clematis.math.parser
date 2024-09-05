@@ -21,11 +21,11 @@ import org.jdom2.Element;
  * a formula for obtaining random variables values for a question.
  */
 public class Algorithm extends DefaultParameterProvider {
-    /**
+    /*
      * Maximum number of algorithm iterations
      */
     protected static final int MAXIMUM_ZERO_CHECKS = 10;
-    /**
+    /*
      * Maximum number of algorithm iterations
      */
     protected static final int MAXIMUM_CONDITION_CHECKS = 100;
@@ -34,7 +34,6 @@ public class Algorithm extends DefaultParameterProvider {
      */
     public void setFormatSettings(OutputFormatSettings fs) {
         super.setFormatSettings(fs);
-        //Set format settings for children algorithms
         for (IParameterProvider aChildren : children) {
             aChildren.setFormatSettings(fs);
         }
@@ -108,6 +107,11 @@ public class Algorithm extends DefaultParameterProvider {
          * Return parameter may be null
          */
         return param;
+    }
+
+    @Override
+    public void clear() {
+
     }
 //************************ CALCULATE PARAMETERS ************************
 

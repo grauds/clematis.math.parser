@@ -165,6 +165,11 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
         return functions.containsKey(key);
     }
 
+    @Override
+    public boolean hasFunction(String name) {
+        return functions.containsKey(new Key(name));
+    }
+
     /**
      * Return function for this key
      *

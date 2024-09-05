@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.clematis.math.v1.io.XMLConstants.ALGORITHM_ATTRIBUTE_NAME;
 import static org.clematis.math.v1.io.XMLConstants.CODE_ELEMENT_NAME;
@@ -68,7 +69,7 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
     /**
      * Calculates values of all parameters participating in algorithm.
      */
-    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
+    public void calculateParameters(Map<Key, IValue> params) throws AlgorithmException {
     /*    parameters.clear();
         if ( code != null )
         {
@@ -86,6 +87,33 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     public Parameter getParameterByCustomIdent(String ident) {
         return null;
+    }
+
+    /**
+     * Renames parameter
+     *
+     * @param paramName    of existing parameter
+     * @param newParamName of new parameter
+     */
+    public void renameParameter(String paramName, String newParamName) {
+        /*
+         * Sanity check
+         */
+        if (!paramName.equals(newParamName)) {
+
+            String modifiedParamName = newParamName;
+            int counter = 0;
+
+            while (parameters.containsKey(modifiedParamName)) {
+                counter++;
+                modifiedParamName = newParamName + counter;
+            }
+
+            if (parameters.get(paramName) != null) {
+                parameters.remove(paramName);
+                parameters.put(newParamName, parameters.get(paramName));
+            }
+        }
     }
 
     /**
@@ -109,6 +137,98 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     public Parameter getParameter(String name) {
         return new Parameter(name, getParameterConstant(name));
+    }
+
+    /**
+     * Checks whether this provider has specified parameter.
+     *
+     * @param paramName the token of parameter.
+     * @return <code>true</code> if this provider has parameter or <code>false</code> in otherwise.
+     */
+    public boolean hasParameter(String paramName) {
+        return parameters.containsKey(paramName);
+    }
+
+    /**
+     * Returns parent parameter provider
+     *
+     * @return parent parameter provider
+     */
+    public IParameterProvider getParent() {
+        return null;
+    }
+
+    /**
+     * Set parent parameter provider
+     *
+     * @param parent parameter provider
+     */
+    public void setParent(IParameterProvider parent) {
+    }
+
+    /**
+     * Add child parameter provider
+     *
+     * @param key       under which child parameter provider is to be stored
+     * @param algorithm child parameter provider
+     */
+    public void addAlgorithm(String key, IParameterProvider algorithm) {
+    }
+
+    /**
+     * Returns a list of children
+     *
+     * @return a list of children
+     */
+    public List<IParameterProvider> getChildren() {
+        return null;
+    }
+
+    /**
+     * Return child parameter provider by key
+     *
+     * @param key to search child parameter provider
+     * @return child parameter provider
+     */
+    public IParameterProvider getAlgorithm(String key) {
+        return null;
+    }
+
+    /**
+     * Return child parameter provider by key
+     *
+     * @param key to search child parameter provider
+     * @return child parameter provider
+     */
+    public IParameterProvider findAlgorithm(String key) {
+        return null;
+    }
+
+    /**
+     * Remove child parameter provider
+     *
+     * @param key to search child parameter provider
+     */
+    public void removeAlgorithm(String key) {}
+
+    /**
+     * Returns the array of parameters
+     *
+     * @return the array of parameters
+     */
+    @Override
+    public Parameter[] getParameters() {
+        return new Parameter[0];
+    }
+
+    /**
+     * Revalidate parameters with XML element containing parameters
+     *
+     * @param element containing parameters
+     */
+    @Override
+    public void revalidateParameters(Element element) throws AlgorithmException {
+
     }
 
     /**
@@ -159,7 +279,7 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      */
     void load(Element algElement) throws AlgorithmException {
         /*  load parameters */
-        HashMap<Key, IValue> params = new HashMap<>();
+        Map<Key, IValue> params = new HashMap<>();
         List<Element> calculatedParams = algElement.getChildren(PARAM_ELEMENT_NAME);
         for (Element element : calculatedParams) {
             Key key = new Key(element.getAttributeValue(NAME_ATTRIBUTE_NAME));
@@ -173,7 +293,6 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
-    @Override
     public Element save() {
         Element algElement = new Element(ALGORITHM_ATTRIBUTE_NAME);
         algElement.setAttribute(TYPE_ATTRIBUTE_NAME, BSH_TYPE);
@@ -199,7 +318,6 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
-    @Override
     public Element toXML() {
         Element algElement = new Element(ALGORITHM_ATTRIBUTE_NAME);
         algElement.setAttribute(TYPE_ATTRIBUTE_NAME, BSH_TYPE);

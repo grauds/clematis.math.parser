@@ -1,8 +1,6 @@
 // Created: Jan 21, 2003 T 5:23:42 PM
 package org.clematis.math.v1.algorithm;
 
-import java.util.HashSet;
-
 import org.clematis.math.StringUtils;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
@@ -20,8 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Parameter is a special constant, that is a product of
- * algorithm work, done before formula is presented to a student.
+ * Parameter is a product of one line of the algorithm
  */
 @Setter
 @Getter
@@ -109,12 +106,12 @@ public class Parameter extends SimpleParameter {
      */
     void calculate(Algorithm paramProvider, int currentLine) throws AlgorithmException {
         /*
-         * If code is not null, Parameter is mutable, if null - immutable via calculation
+         * If code is not null, parameter is mutable, if null - immutable via calculation
          */
         IExpressionItem result = null;
         if (code != null) {
             try {
-                //** parse processed code string */
+                /* parse processed code string */
                 ExpressionParser exprParser = new ExpressionParser(
                     AlgorithmUtils.replaceParameters(code, paramProvider, currentLine, false),
                     paramProvider,
@@ -122,7 +119,7 @@ public class Parameter extends SimpleParameter {
                     paramProvider
                 );
                 expressionRoot = exprParser.parse();
-                //** calculate expression root */
+                /* calculate expression root */
                 if (expressionRoot != null) {
                     result = expressionRoot.calculate(paramProvider);
                 }
@@ -188,7 +185,7 @@ public class Parameter extends SimpleParameter {
      *
      * @param constant the parameter value
      */
-    void setCurrentResult(AbstractConstant constant) {
+    public void setCurrentResult(AbstractConstant constant) {
         super.setCurrentResult(constant);
         if (getCurrentResult() != null) {
             getCurrentResult().setParameter(this);
@@ -212,7 +209,7 @@ public class Parameter extends SimpleParameter {
      *
      * @param name of parameter
      */
-    void setName(String name) {
+    public void setName(String name) {
         super.setName(name);
         if (name.equals(XMLConstants.CONDITION_NAME)) {
             condition = true;
@@ -229,14 +226,6 @@ public class Parameter extends SimpleParameter {
         }
 
         return true;
-    }
-
-    void setContainer(Algorithm container) {
-        this.container = container;
-    }
-
-    void setCorrectAnswerIdent(String correctAnswerIdent) {
-        this.correctAnswerIdent = correctAnswerIdent;
     }
 
     public boolean getSdEnable() {
@@ -418,17 +407,6 @@ public class Parameter extends SimpleParameter {
             } catch (NumberFormatException ignored) {}
         }
         return param;
-    }
-
-    /**
-     * Gets set with strings found in expression tree.
-     *
-     * @return set with strings
-     */
-    public HashSet<String> getStringDependencies() {
-        HashSet<String> strList = new HashSet<>();
-        AlgorithmUtils.findStringVariants(container, expressionRoot, strList);
-        return strList;
     }
 
     /**

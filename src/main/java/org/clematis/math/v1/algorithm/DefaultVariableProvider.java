@@ -2,14 +2,15 @@
 package org.clematis.math.v1.algorithm;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
 
 /**
- * Default parameter provider is used to provide generic
+ * Default variable provider is used to provide generic
  * random variable values to expression tree.
  */
 public class DefaultVariableProvider implements IVariableProvider {
@@ -29,7 +30,7 @@ public class DefaultVariableProvider implements IVariableProvider {
     /**
      * Hashed values
      */
-    protected Hashtable<String, Double> valuesCache = new Hashtable<>();
+    protected Map<String, Double> valuesCache = new HashMap<>();
     /**
      * Adds calculated parameter.
      *

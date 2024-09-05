@@ -6,12 +6,12 @@ import org.clematis.math.v2.AbstractConstant;
 /**
  * Provider of variables for functions.
  */
-public interface iVariableProvider {
+public interface IVariableProvider {
     /**
      * Return variable constant
      *
-     * @param in_varName parameter name
+     * @param name parameter name
      * @return parameter value, string or double
      */
-    AbstractConstant getVariableConstant(String in_varName);
+    AbstractConstant getVariableConstant(String name);
 }

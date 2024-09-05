@@ -60,7 +60,7 @@ public class AlgorithmFactory {
      *
      * @param algorithmXML - xml notation of an algorithm
      */
-    public static IParameterProvider createAlgorithm(Element algorithmXML) {
+    public static IParameterProvider createAlgorithm(Element algorithmXML) throws AlgorithmException {
         return Algorithm.createFromXML(algorithmXML);
     }
 
@@ -69,7 +69,8 @@ public class AlgorithmFactory {
      *
      * @param algorithmXML - xml notation of an algorithm
      */
-    public static IParameterProvider createAlgorithm(String algorithmXML) throws IOException, JDOMException {
+    public static IParameterProvider createAlgorithm(String algorithmXML)
+        throws IOException, JDOMException, AlgorithmException {
         if (algorithmXML != null && !algorithmXML.trim().isEmpty()) {
             Document doc = load(new StringReader(algorithmXML));
             Element root = doc.getRootElement();
@@ -105,16 +106,6 @@ public class AlgorithmFactory {
      */
     public static IParameterProvider copyAlgorithm(IParameterProvider algorithm) throws AlgorithmException {
         return copyAlgorithm(algorithm, null);
-    }
-
-    /**
-     * Store algorithm in xml string
-     *
-     * @param algorithm to store
-     * @return xml string
-     */
-    public static String toXML(IParameterProvider algorithm) throws IOException {
-        return printToString(algorithm.toXML());
     }
 
     /**
@@ -181,15 +172,6 @@ public class AlgorithmFactory {
             return load(new StringReader(algorithmXML)).getRootElement();
         }
         return null;
-    }
-
-    /**
-     * Save algorithm according to its version.
-     *
-     * @param algorithm instance to save
-     */
-    public static String saveAlgorithm(IParameterProvider algorithm) throws IOException {
-        return printToString(algorithm.save());
     }
 
     /**
