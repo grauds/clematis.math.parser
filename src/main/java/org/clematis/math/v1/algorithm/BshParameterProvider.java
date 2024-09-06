@@ -1,6 +1,7 @@
 // Created: 11.04.2005 T 16:32:05
 package org.clematis.math.v1.algorithm;
 
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -340,6 +341,16 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
         }
             */
         return algElement;
+    }
+
+    /**
+     * Print parameters for the parameters provider
+     *
+     * @param ps print stream
+     */
+    @Override
+    public void printParameters(PrintStream ps) {
+
     }
 
     /**

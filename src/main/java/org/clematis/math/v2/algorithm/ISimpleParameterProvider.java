@@ -2,15 +2,17 @@
 package org.clematis.math.v2.algorithm;
 
 import org.clematis.math.v2.AbstractConstant;
+import org.clematis.math.v2.AlgorithmException;
 
 public interface ISimpleParameterProvider {
+
     /**
      * Return parameter constant
      *
-     * @param in_varName parameter name
+     * @param name parameter name
      * @return parameter value, string or double
      */
-    AbstractConstant getParameterConstant(String in_varName);
+    AbstractConstant getParameterConstant(String name) throws AlgorithmException;
 
     /**
      * Provides the parameter.

@@ -2,6 +2,7 @@
 // Created: Jan 21, 2003 T 11:34:43 AM
 package org.clematis.math.v1.algorithm;
 
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -156,4 +157,11 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
     Element toXML();
+
+    /**
+     * Print parameters for the parameters provider
+     *
+     * @param ps print stream
+     */
+    void printParameters(PrintStream ps);
 }

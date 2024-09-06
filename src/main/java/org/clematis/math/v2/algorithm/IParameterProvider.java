@@ -1,6 +1,7 @@
 // Created: Jan 21, 2003 T 11:34:43 AM
 package org.clematis.math.v2.algorithm;
 
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.Map;
 import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.IValue;
 import org.clematis.math.v2.io.IParameterFormatter;
+import org.jdom2.Element;
+
 /**
  * Provider of parameters for functions.
  */
@@ -128,6 +131,26 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
      * @param key to search child parameter provider
      */
     void removeAlgorithm(String key);
+
+    /**
+     * Save parameters to XML
+     *
+     * @return JDOM element with parameters
+     */
+    Element save();
+    /**
+     * Converts algorithm to JDOM.
+     *
+     * @return <code>Element</code> representing root of calculated algorithm's JDOM.
+     */
+    Element toXML();
+
+    /**
+     * Print parameters for the parameters provider
+     *
+     * @param ps print stream
+     */
+    void printParameters(PrintStream ps);
 
     /**
      * Clear all the parameters calculation results

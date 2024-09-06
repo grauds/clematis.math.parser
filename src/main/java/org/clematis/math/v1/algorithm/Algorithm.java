@@ -1,11 +1,11 @@
 // Created: 17.09.2004 T 16:27:26
 package org.clematis.math.v1.algorithm;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.AlgorithmException;
@@ -21,12 +21,10 @@ import org.clematis.math.v1.io.XMLConstants;
 import org.jdom2.Element;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
- * A representation of algorithm in question. This is
- * a formula for obtaining random variables values
- * for a question.
+ * This class adds calculation to the basic default parameters provider with some
+ * tolerance and confition checks policies
  */
 @Getter
 public class Algorithm extends DefaultParameterProvider {
@@ -43,24 +41,6 @@ public class Algorithm extends DefaultParameterProvider {
      * Numeric interval for condition checks
      */
     protected static final double TOLERANCE = 10e-9;
-    /*
-     * Parent algorithm
-     */
-    @Setter
-    protected Algorithm parent = null;
-    /*
-     * Collection of algorithmic parts.
-     */
-    protected List<IParameterProvider> children = new ArrayList<>();
-    /*
-     * Sets format settings for this algorithm
-     */
-    public void setFormatSettings(OutputFormatSettings fs) {
-        super.setFormatSettings(fs);
-        for (IParameterProvider algorithm : children) {
-            algorithm.setFormatSettings(fs);
-        }
-    }
     /*
      * Adds parameter and sets itself as parameter container.
      *
@@ -89,7 +69,7 @@ public class Algorithm extends DefaultParameterProvider {
         return param;
     }
 
-    /*
+    /**
      * Finds parameter by its answer ident
      *
      * @param answerIdent answer ident
@@ -109,36 +89,7 @@ public class Algorithm extends DefaultParameterProvider {
         return param;
     }
 
-    /*
-     * Prints parameters names and values.
-     *
-     * @param ps output stream to print parameters names and values.
-     */
-    public void printParameters(PrintStream ps) {
-        ps.println("Algorithm ( ident='" + getIdent() + "' ) parameters:");
-
-        /* Get instance of parameter */
-        for (Key key : lines) {
-            /*
-             * Get instance of parameter
-             */
-            if (!key.isFunction()) {
-                /* directly get parameter */
-                Parameter param = getParameter(key);
-                ps.println(param.getName() + " = " + param.getOutputValue(true));
-            } else {
-                this.functionFactory.loadForUse(key);
-            }
-        }
-
-        if (getParent() != null && !getParent().parameters.isEmpty()) {
-            ps.println("Parent parameters:");
-            getParent().printParameters(ps);
-        }
-
-        finishAndClear();
-    }
-    /*
+    /**
      * Add child algorithm
      *
      * @param key       for storing algorithm
@@ -186,33 +137,11 @@ public class Algorithm extends DefaultParameterProvider {
     }
 
     /*
-     * Remove algorithm
-     *
-     * @param key ident of algorithm
-     */
-    public void removeAlgorithm(String key) {
-        IParameterProvider algorithm = getAlgorithm(key);
-        if (algorithm != null) {
-            algorithm.setParent(null);
-            this.children.remove(algorithm);
-        }
-    }
-
-    /*
-     * Calculates values of all parameters participating in algorithm.
+     * Calculates values of all parameters in algorithm.
      *
      * @throws AlgorithmException on error.
      */
-    public void calculateParameters() throws AlgorithmException {
-        calculateParameters(null);
-    }
-
-    /*
-     * Calculates values of all parameters participating in algorithm.
-     *
-     * @throws AlgorithmException on error.
-     */
-    public void calculateParameters(HashMap<Key, IValue> params) throws AlgorithmException {
+    public void calculateParameters(Map<Key, IValue> params) throws AlgorithmException {
         boolean success = false;
         String message = "";
         int conditionFailures = 0;
@@ -259,7 +188,7 @@ public class Algorithm extends DefaultParameterProvider {
         }
     }
 
-    /*
+    /**
      * Recursively calculates parameters of this algorithm and all its children.
      * Creates a calculated algorithm branch.
      *
@@ -271,11 +200,11 @@ public class Algorithm extends DefaultParameterProvider {
      * @throws AlgorithmException is thrown if error occurs in evaluating any parameter
      */
     @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:CyclomaticComplexity"})
-    private boolean calculateParameters(HashMap<Key, IValue> params, boolean calculateAllParameters)
+    private boolean calculateParameters(Map<Key, IValue> params, boolean calculateAllParameters)
         throws AlgorithmException {
 
         boolean zeroFailed = false;
-        HashMap<String, Integer> randomizedParamsCounter = new HashMap<>();
+        Map<String, Integer> randomizedParamsCounter = new HashMap<>();
         for (int i = 0; i < lines.size(); i++) {
             /* key here is always without braces */
             Key key = lines.get(i);
@@ -364,146 +293,31 @@ public class Algorithm extends DefaultParameterProvider {
         return zeroFailed;
     }
 
-    /*
-     * Revalidate calculated parameters to restore missing parameter
-     * code, but not to change results.
-     * <p>
-     * before: code=? after: code=sig(3, 2*$k*....
-     *
-     * @param algElement question algorithm xml
-     */
-    @SuppressWarnings("checkstyle:NestedIfDepth")
-    public void revalidateParameters(Element algElement) throws AlgorithmException {
-        if (algElement != null) {
-            /*
-             * Create algorithm instance
-             */
-            IParameterProvider algorithm = Algorithm.createFromQuestionXML(algElement);
-            /*
-             * Get algorithm with id of this taken algorithm
-             */
-            IParameterProvider p = algorithm.getAlgorithm(this.getIdent());
-            if (p != null) {
-                algorithm = p;
-            }
-            /*
-             * Iterate through our parameters
-             */
-            Iterator<Key> it = lines.iterator();
-            /*
-             * Get algorithm parameters
-             */
-            Parameter[] algParams = algorithm.getParameters();
-            int cursor = 0;
-            while (it.hasNext()) {
-                Key key = it.next();
-                /* parameter */
-                if (!key.isFunction()) {
-                    /* directly get parameter */
-                    Parameter param = getParameter(key);
-                    Parameter pa = null;
-                    if (cursor < algParams.length) {
-                        pa = algParams[cursor];
-                        cursor++;
-                    }
-
-                    if (param.getCode() == null && pa != null) {
-                        param.setCode(pa.getCode());
-                    }
-                } else {
-                    this.functionFactory.loadForUse(key);
-                }
-            }
-        }
-        finishAndClear();
-        /*
-         * Process children
-         */
-        for (IParameterProvider alg : children) {
-            alg.revalidateParameters(algElement);
-        }
-    }
-
-    /*
-     * Replaces parameters references with expression roots
-     */
-    public void parseParametersWithFullTree() throws AlgorithmException {
-        Iterator<Key> it = lines.iterator();
-        int line = 1;
-        while (it.hasNext()) {
-            Key key = it.next();
-            /* parameter */
-            if (!key.isFunction()) {
-                /* directly get parameter */
-                Parameter param = getParameter(key);
-                try {
-                    param.parseWithFullTree(this);
-                } catch (AlgorithmException ex) {
-                    throw new AlgorithmException(ex.getMessage(), line);
-                }
-                /* load parameter for usage */
-                loadForUse(param);
-            } else {
-                this.functionFactory.loadForUse(key);
-            }
-            line++;
-        }
-        finishAndClear();
-    }
-
-    /*
-     * Replaces parameters references with ParameterReference objects.
-     */
-    public void parseParametersWithReferences() throws AlgorithmException {
-        Iterator<Key> it = lines.iterator();
-        int line = 1;
-        while (it.hasNext()) {
-            Key key = it.next();
-            /* parameter */
-            if (!key.isFunction()) {
-                /* directly get parameter */
-                Parameter param = getParameter(key);
-                try {
-                    param.parseWithReferences(this);
-                } catch (AlgorithmException ex) {
-                    throw new AlgorithmException(ex.getMessage(), line);
-                }
-                /* load parameter for usage */
-                loadForUse(param);
-            } else {
-                this.functionFactory.loadForUse(key);
-            }
-            line++;
-        }
-        finishAndClear();
-    }
-//************************ CREATE FROM AND SAVE TO XML *********************
-
-    /*
-     * Creates algorithm for taken question
+    /**
+     * Copies algorithm from the initial algorithm and results
      *
      * @param qalg question algorithm
      * @return calculated algorithm instance
      * @throws AlgorithmException throws exception if algorithm cannot be created
      */
-    static Algorithm createFromAlgorithm(IParameterProvider qalg) throws AlgorithmException {
+    public static Algorithm createFromAlgorithm(IParameterProvider qalg) throws AlgorithmException {
         return createFromAlgorithm(qalg, null);
     }
 
-    /*
-     * Creates algorithm for taken question
+    /**
+     * Copy algorithm from initial one. Restores algorithm from initial values or calculates it one again
      *
      * @param qalg   question algorithm
      * @param params some parameters values
      * @return calculated algorithm instance
      * @throws AlgorithmException throws exception if algorithm cannot be created
      */
-    static Algorithm createFromAlgorithm(IParameterProvider qalg, HashMap<Key, IValue> params)
+    public static Algorithm createFromAlgorithm(IParameterProvider qalg, Map<Key, IValue> params)
         throws AlgorithmException {
 
         if (qalg instanceof Algorithm) {
 
-            Element ser = ((Algorithm) qalg).toXML();
+            Element ser = qalg.toXML();
             Algorithm algorithm = Algorithm.createFromXML(ser);
             if (algorithm != null) {
                 algorithm.setFormatSettings(qalg.getFormatSettings());
@@ -514,11 +328,12 @@ public class Algorithm extends DefaultParameterProvider {
         return null;
     }
 
-    /*
+    /**
      * Creates algorithm from xml jdom element
      *
      * @param algorithmXML containing algorithm
      * @return algorithm object
+     * @throws AlgorithmException if algorithm cannot be created
      */
     @SuppressWarnings("checkstyle:NestedIfDepth")
     static Algorithm createFromXML(Element algorithmXML) throws AlgorithmException {
@@ -554,7 +369,7 @@ public class Algorithm extends DefaultParameterProvider {
      * Loads algorithm calculation results
      */
     void load(Element algElement) {
-        HashMap<Key, IValue> params = loadParameters(algElement);
+        Map<Key, IValue> params = loadParameters(algElement);
         try {
             this.calculateParameters(params);
         } catch (AlgorithmException e) {
@@ -562,49 +377,66 @@ public class Algorithm extends DefaultParameterProvider {
         }
     }
 
-    /*
+    /**
      * Load initial values from algorithm xml
      *
      * @param algElement algorithm xml
      * @return initial values map, with algorithm idents in keys
      */
     @SuppressWarnings("checkstyle:NestedIfDepth")
-    private HashMap<Key, IValue> loadParameters(Element algElement) {
+    private Map<Key, IValue> loadParameters(Element algElement) {
         /*  load parameters for this algorithm */
-        HashMap<Key, IValue> params = new HashMap<>();
-        List<Element> elements = algElement.getChildren();
-        for (Object element : elements) {
-            if (element instanceof Element e) {
-                String name = e.getName();
-                if (name.equals(XMLConstants.PARAM_ELEMENT_NAME)) {
-                    Parameter p = Parameter.loadResult(e);
-                    /*
-                     * Construct key
-                     */
-                    Key key = new Key(p.getName());
-                    String ident = algElement.getAttributeValue(XMLConstants.IDENT_ATTRIBUTE_NAME);
-                    if (ident != null && !ident.trim().isEmpty()) {
-                        key.setPartId(ident);
+        Map<Key, IValue> params = new HashMap<>();
+        if (algElement != null) {
+            List<Element> elements = algElement.getChildren();
+            for (Object element : elements) {
+                if (element instanceof Element e) {
+                    String name = e.getName();
+                    if (name.equals(XMLConstants.PARAM_ELEMENT_NAME)) {
+                        /*
+                         * Load parameter from xml
+                         */
+                        Parameter p = Parameter.loadResult(e);
+                        /*
+                         * Construct key
+                         */
+                        Key key = new Key(p.getName());
+                        String ident = algElement.getAttributeValue(XMLConstants.IDENT_ATTRIBUTE_NAME);
+                        if (ident != null && !ident.trim().isEmpty()) {
+                            key.setPartId(ident);
+                        }
+                        /*
+                         * Find similar parameter
+                         */
+                        while (params.get(key) != null) {
+                            key.setNo(key.getNo() + 1);
+                        }
+                        /*
+                         * Put key with name and number
+                         */
+                        if (p.getCurrentResult() != null) {
+                            params.put(key, p.getCurrentResult().copy());
+                        }
+                    } else if (name.equals(XMLConstants.ALGORITHM_ATTRIBUTE_NAME)) {
+                        params.putAll(loadParameters(e));
                     }
-                    /*
-                     * Find similar parameter
-                     */
-                    while (params.get(key) != null) {
-                        key.setNo(key.getNo() + 1);
-                    }
-                    /*
-                     * Put key with name and number
-                     */
-                    params.put(key, p.getCurrentResult().copy());
-                } else if (name.equals(XMLConstants.ALGORITHM_ATTRIBUTE_NAME)) {
-                    params.putAll(loadParameters(e));
                 }
             }
         }
         return params;
     }
 
-    /*
+    /**
+     * Sets format settings for this algorithm
+     */
+    public void setFormatSettings(OutputFormatSettings fs) {
+        super.setFormatSettings(fs);
+        for (IParameterProvider algorithm : children) {
+            algorithm.setFormatSettings(fs);
+        }
+    }
+
+    /**
      * Saves algorithm calculation results
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
@@ -676,19 +508,20 @@ public class Algorithm extends DefaultParameterProvider {
 
         return algElement;
     }
-//**************************** QUESTION XML OPERATIONS *****************************
 
-    /*
+    /**
      * Creates <code>Algorithm</code> object from QUESTION XML.
      *
      * @param algorithmXML XML representing the algorithm.
+     * @return instance of Algorithm
+     * @throws AlgorithmException if algorithm cannot be created
      */
-    static Algorithm createFromQuestionXML(Element algorithmXML) throws AlgorithmException {
+    public static Algorithm createFromQuestionXML(Element algorithmXML) throws AlgorithmException {
         return createFromXML(algorithmXML);
     }
 
     /*
-     * Finds all parameters dependenced from the parameter.
+     * Finds all parameters dependent on the parameter.
      *
      * @param param the parameter from which the dependencies are searched.
      * @return ArrayList with parameters if exist or null.
@@ -725,4 +558,119 @@ public class Algorithm extends DefaultParameterProvider {
             dependencies.add(paramRef.getOrigin());
         }
     }
+
+    /**
+     * Revalidate calculated parameters to restore missing parameter
+     * code, but not to change results.
+     * <p>
+     * before: code=? after: code=sig(3, 2*$k*....
+     *
+     * @param algElement question algorithm xml
+     */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
+    public void revalidateParameters(Element algElement) throws AlgorithmException {
+        if (algElement != null) {
+            /*
+             * Create algorithm instance
+             */
+            IParameterProvider algorithm = Algorithm.createFromQuestionXML(algElement);
+            /*
+             * Get algorithm with id of this taken algorithm
+             */
+            IParameterProvider p = algorithm.getAlgorithm(this.getIdent());
+            if (p != null) {
+                algorithm = p;
+            }
+            /*
+             * Iterate through our parameters
+             */
+            Iterator<Key> it = lines.iterator();
+            /*
+             * Get algorithm parameters
+             */
+            Parameter[] algParams = algorithm.getParameters();
+            int cursor = 0;
+            while (it.hasNext()) {
+                Key key = it.next();
+                /* parameter */
+                if (!key.isFunction()) {
+                    /* directly get parameter */
+                    Parameter param = getParameter(key);
+                    Parameter pa = null;
+                    if (cursor < algParams.length) {
+                        pa = algParams[cursor];
+                        cursor++;
+                    }
+
+                    if (param.getCode() == null && pa != null) {
+                        param.setCode(pa.getCode());
+                    }
+                } else {
+                    this.functionFactory.loadForUse(key);
+                }
+            }
+        }
+        finishAndClear();
+        /*
+         * Process children
+         */
+        for (IParameterProvider alg : children) {
+            alg.revalidateParameters(algElement);
+        }
+    }
+
+    /**
+     * Replaces parameters references with expression roots
+     */
+    public void parseParametersWithFullTree() throws AlgorithmException {
+        Iterator<Key> it = lines.iterator();
+        int line = 1;
+        while (it.hasNext()) {
+            Key key = it.next();
+            /* parameter */
+            if (!key.isFunction()) {
+                /* directly get parameter */
+                Parameter param = getParameter(key);
+                try {
+                    param.parseWithFullTree(this);
+                } catch (AlgorithmException ex) {
+                    throw new AlgorithmException(ex.getMessage(), line);
+                }
+                /* load parameter for usage */
+                loadForUse(param);
+            } else {
+                this.functionFactory.loadForUse(key);
+            }
+            line++;
+        }
+        finishAndClear();
+    }
+
+    /*
+     * Replaces parameters references with ParameterReference objects.
+     */
+    public void parseParametersWithReferences() throws AlgorithmException {
+        Iterator<Key> it = lines.iterator();
+        int line = 1;
+        while (it.hasNext()) {
+            Key key = it.next();
+            /* parameter */
+            if (!key.isFunction()) {
+                /* directly get parameter */
+                Parameter param = getParameter(key);
+                try {
+                    param.parseWithReferences(this);
+                } catch (AlgorithmException ex) {
+                    throw new AlgorithmException(ex.getMessage(), line);
+                }
+                /* load parameter for usage */
+                loadForUse(param);
+            } else {
+                this.functionFactory.loadForUse(key);
+            }
+            line++;
+        }
+        finishAndClear();
+    }
+
 }

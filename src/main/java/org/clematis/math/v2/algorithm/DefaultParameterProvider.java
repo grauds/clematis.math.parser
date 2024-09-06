@@ -20,6 +20,7 @@ import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.functions.generic;
 import org.clematis.math.v2.io.AbstractParameterFormatter;
+import org.jdom2.Element;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -437,6 +438,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @throws AlgorithmException on error.
      */
     public void calculateParameters() throws AlgorithmException {
+        calculateParameters(null);
     }
 
     /**
@@ -609,6 +611,26 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             algorithm.setParent(null);
             this.children.remove(algorithm);
         }
+    }
+
+    /**
+     * Save parameters to XML
+     *
+     * @return JDOM element with parameters
+     */
+    @Override
+    public Element save() {
+        return null;
+    }
+
+    /**
+     * Converts algorithm to JDOM.
+     *
+     * @return <code>Element</code> representing root of calculated algorithm's JDOM.
+     */
+    @Override
+    public Element toXML() {
+        return null;
     }
 
     /**

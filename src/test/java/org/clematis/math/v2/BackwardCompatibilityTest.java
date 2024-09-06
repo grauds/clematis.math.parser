@@ -1,9 +1,6 @@
 // Created: 07.07.2005 T 10:00:19
 package org.clematis.math.v2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.AlgorithmFactory;
 import org.clematis.math.v2.algorithm.Parameter;

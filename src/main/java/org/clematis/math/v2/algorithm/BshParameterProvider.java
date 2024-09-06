@@ -1,6 +1,7 @@
 // Created: 11.04.2005 T 16:32:05
 package org.clematis.math.v2.algorithm;
 
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -102,14 +103,15 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
         if (!paramName.equals(newParamName)) {
             String modifiedParamName = newParamName;
             int counter = 0;
-            while (parameters.containsKey(newParamName)) {
+
+            while (parameters.containsKey(modifiedParamName)) {
                 counter++;
                 modifiedParamName = newParamName + counter;
             }
-            String code = parameters.get(paramName);
-            if (code != null) {
+
+            if (parameters.get(paramName) != null) {
                 parameters.remove(paramName);
-                parameters.put(newParamName, code);
+                parameters.put(newParamName, parameters.get(paramName));
             }
         }
     }
@@ -326,6 +328,16 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
         }
             */
         return algElement;
+    }
+
+    /**
+     * Print parameters for the parameters provider
+     *
+     * @param ps print stream
+     */
+    @Override
+    public void printParameters(PrintStream ps) {
+        
     }
 
     /**

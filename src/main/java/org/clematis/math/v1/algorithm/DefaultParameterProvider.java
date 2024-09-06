@@ -331,36 +331,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Revalidate parameters with XML element containing parameters
-     *
-     * @param element containing parameters
-     */
-    @Override
-    public void revalidateParameters(Element element) throws AlgorithmException {
-
-    }
-
-    /**
-     * Save parameters to XML
-     *
-     * @return JDOM element with parameters
-     */
-    @Override
-    public Element save() {
-        return null;
-    }
-
-    /**
-     * Converts algorithm to JDOM.
-     *
-     * @return <code>Element</code> representing root of calculated algorithm's JDOM.
-     */
-    @Override
-    public Element toXML() {
-        return null;
-    }
-
-    /**
      * Get parameter directly and activate it
      *
      * @param key of parameter
@@ -467,6 +437,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @throws AlgorithmException on error.
      */
     public void calculateParameters() throws AlgorithmException {
+        calculateParameters(null);
     }
 
     /**
@@ -640,4 +611,36 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             this.children.remove(algorithm);
         }
     }
+
+
+    /**
+     * Revalidate parameters with XML element containing parameters
+     *
+     * @param element containing parameters
+     */
+    @Override
+    public void revalidateParameters(Element element) throws AlgorithmException {
+
+    }
+
+    /**
+     * Save parameters to XML
+     *
+     * @return JDOM element with parameters
+     */
+    @Override
+    public Element save() {
+        return null;
+    }
+
+    /**
+     * Converts algorithm to JDOM.
+     *
+     * @return <code>Element</code> representing root of calculated algorithm's JDOM.
+     */
+    @Override
+    public Element toXML() {
+        return null;
+    }
+
 }

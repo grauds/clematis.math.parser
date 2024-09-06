@@ -35,6 +35,7 @@ package org.clematis.math.v2.parsers.string;
  ***************************************************************/
 
 import org.clematis.math.v2.AbstractConstant;
+import org.clematis.math.v2.AlgorithmException;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.Variable;
@@ -957,6 +958,8 @@ public class StringMathParser/*@bgen(jjtree)*/
                     return t;
                 }
             }
+        } catch (AlgorithmException e) {
+            throw new RuntimeException(e);
         } finally {
             if (jjtc000) {
                 jjtree.closeNodeScope(jjtn000, true);
