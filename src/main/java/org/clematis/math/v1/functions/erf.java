@@ -4,8 +4,8 @@ package org.clematis.math.v1.functions;
 
 import org.apache.commons.math3.special.Erf;
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
@@ -19,7 +19,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * </ul>
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class erf extends aFunction2 {
+public class erf extends AbstractMathMLFunction {
     /**
      * Calculate a subtree of expression items
      *

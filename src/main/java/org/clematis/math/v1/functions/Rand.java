@@ -4,8 +4,8 @@ package org.clematis.math.v1.functions;
 import java.util.Random;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
@@ -15,7 +15,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * rand(m,n,k)
  * Returns a randomly chosen real number between m and n expressed to k significant places.
  */
-public class Rand extends aFunction2 {
+public class Rand extends AbstractMathMLFunction {
 
     public static final String SIGNATURE = "Rand";
 

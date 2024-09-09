@@ -3,8 +3,8 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
@@ -12,7 +12,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * i.e. it returns a == 0.0 ? 1.0 : 0.0.
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class not extends aFunction2 {
+public class not extends AbstractMathMLFunction {
     /**
      * Calculate a subtree of expression items
      *

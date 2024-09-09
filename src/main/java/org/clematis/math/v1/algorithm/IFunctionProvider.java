@@ -2,7 +2,7 @@
 package org.clematis.math.v1.algorithm;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.functions.aFunction;
+import org.clematis.math.v1.IFunction;
 
 /**
  * Provides generic functions for qu algorithms, declared earlier in
@@ -15,7 +15,7 @@ public interface IFunctionProvider {
      * @param name the function name
      * @return function or null
      */
-    aFunction getFunction(String name) throws AlgorithmException;
+    IFunction getFunction(String name) throws AlgorithmException;
 
     /**
      * This method returns true if function provider has function with given signature

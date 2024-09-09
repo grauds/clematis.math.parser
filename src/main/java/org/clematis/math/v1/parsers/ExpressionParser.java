@@ -19,7 +19,6 @@ import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.algorithm.ParameterReference;
-import org.clematis.math.v1.functions.aFunction;
 import org.clematis.math.v1.operations.Addition;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
@@ -343,7 +342,7 @@ public class ExpressionParser {
                     + expression + '\"');
             }
 
-            final aFunction and = functionProvider.getFunction("and");
+            final IFunction and = functionProvider.getFunction("and");
             if (and != null) {
                 for (final IExpressionItem itm : items) {
                     and.addArgument(itm);

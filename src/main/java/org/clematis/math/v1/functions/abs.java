@@ -11,7 +11,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * abs ( a )
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class abs extends aFunction {
+public class abs extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

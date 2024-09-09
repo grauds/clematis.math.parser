@@ -6,15 +6,15 @@ package org.clematis.math.v1.functions;
 import java.util.ArrayList;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IOptions;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * if (a, b, c)    returns ( a != 0) ? b : c
  */
-public class If extends aFunction2 implements IOptions {
+public class If extends AbstractMathMLFunction implements IOptions {
 
     public static final int NUMBER_OF_ARGUMENTS = 3;
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.algorithm.Key;
 
 /**
  * Function is an expression item with parameter
@@ -44,7 +45,7 @@ public interface IFunction extends IExpressionItem {
     void setSignature(String signature);
 
     /**
-     * Return a set of arguments of this function
+     * Return a list of arguments of this function
      *
      * @return an iExpressionItem set of arguments of this function
      */

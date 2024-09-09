@@ -3,15 +3,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * arcsinh(x)=log( x + (x^2 + 1)^(1/2) )
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class arcsinh extends aFunction {
+public class arcsinh extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

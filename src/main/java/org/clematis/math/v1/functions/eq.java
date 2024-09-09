@@ -3,15 +3,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 
 /**
  * Returns 1.0 if a and b are equal, otherwise returns 0.0;
  * i.e. it returns a == b ? 1.0 : 0.0.
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class eq extends aFunction2 {
+public class eq extends AbstractMathMLFunction {
 
     /**
      * Calculate a subtree of expression items

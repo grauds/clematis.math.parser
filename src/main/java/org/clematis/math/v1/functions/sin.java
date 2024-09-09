@@ -4,15 +4,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * sin (a)
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class sin extends aFunction {
+public class sin extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

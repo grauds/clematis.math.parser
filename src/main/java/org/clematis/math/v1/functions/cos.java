@@ -4,15 +4,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * cos ( a )
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class cos extends aFunction {
+public class cos extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

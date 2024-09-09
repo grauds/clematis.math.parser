@@ -4,15 +4,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * arccos( a )
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class arccos extends aFunction {
+public class arccos extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

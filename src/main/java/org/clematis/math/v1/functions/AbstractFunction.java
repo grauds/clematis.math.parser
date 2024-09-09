@@ -7,11 +7,11 @@ import java.util.Objects;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.algorithm.IParameterProvider;
-import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.operations.Power;
 import org.jdom2.Element;
 
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @SuppressWarnings("checkstyle:TypeName")
-public abstract class aFunction implements IFunction, Serializable {
+public abstract class AbstractFunction implements IFunction, Serializable {
 
     /**
      * The list of arguments
@@ -107,7 +107,7 @@ public abstract class aFunction implements IFunction, Serializable {
             return true;
         }
 
-        if (!(item instanceof aFunction aFunction)) {
+        if (!(item instanceof AbstractFunction aFunction)) {
             return false;
         }
 
@@ -137,11 +137,11 @@ public abstract class aFunction implements IFunction, Serializable {
         if (this == item) {
             return true;
         }
-        if (item instanceof aFunction) {
+        if (item instanceof AbstractFunction) {
             return equals(item);
         } else if (item instanceof Power) {
             IExpressionItem expression = ((Power) item).getOperand1();
-            if (expression instanceof aFunction) {
+            if (expression instanceof AbstractFunction) {
                 return equals(expression);
             }
         }
@@ -155,7 +155,7 @@ public abstract class aFunction implements IFunction, Serializable {
      * @return result expression item
      */
     public IExpressionItem add(IExpressionItem item) {
-        if (item instanceof aFunction && item.aKindOf(this)) {
+        if (item instanceof AbstractFunction && item.aKindOf(this)) {
             this.setMultiplier(this.getMultiplier() + item.getMultiplier());
             return this;
         }
@@ -171,7 +171,7 @@ public abstract class aFunction implements IFunction, Serializable {
     @SuppressWarnings("checkstyle:ReturnCount")
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
         if (item.aKindOf(this)) {
-            if (item instanceof aFunction) {
+            if (item instanceof AbstractFunction) {
                 /*
                  *  2 * sin ( x ) * 3 * sin ( x ) = 6 * sin ( x ) ^ 2
                  */

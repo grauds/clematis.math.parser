@@ -17,8 +17,8 @@ import org.clematis.math.StringUtils;
 import org.clematis.math.io.AbstractParameterFormatter;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.FunctionFactory;
+import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.functions.aFunction;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -236,7 +236,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param name the function name
      * @return function or null
      */
-    public aFunction getFunction(String name) throws AlgorithmException {
+    public IFunction getFunction(String name) throws AlgorithmException {
         return this.functionFactory.getFunction(name);
     }
 

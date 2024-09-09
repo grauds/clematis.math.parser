@@ -3,13 +3,14 @@ package org.clematis.math.v1;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.Key;
+import org.clematis.math.v1.functions.AbstractFunction;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.functions.aFunction;
 
 /**
  * Factory for functions.
@@ -19,19 +20,19 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
     /**
      * Standard function classes
      */
-    private static final HashMap<String, String> CLASSES = new HashMap<>();
+    private static final Map<String, String> CLASSES = new HashMap<>();
     /**
      * Extended functions codes
      * <p/>
      * key -> code
      */
-    private final HashMap<Key, GenericFunction> functions = new HashMap<>();
+    private final Map<Key, IFunction> functions = new HashMap<>();
     /**
      * Extended functions codes currently in use
      * <p/>
      * name -> code
      */
-    private HashMap<String, GenericFunction> functionsInUse = new HashMap<>();
+    private final Map<String, IFunction> functionsInUse = new HashMap<>();
 
     /**
      * Return available library functions
@@ -96,20 +97,22 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @return function, either standard or extended
      * @throws AlgorithmException is thrown is function is unknown
      */
-    public aFunction getFunction(String functionName) throws AlgorithmException {
-        aFunction f = null;
+    public IFunction getFunction(String functionName) throws AlgorithmException {
+        IFunction f = null;
         try {
             String className = CLASSES.get(functionName);
             if (className != null) {
                 Object obj = Class.forName(className).getDeclaredConstructor().newInstance();
-                if (obj instanceof aFunction) {
-                    f = (aFunction) obj;
-                    f.setFunctionFactory(this);
+                if (obj instanceof AbstractFunction) {
+                    f = (AbstractFunction) obj;
+                    ((AbstractFunction) f).setFunctionFactory(this);
                 }
             } else {
                 if (functionsInUse.containsKey(functionName)) {
-                    GenericFunction function = functionsInUse.get(functionName);
-                    f = new GenericFunction(function);
+                    IFunction function = functionsInUse.get(functionName);
+                    if (function instanceof GenericFunction) {
+                        f = new GenericFunction((GenericFunction) function);
+                    }
                 } else {
                     f = getLatestFunction(functionName);
                 }
@@ -130,15 +133,15 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @param functionName name of function
      * @return the latest function added to collection with the same name
      */
-    public aFunction getLatestFunction(String functionName) {
+    public IFunction getLatestFunction(String functionName) {
         Key key = new Key(functionName);
-        GenericFunction function = null;
+        IFunction function = null;
         while (functions.containsKey(key)) {
             function = functions.get(key);
             key.setNo(key.getNo() + 1);
         }
-        if (function != null) {
-            return new GenericFunction(function);
+        if (function instanceof GenericFunction) {
+            return new GenericFunction((GenericFunction) function);
         } else {
             return null;
         }
@@ -178,7 +181,10 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @return function for this key
      */
     public GenericFunction getGenericFunction(Key key) {
-        return new GenericFunction(functions.get(key));
+        if (functions.get(key) instanceof GenericFunction) {
+            return new GenericFunction((GenericFunction) functions.get(key));
+        }
+        return null;
     }
 
     /**
@@ -188,7 +194,7 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * @param key under which function is stored
      */
     public void loadForUse(Key key) {
-        GenericFunction function = functions.get(key);
+        IFunction function = functions.get(key);
         if (function != null) {
             functionsInUse.put(key.getName(), function);
         }
@@ -198,6 +204,6 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
      * Clear functions loaded for usage
      */
     public void clear() {
-        functionsInUse = new HashMap<String, GenericFunction>();
+        functionsInUse.clear();
     }
 }

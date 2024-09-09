@@ -4,16 +4,16 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.XMath;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * csc (a)
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class csc extends aFunction {
+public class csc extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

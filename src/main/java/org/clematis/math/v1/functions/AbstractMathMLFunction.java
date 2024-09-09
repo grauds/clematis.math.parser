@@ -9,7 +9,7 @@ import org.jdom2.Element;
  * This function does not have analog in mathml notation
  */
 @SuppressWarnings("checkstyle:TypeName")
-public abstract class aFunction2 extends aFunction {
+public abstract class AbstractMathMLFunction extends AbstractFunction {
 
     /**
      * Provides mathml formatted element, representing

@@ -5,8 +5,8 @@ package org.clematis.math.v1.functions;
 import java.util.Random;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
@@ -15,7 +15,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * rint(n)
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class rInt extends aFunction2 {
+public class rInt extends AbstractMathMLFunction {
 
     private static final Random RANDOM = new Random(System.currentTimeMillis());
 

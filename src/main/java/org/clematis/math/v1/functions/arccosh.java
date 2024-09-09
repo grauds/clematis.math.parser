@@ -2,15 +2,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * arccosh(x)=log( x + (x^2 - 1)^(1/2) )
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class arccosh extends aFunction {
+public class arccosh extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

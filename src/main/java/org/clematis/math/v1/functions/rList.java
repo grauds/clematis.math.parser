@@ -12,7 +12,7 @@ import org.clematis.math.IExpressionItem;
  * Random list - chooses items from list randomly.
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class rList extends aFunction2 {
+public class rList extends AbstractMathMLFunction {
 
     private static final Random RANDOM = new Random(System.currentTimeMillis());
 

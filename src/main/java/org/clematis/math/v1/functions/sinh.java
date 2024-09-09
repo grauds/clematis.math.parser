@@ -3,15 +3,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * sinh(x) = ( e^x - e^(-x) ) / 2
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class sinh extends aFunction {
+public class sinh extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

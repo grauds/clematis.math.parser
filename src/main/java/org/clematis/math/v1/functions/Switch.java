@@ -4,8 +4,8 @@ package org.clematis.math.v1.functions;
 import java.util.ArrayList;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IOptions;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
@@ -17,7 +17,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * <p>
  * sets $prime to a random choice from the first 5 primes.
  */
-public class Switch extends aFunction2 implements IOptions {
+public class Switch extends AbstractMathMLFunction implements IOptions {
     /**
      * Calculate a subtree of expression items
      *

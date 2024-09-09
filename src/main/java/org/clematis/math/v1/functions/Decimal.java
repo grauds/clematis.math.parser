@@ -1,19 +1,19 @@
 // Created: 21.10.2003 T 10:59:38
 package org.clematis.math.v1.functions;
 
-import java.math.BigDecimal;
-
-import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
-import org.clematis.math.MathUtils;
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.MathUtils;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
+
+import java.math.BigDecimal;
+import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
 
 /**
  * Returns x expressed as a floating-point number rounded to n decimal places.
  */
-public class Decimal extends aFunction2 {
+public class Decimal extends AbstractMathMLFunction {
 
     public static final String MINUS_SIGNS = "-";
     public static final String ZERO = "0";

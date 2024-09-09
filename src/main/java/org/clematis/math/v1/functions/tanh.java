@@ -2,15 +2,15 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * tanh(x) = sinh(x) / cosh(x)
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class tanh extends aFunction {
+public class tanh extends AbstractFunction {
     /**
      * Calculate a subtree of expression items
      *

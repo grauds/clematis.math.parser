@@ -2,11 +2,12 @@
 
 package org.clematis.math.v1.functions;
 
-import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
@@ -27,7 +28,7 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * NOTE: The dummy variable in the sum MUST NOT be decorated with a $ character.
  */
 @SuppressWarnings("checkstyle:TypeName")
-public class sum extends aFunction2 {
+public class sum extends AbstractMathMLFunction {
 
     public static final int ARGUMENTS_NUMBER = 4;
 
@@ -82,7 +83,7 @@ public class sum extends aFunction2 {
          * @param name the function name
          * @return function or null
          */
-        public aFunction getFunction(String name) throws AlgorithmException {
+        public IFunction getFunction(String name) throws AlgorithmException {
             return functionFactory.getFunction(name);
         }
 

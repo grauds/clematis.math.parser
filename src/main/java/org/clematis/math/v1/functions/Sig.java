@@ -10,17 +10,17 @@ import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
 import static org.clematis.math.MathUtils.E;
 import static org.clematis.math.MathUtils.MINUS_SIGN;
 import static org.clematis.math.MathUtils.ZERO_STRING;
-import org.clematis.math.MathUtils;
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.MathUtils;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * <code>Sig(n, x)</code>
  * Returns x expressed as a floating point number to n significant digits.
  */
-public class Sig extends aFunction2 {
+public class Sig extends AbstractMathMLFunction {
     /**
      * Get number format locale
      */

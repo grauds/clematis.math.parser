@@ -5,17 +5,17 @@ import java.math.BigDecimal;
 
 import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
 import static org.clematis.math.MathUtils.E;
-import org.clematis.math.MathUtils;
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.MathUtils;
+import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**
  * lsu( n, x )
  * Returns the least significant unit of x in the n'th place.
  */
-public class Lsu extends aFunction2 {
+public class Lsu extends AbstractMathMLFunction {
     /**
      * Implementation of <code>calculate()</code> method of the
      * <code>iExpressionItem</code> interface.

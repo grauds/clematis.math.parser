@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.AbstractConstant;
+import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.algorithm.DefaultParameterProvider;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.Key;
@@ -26,7 +26,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class GenericFunction extends aFunction {
+public class GenericFunction extends AbstractFunction {
     /**
      * Special name of generic function
      */
