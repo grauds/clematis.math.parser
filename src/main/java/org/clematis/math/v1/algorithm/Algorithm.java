@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.clematis.math.AlgorithmException;
+import org.clematis.math.ConditionException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.IValue;
 import org.clematis.math.io.OutputFormatSettings;

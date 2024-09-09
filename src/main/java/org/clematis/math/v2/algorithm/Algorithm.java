@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.clematis.math.ConditionException;
 import org.clematis.math.XMLConstants;
 import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.AlgorithmException;

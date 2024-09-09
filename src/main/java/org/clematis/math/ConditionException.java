@@ -1,7 +1,5 @@
 // Created: 30.03.2004 T 11:57:40
-package org.clematis.math.v2.algorithm;
-
-import org.clematis.math.AlgorithmException;
+package org.clematis.math;
 
 /**
  * Condition exception is thrown if some condition is not satisfied
@@ -13,7 +11,7 @@ public class ConditionException extends AlgorithmException {
     String conditionName;
     String conditionCode;
 
-    ConditionException(String conditionName, String conditionCode, int line) {
+    public ConditionException(String conditionName, String conditionCode, int line) {
         super(CONDITION_FAILED_IN_MESSAGE, line);
         this.conditionName = conditionName;
         this.conditionCode = conditionCode;
