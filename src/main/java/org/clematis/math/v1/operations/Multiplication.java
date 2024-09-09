@@ -19,21 +19,17 @@ public class Multiplication extends aOperation {
      * Common constructor. Note, that constructor does
      * not simplify the expression.
      *
-     * @param operand1 first argument
-     * @param operand2 second argument
+     * @param operand an array of operands
      */
-    public Multiplication(IExpressionItem operand1, IExpressionItem operand2) {
-        super(operand1, operand2);
+    public Multiplication(IExpressionItem... operand) {
+        super(operand);
         /*
-         * Set multiplier
+         * Optimize multipliers
          */
-        setMultiplier(getMultiplier() * getOperand1().getMultiplier()
-            * getOperand2().getMultiplier());
-        /*
-         * Set all other multipliers to 1.
-         */
-        getOperand1().setMultiplier(1);
-        getOperand2().setMultiplier(1);
+        for (IExpressionItem op : operand) {
+            setMultiplier(getMultiplier() * op.getMultiplier());
+            op.setMultiplier(1);
+        }
     }
 
     /**
@@ -42,23 +38,17 @@ public class Multiplication extends aOperation {
      * @return new or modified expression.
      */
     public IExpressionItem calculate() throws AlgorithmException {
-        /*
-         * Try to make multiplication
-         */
         IExpressionItem a = getOperand1().calculate();
-        IExpressionItem b = getOperand2().calculate();
-        IExpressionItem result = a.multiply(b);
-        /*
-         * We failed
-         */
-        if (result == null) {
-            result = new Multiplication(a, b);
+        for (IExpressionItem op : this.getOperands()) {
+            IExpressionItem b = op.calculate();
+            a = a.multiply(b);
+            if (a == null) {
+                a = new Multiplication(a, b);
+                break;
+            }
         }
-        /*
-         * Take into account multiplier of this operation
-         */
-        result.setMultiplier(this.getMultiplier() * result.getMultiplier());
-        return result;
+        a.setMultiplier(this.getMultiplier() * a.getMultiplier());
+        return a;
     }
 
     /**
@@ -135,10 +125,10 @@ public class Multiplication extends aOperation {
      * @return true, if expression items are similar
      */
     public boolean aKindOf(IExpressionItem item) {
-        if (item instanceof Multiplication mitem) {
+        if (item instanceof Multiplication multiplication) {
 
-            IExpressionItem op1 = mitem.getOperand1();
-            IExpressionItem op2 = mitem.getOperand2();
+            IExpressionItem op1 = multiplication.getOperand1();
+            IExpressionItem op2 = multiplication.getOperand2();
 
             return op1.aKindOf(getOperand1()) && op2.aKindOf(getOperand2())
                 || op2.aKindOf(getOperand1()) && op1.aKindOf(getOperand2());
@@ -205,10 +195,14 @@ public class Multiplication extends aOperation {
         if (getMultiplier() != 1) {
             sb.append(new Constant(getMultiplier()));
             sb.append(MULTIPLY_SIGN);
+            sb.append("(");
         }
         sb.append(getOperand1().toString());
         sb.append(MULTIPLY_SIGN);
         sb.append(getOperand2().toString());
+        if (getMultiplier() != 1) {
+            sb.append(")");
+        }
         return sb.toString();
     }
 }

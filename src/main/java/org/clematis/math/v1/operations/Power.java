@@ -20,8 +20,7 @@ public class Power extends aOperation {
     public static final String POWER_ELEMENT_NAME = "power";
 
     /**
-     * Common constructor. Note, that constructor does
-     * not simplify the expression.
+     * Common constructor. Note, that constructor does not simplify the expression.
      *
      * @param operand1 first argument
      * @param operand2 second argument
@@ -32,6 +31,7 @@ public class Power extends aOperation {
 
     @SuppressWarnings({"checkstyle:NestedIfDepth", "checkstyle:ReturnCount"})
     public IExpressionItem calculate() throws AlgorithmException {
+
         IExpressionItem base = getOperand1().calculate();
         IExpressionItem exponent = getOperand2().calculate();
 

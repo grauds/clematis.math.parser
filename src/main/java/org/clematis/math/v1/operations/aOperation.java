@@ -4,6 +4,9 @@
 package org.clematis.math.v1.operations;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
@@ -23,7 +26,7 @@ public abstract class aOperation implements IExpressionItem, Serializable {
     /**
      * Operands
      */
-    private IExpressionItem[] operands = new IExpressionItem[2];
+    private final List<IExpressionItem> operands = new ArrayList<>(2);
     /**
      * Operation multiplier. For instance, it could be constant 2 in 2 * 5 ^ x
      */
@@ -31,42 +34,29 @@ public abstract class aOperation implements IExpressionItem, Serializable {
 
     protected aOperation() { }
 
-    public aOperation(IExpressionItem operand1, IExpressionItem operand2) {
-        setOperand1(operand1);
-        setOperand2(operand2);
+    public aOperation(IExpressionItem... operand) {
+        this.operands.addAll(Arrays.asList(operand));
+
     }
 
     public void addOperand(IExpressionItem item) {
-        /*
-         * Temp array to store data
-         */
-        IExpressionItem[] temp = new IExpressionItem[operands.length];
-        System.arraycopy(operands, 0, temp, 0, operands.length);
-        /*
-         * Increase array by one and restore data
-         */
-        operands = new IExpressionItem[temp.length + 1];
-        System.arraycopy(temp, 0, operands, 0, temp.length);
-        /*
-         * Write the last element
-         */
-        operands[operands.length - 1] = item;
+        this.operands.add(item);
     }
 
     public IExpressionItem getOperand1() {
-        return operands[0];
+        return operands.get(0);
     }
 
     public void setOperand1(IExpressionItem operand1) {
-        operands[0] = operand1;
+        operands.set(0, operand1);
     }
 
     public IExpressionItem getOperand2() {
-        return operands[1];
+        return operands.get(1);
     }
 
     public void setOperand2(IExpressionItem operand2) {
-        operands[1] = operand2;
+        operands.set(1, operand2);
     }
 
     /**

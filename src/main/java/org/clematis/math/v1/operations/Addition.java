@@ -14,26 +14,24 @@ public class Addition extends aOperation {
     /**
      * Public constructor for addition operation.
      *
-     * @param operand1 first operand
-     * @param operand2 second operand
+     * @param operand to add to addition
      */
-    public Addition(IExpressionItem operand1, IExpressionItem operand2) {
-        super(operand1, operand2);
+    public Addition(IExpressionItem... operand) {
+        super(operand);
     }
 
     public IExpressionItem calculate() throws AlgorithmException {
-        /*
-         * First try to calculate each operand
-         */
+
         IExpressionItem a = getOperand1().calculate();
-        IExpressionItem b = getOperand2().calculate();
-        IExpressionItem result = a.add(b);
-
-        if (result == null) {
-            result = new Addition(a, b);
+        for (IExpressionItem op : this.getOperands()) {
+            IExpressionItem b = op.calculate();
+            a = a.add(b);
+            if (a == null) {
+                a = new Addition(a, b);
+                break;
+            }
         }
-
-        return result.multiply(new Constant(getMultiplier()));
+        return a.multiply(new Constant(getMultiplier()));
     }
 
     /**
@@ -176,7 +174,7 @@ public class Addition extends aOperation {
     /**
      * Returns a string representation of the object.
      * <p>
-     * x + y or 2 (x + y)
+     * x + y or 2 * (x + y)
      *
      * @return a string representation of the object.
      */
@@ -185,12 +183,16 @@ public class Addition extends aOperation {
         if (getMultiplier() != 1) {
             sb.append(new Constant(getMultiplier()));
             sb.append("*");
+            sb.append("(");
         }
-        sb.append("(");
+
         sb.append(getOperand1().toString());
         sb.append("+");
         sb.append(getOperand2().toString());
-        sb.append(")");
+
+        if (getMultiplier() != 1) {
+            sb.append(")");
+        }
         return sb.toString();
     }
 }
