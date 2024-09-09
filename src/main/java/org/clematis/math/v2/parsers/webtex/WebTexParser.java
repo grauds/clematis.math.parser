@@ -35,7 +35,7 @@ package org.clematis.math.v2.parsers.webtex;
  ***************************************************************/
 
 import org.clematis.math.v2.AbstractConstant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.algorithm.IParameterProvider;

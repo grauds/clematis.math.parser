@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v2.AbstractConstant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.IValue;
+import org.clematis.math.IValue;
 import org.clematis.math.v2.SimpleValue;
 import org.clematis.math.v2.StringConstant;
 import org.clematis.math.v2.functions.generic;

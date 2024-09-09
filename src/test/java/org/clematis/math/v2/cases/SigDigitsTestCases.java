@@ -3,7 +3,7 @@ package org.clematis.math.v2.cases;
 
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.algorithm.Algorithm;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.Lsu;
 import org.clematis.math.v2.functions.Sig;

@@ -3,6 +3,8 @@ package org.clematis.math.v1;
 
 import java.util.ArrayList;
 
+import org.clematis.math.IExpressionItem;
+
 /**
  * Implement this interface to denote function is a logic function with several choices
  */

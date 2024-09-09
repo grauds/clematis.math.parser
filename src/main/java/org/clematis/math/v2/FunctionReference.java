@@ -1,6 +1,7 @@
 // Created: 10.01.2007 T 17:26:32
 package org.clematis.math.v2;
 
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.algorithm.IFunctionProvider;
 import org.clematis.math.v2.functions.aFunction;

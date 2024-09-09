@@ -1,14 +1,17 @@
 // Created: Feb 15, 2003 T 4:54:17 PM
-package org.clematis.math.v1;
+package org.clematis.math;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * <code>AlgorithmException</code> is thrown when something wrong
  * when algorithm is processed.
  */
 @Getter
+@Setter
 public class AlgorithmException extends Exception {
+
     private int line = 0;
 
     /**
@@ -27,10 +30,6 @@ public class AlgorithmException extends Exception {
      */
     public AlgorithmException(String msg, int line) {
         super(msg);
-        this.line = line;
-    }
-
-    public void setLine(int line) {
         this.line = line;
     }
 

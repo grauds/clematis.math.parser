@@ -6,6 +6,8 @@ package org.clematis.math.v1;
 import java.io.Serializable;
 import java.util.List;
 
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.MathUtils;
 import org.clematis.math.StringUtils;
 import org.clematis.math.v1.algorithm.IParameterProvider;

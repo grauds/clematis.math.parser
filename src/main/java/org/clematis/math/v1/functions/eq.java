@@ -2,9 +2,9 @@
 
 package org.clematis.math.v1.functions;
 
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.IExpressionItem;
 
 /**
  * Returns 1.0 if a and b are equal, otherwise returns 0.0;

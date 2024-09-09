@@ -7,12 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
+import org.clematis.math.IValue;
 import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.IFunction;
-import org.clematis.math.v1.IValue;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;

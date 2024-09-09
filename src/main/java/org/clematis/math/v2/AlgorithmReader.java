@@ -1,6 +1,7 @@
 // Created: Jan 17, 2003 T 5:13:06 PM
 package org.clematis.math.v2;
 
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.io.XMLConstants;
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.Parameter;

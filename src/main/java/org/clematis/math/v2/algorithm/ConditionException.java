@@ -1,7 +1,7 @@
 // Created: 30.03.2004 T 11:57:40
 package org.clematis.math.v2.algorithm;
 
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 
 /**
  * Condition exception is thrown if some condition is not satisfied

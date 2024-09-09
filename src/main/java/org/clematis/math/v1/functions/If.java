@@ -5,9 +5,9 @@ package org.clematis.math.v1.functions;
 
 import java.util.ArrayList;
 
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.IOptions;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 

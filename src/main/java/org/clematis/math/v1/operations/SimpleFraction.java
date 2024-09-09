@@ -1,9 +1,9 @@
 // Created: 30.01.2006 T 16:44:39
 package org.clematis.math.v1.operations;
 
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.IExpressionItem;
 import org.jdom2.Element;
 
 /**

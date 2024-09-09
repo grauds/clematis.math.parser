@@ -3,7 +3,7 @@ package org.clematis.math.v2.parsers;
 
 import java.util.ArrayList;
 
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.jdom2.Element;
 

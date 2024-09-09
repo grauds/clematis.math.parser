@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.clematis.math.v2.AlgorithmException;
-import org.clematis.math.v2.IValue;
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IValue;
 import org.clematis.math.v2.io.IParameterFormatter;
 import org.jdom2.Element;
 

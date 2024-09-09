@@ -6,6 +6,7 @@ package org.clematis.math.v1;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.GenericFunction;

@@ -3,10 +3,10 @@
 package org.clematis.math.v1.functions;
 
 import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.IFunctionProvider;

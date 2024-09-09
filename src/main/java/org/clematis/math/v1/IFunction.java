@@ -4,6 +4,8 @@ package org.clematis.math.v1;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.clematis.math.IExpressionItem;
+
 /**
  * Function is an expression item with parameter
  */

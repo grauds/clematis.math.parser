@@ -3,7 +3,7 @@ package org.clematis.math.v2.functions;
 
 import org.apache.commons.math3.special.Erf;
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;

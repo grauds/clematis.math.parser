@@ -3,6 +3,7 @@ package org.clematis.math.v2;
 
 import java.math.BigDecimal;
 
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.Decimal;
 import org.clematis.math.v2.functions.Sig;

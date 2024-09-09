@@ -11,9 +11,9 @@ import static org.clematis.math.MathUtils.E;
 import static org.clematis.math.MathUtils.MINUS_SIGN;
 import static org.clematis.math.MathUtils.ZERO_STRING;
 import org.clematis.math.MathUtils;
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**

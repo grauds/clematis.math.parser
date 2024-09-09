@@ -6,10 +6,10 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;

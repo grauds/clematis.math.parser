@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;

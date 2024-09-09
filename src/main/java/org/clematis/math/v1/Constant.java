@@ -3,6 +3,8 @@ package org.clematis.math.v1;
 
 import java.math.BigDecimal;
 
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.MathUtils;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.Decimal;

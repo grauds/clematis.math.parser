@@ -2,7 +2,7 @@
 package org.clematis.math.v2.algorithm;
 
 import org.clematis.math.v2.AbstractConstant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 
 public interface ISimpleParameterProvider {
 

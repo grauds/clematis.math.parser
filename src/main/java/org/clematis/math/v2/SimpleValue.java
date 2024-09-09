@@ -1,6 +1,7 @@
 // Created: 14.07.2005 T 17:54:50
 package org.clematis.math.v2;
 
+import org.clematis.math.IValue;
 import org.clematis.math.v2.io.OutputFormatSettings;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;

@@ -9,7 +9,7 @@ import java.util.List;
 import org.clematis.math.StringUtils;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.StringConstant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.algorithm.ParameterReference;

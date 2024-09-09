@@ -13,9 +13,9 @@ import java.util.Set;
 
 import org.clematis.math.StringUtils;
 import org.clematis.math.v2.AbstractConstant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.FunctionFactory;
-import org.clematis.math.v2.IValue;
+import org.clematis.math.IValue;
 import org.clematis.math.v2.SimpleParameter;
 import org.clematis.math.v2.functions.aFunction;
 import org.clematis.math.v2.functions.generic;

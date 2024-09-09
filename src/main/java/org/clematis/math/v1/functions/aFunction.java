@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.v1.IExpressionItem;
 import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.io.XMLConstants;

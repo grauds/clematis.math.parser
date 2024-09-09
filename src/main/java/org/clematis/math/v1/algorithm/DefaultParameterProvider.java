@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IValue;
 import org.clematis.math.StringUtils;
 import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.AlgorithmException;
 import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.v1.IValue;
 import org.clematis.math.v1.functions.GenericFunction;
 import org.clematis.math.v1.functions.aFunction;
 import org.clematis.math.v1.io.AbstractParameterFormatter;

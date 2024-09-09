@@ -9,7 +9,7 @@ import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.FunctionFactory;
 import org.clematis.math.v2.StringConstant;
-import org.clematis.math.v2.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.DefaultParameterProvider;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.algorithm.IParameterProvider;

@@ -4,6 +4,8 @@ package org.clematis.math.v2;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IValue;
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.Key;
 import org.clematis.math.v2.algorithm.Parameter;

@@ -1,7 +1,7 @@
 // Created: 12.04.2005 T 16:46:49
 package org.clematis.math.v1.algorithm;
 
-import org.clematis.math.v1.AlgorithmException;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.functions.aFunction;
 
 /**

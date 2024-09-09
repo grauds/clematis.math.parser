@@ -1,7 +1,7 @@
 // $Id: iExpressionItem.java,v 1.1 2009-04-27 07:11:09 anton Exp $
 // Created: Feb 14, 2003 T 10:18:05 AM
 
-package org.clematis.math.v1;
+package org.clematis.math;
 
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.jdom2.Element;

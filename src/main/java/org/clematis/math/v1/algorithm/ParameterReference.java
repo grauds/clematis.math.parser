@@ -1,8 +1,8 @@
 // Created: 16.07.2004 T 12:49:06
 package org.clematis.math.v1.algorithm;
 
-import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
 import org.jdom2.Element;
 
 import lombok.Getter;

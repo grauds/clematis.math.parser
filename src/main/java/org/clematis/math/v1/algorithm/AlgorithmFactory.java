@@ -7,8 +7,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.IValue;
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IValue;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;

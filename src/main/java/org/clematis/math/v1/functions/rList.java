@@ -5,8 +5,8 @@ package org.clematis.math.v1.functions;
 
 import java.util.Random;
 
-import org.clematis.math.v1.AlgorithmException;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.AlgorithmException;
+import org.clematis.math.IExpressionItem;
 
 /**
  * Random list - chooses items from list randomly.

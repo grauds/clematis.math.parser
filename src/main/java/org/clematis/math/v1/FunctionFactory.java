@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.Key;
 import org.clematis.math.v1.functions.GenericFunction;

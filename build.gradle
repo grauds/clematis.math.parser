@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
     id 'checkstyle'
     id 'com.github.spotbugs' version '6.0.7'
-   // id 'org.javacc.javacc' version "3.0.2"
+    id 'org.javacc.javacc' version "3.0.2"
 }
 
 group = 'org.clematis'
@@ -16,18 +16,18 @@ java {
 repositories {
     mavenCentral()
 }
-/*
-compileJavacc {
-    inputDirectory = file('src/main/javacc')
-    outputDirectory = file(project.buildDir.absolutePath + '/generated/javacc')
-}
 
 compileJjtree {
-    inputDirectory = file('src/main/jjtree')
-    outputDirectory = file(project.buildDir.absolutePath + '/generated/jjtree')
+    inputDirectory = file('src/main/resources/org/clematis/math/parsers')
+    outputDirectory = file('src/main/java/org/clematis/math/v2/parsers/jjt')
     arguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
-*/
+
+compileJavacc {
+    inputDirectory = file('src/main/java/org/clematis/math/v2/parsers/jjt')
+    outputDirectory = file('src/main/java/org/clematis/math/v2/parsers')
+} dependsOn(compileJjtree)
+
 dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
@@ -60,10 +60,6 @@ tasks.withType(Checkstyle).configureEach {
 // ------------ JaCoCo configuration  ---------
 ext {
     setProperty('snippetsDir', file("build/generated-snippets"))
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
 }
 
 test {
@@ -121,11 +117,10 @@ spotbugsMain {
 spotbugsTest {
     reports {
         xml {
-            enabled = false
+            required = false
         }
         html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/test/spotbugs.html")
+            required = true
         }
     }
 }

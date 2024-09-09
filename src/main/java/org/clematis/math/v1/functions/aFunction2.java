@@ -2,7 +2,7 @@
 package org.clematis.math.v1.functions;
 
 import static org.clematis.math.v1.io.XMLConstants.APPLY_ELEMENT_NAME;
-import org.clematis.math.v1.IExpressionItem;
+import org.clematis.math.IExpressionItem;
 import org.jdom2.Element;
 
 /**
