@@ -14,7 +14,7 @@ import org.clematis.math.IValue;
 import org.clematis.math.v2.SimpleValue;
 import org.clematis.math.v2.StringConstant;
 import org.clematis.math.v2.functions.generic;
-import org.clematis.math.v2.io.OutputFormatSettings;
+import org.clematis.math.io.OutputFormatSettings;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 

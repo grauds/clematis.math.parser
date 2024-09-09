@@ -14,7 +14,7 @@ import org.clematis.math.v2.cases.ParameterAssignTestCases;
 import org.clematis.math.v2.cases.PlainTestCases;
 import org.clematis.math.v2.cases.SigDigitsTestCases;
 import org.clematis.math.v2.cases.StringsTestCases;
-import org.clematis.math.v2.io.OutputFormatSettings;
+import org.clematis.math.io.OutputFormatSettings;
 import org.junit.jupiter.api.Test;
 
 /**

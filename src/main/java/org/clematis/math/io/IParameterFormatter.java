@@ -1,5 +1,5 @@
 // Created: 14.04.2005 T 15:01:38
-package org.clematis.math.v1.io;
+package org.clematis.math.io;
 
 /**
  * Parameter formatter

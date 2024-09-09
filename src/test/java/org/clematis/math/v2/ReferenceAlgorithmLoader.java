@@ -1,7 +1,7 @@
 // Created: 05.12.2006 T 16:02:35
 package org.clematis.math.v2;
 
-import org.clematis.math.v1.io.OutputFormatSettings;
+import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.AlgorithmFactory;
 

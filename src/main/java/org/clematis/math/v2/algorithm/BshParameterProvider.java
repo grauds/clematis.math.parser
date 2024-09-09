@@ -14,12 +14,12 @@ import static org.clematis.math.v1.io.XMLConstants.IDENT_ATTRIBUTE_NAME;
 import static org.clematis.math.v1.io.XMLConstants.NAME_ATTRIBUTE_NAME;
 import static org.clematis.math.v1.io.XMLConstants.PARAM_ELEMENT_NAME;
 import static org.clematis.math.v1.io.XMLConstants.TYPE_ATTRIBUTE_NAME;
-import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IValue;
+import org.clematis.math.io.AbstractParameterFormatter;
+import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.v2.SimpleValue;
 import org.clematis.math.v2.StringConstant;
-import org.clematis.math.v2.io.AbstractParameterFormatter;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -28,7 +28,8 @@ import lombok.Setter;
 /**
  * Algorithm, based on Bean Shell evaluation
  */
-public class BshParameterProvider extends AbstractParameterFormatter implements Serializable {
+public class BshParameterProvider extends AbstractParameterFormatter
+    implements IParameterProvider, Serializable {
 
     public static final String BSH_TYPE = "bsh";
     /**

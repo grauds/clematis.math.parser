@@ -14,11 +14,11 @@ import java.util.Set;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IValue;
 import org.clematis.math.StringUtils;
+import org.clematis.math.io.AbstractParameterFormatter;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.functions.GenericFunction;
 import org.clematis.math.v1.functions.aFunction;
-import org.clematis.math.v1.io.AbstractParameterFormatter;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -29,7 +29,7 @@ import lombok.Setter;
  * parameters to expression tree.
  */
 public class DefaultParameterProvider extends AbstractParameterFormatter
-    implements IFunctionProvider, Serializable {
+    implements IParameterProvider, IFunctionProvider, Serializable {
     /**
      * List of ordered parameters and functions ids
      */

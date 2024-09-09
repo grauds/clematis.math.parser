@@ -2,7 +2,7 @@
 package org.clematis.math.v2;
 
 import org.clematis.math.IValue;
-import org.clematis.math.v2.io.OutputFormatSettings;
+import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.parsers.SimpleNode;
 

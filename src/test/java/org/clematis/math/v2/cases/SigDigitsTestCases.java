@@ -7,7 +7,7 @@ import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.Lsu;
 import org.clematis.math.v2.functions.Sig;
-import org.clematis.math.v2.io.OutputFormatSettings;
+import org.clematis.math.io.OutputFormatSettings;
 
 /**
  * Test cases that check up significant digits correct handling

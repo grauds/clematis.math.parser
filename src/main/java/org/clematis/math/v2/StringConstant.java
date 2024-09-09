@@ -3,7 +3,7 @@ package org.clematis.math.v2;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;
-import org.clematis.math.v2.io.OutputFormatSettings;
+import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
 import org.jdom2.CDATA;

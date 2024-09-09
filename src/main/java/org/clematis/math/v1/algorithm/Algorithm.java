@@ -10,13 +10,13 @@ import java.util.Map;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.IValue;
+import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.io.OutputFormatSettings;
 import org.clematis.math.v1.io.XMLConstants;
 import org.jdom2.Element;
 

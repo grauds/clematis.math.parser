@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IValue;
-import org.clematis.math.v1.io.IParameterFormatter;
+import org.clematis.math.io.IParameterFormatter;
 import org.jdom2.Element;
 
 /**
