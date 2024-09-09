@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import org.clematis.math.v2.io.InputFormatSettings;
+import org.clematis.math.io.InputFormatSettings;
 
 /**
  * A collection of math utils.

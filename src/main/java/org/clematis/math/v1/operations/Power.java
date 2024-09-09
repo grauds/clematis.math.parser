@@ -3,8 +3,8 @@ package org.clematis.math.v1.operations;
 
 import java.math.BigDecimal;
 
-import static org.clematis.math.v1.io.XMLConstants.APPLY_ELEMENT_NAME;
-import static org.clematis.math.v1.io.XMLConstants.TIMES_ELEMENT_NAME;
+import static org.clematis.math.XMLConstants.APPLY_ELEMENT_NAME;
+import static org.clematis.math.XMLConstants.TIMES_ELEMENT_NAME;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.Constant;

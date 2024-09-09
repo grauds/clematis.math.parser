@@ -36,7 +36,7 @@ public class SigDigitsTestCases extends AlgorithmTestCases {
         a.addParameter(p);
         a.setFormatSettings(out);
 
-        out.setSdEnable(false);
+        out.setSdEnabled(false);
         a.setFormatSettings(out);
 
         if (!p.getOutputValue(true).equals("-3.14154879879E45") &&
@@ -44,7 +44,7 @@ public class SigDigitsTestCases extends AlgorithmTestCases {
             throw new AlgorithmException("Constant failed:" + p.getOutputValue(true) + " instead of -3.14154879879E45",
                 2);
         }
-        out.setSdEnable(true);
+        out.setSdEnabled(true);
         a.setFormatSettings(out);
 
         if (!p.getOutputValue(true).equals("-3.1415488E45") && !p.getOutputValue(true).equals("-3.1415488E+45")) {

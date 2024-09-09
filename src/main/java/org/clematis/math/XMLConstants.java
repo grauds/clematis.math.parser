@@ -1,4 +1,4 @@
-package org.clematis.math.v1.io;
+package org.clematis.math;
 
 public interface XMLConstants {
     /**
@@ -69,4 +69,12 @@ public interface XMLConstants {
      * Times element name
      */
     String TIMES_ELEMENT_NAME = "times";
+    String MINUS_SIGN = "-";
+    String PLUS_SIGN = "+";
+    String OPENING_BRACKET = "(";
+    String CLOSING_BRACKET = ")";
+    String OPENING_SQUARE_BRACKET = "[";
+    String CLOSING_SQUARE_BRACKET = "]";
+    String OPENING_CURLY_BRACKET = "{";
+    String CLOSING_CURLY_BRACKET = "}";
 }

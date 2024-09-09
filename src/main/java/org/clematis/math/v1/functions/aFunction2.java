@@ -1,7 +1,7 @@
 // Created: 23.12.2003 T 10:39:01
 package org.clematis.math.v1.functions;
 
-import static org.clematis.math.v1.io.XMLConstants.APPLY_ELEMENT_NAME;
+import static org.clematis.math.XMLConstants.APPLY_ELEMENT_NAME;
 import org.clematis.math.IExpressionItem;
 import org.jdom2.Element;
 

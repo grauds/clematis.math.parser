@@ -2,8 +2,8 @@
 package org.clematis.math.v2;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.io.OutputFormatSettings;
+import org.clematis.math.v2.algorithm.IParameterProvider;
 import org.clematis.math.v2.parsers.Node;
 import org.clematis.math.v2.utils.AlgorithmUtils;
 import org.jdom2.CDATA;
@@ -54,7 +54,7 @@ public class StringConstant extends AbstractConstant {
      * @throws AlgorithmException is thrown if some error occurs while calculating or null result is yeilded.
      */
     public Node calculate(IParameterProvider parameterProvider) {
-        /**
+        /*
          * Find parameter references
          */
         return new StringConstant(AlgorithmUtils.replaceParameters(getTokenName(), parameterProvider));

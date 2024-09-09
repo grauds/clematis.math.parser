@@ -11,7 +11,7 @@ import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.algorithm.IParameterProvider;
-import org.clematis.math.v1.io.XMLConstants;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.operations.Power;
 import org.jdom2.Element;
 

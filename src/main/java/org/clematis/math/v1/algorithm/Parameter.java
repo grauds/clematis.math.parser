@@ -7,7 +7,7 @@ import org.clematis.math.StringUtils;
 import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.io.XMLConstants;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.clematis.math.v1.parsers.ExpressionParser;
 import org.clematis.math.v1.utils.AlgorithmUtils;
@@ -230,7 +230,7 @@ public class Parameter extends SimpleParameter {
 
     public boolean getSdEnable() {
         if (container != null && container.getFormatSettings() != null) {
-            return isSdApplicable() && container.getFormatSettings().isSdEnable();
+            return isSdApplicable() && container.getFormatSettings().isSdEnabled();
         } else {
             return this.isSdApplicable();
         }
@@ -241,7 +241,7 @@ public class Parameter extends SimpleParameter {
 
         if (container != null && container.getFormatSettings() != null) {
             if (!isSdIndependent()) {
-                return !container.getFormatSettings().isQTolerance() || pureApplicable;
+                return !container.getFormatSettings().isToleranceEnabled() || pureApplicable;
             }
         }
 

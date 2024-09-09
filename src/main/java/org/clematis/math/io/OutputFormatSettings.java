@@ -23,12 +23,11 @@ public class OutputFormatSettings implements Serializable {
     /**
      * External sdEnable flag
      */
-    private boolean sdEnable = false;
+    private boolean sdEnabled = false;
     /**
-     * Tolerance policy - take policy from question or
-     * from assignment
+     * Tolerance policy
      */
-    private boolean qTolerance = true;
+    private boolean toleranceEnabled = true;
 
     public OutputFormatSettings() {
     }
@@ -36,7 +35,7 @@ public class OutputFormatSettings implements Serializable {
     public OutputFormatSettings(OutputFormatSettings formatSettings) {
         this.noExponent = formatSettings.isNoExponent();
         this.grouping = formatSettings.isGrouping();
-        this.sdEnable = formatSettings.isSdEnable();
-        this.qTolerance = formatSettings.isQTolerance();
+        this.sdEnabled = formatSettings.isSdEnabled();
+        this.toleranceEnabled = formatSettings.isToleranceEnabled();
     }
 }

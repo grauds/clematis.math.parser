@@ -8,12 +8,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.clematis.math.v1.io.XMLConstants.ALGORITHM_ATTRIBUTE_NAME;
-import static org.clematis.math.v1.io.XMLConstants.CODE_ELEMENT_NAME;
-import static org.clematis.math.v1.io.XMLConstants.IDENT_ATTRIBUTE_NAME;
-import static org.clematis.math.v1.io.XMLConstants.NAME_ATTRIBUTE_NAME;
-import static org.clematis.math.v1.io.XMLConstants.PARAM_ELEMENT_NAME;
-import static org.clematis.math.v1.io.XMLConstants.TYPE_ATTRIBUTE_NAME;
+import static org.clematis.math.XMLConstants.ALGORITHM_ATTRIBUTE_NAME;
+import static org.clematis.math.XMLConstants.CODE_ELEMENT_NAME;
+import static org.clematis.math.XMLConstants.IDENT_ATTRIBUTE_NAME;
+import static org.clematis.math.XMLConstants.NAME_ATTRIBUTE_NAME;
+import static org.clematis.math.XMLConstants.PARAM_ELEMENT_NAME;
+import static org.clematis.math.XMLConstants.TYPE_ATTRIBUTE_NAME;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IValue;
 import org.clematis.math.io.AbstractParameterFormatter;

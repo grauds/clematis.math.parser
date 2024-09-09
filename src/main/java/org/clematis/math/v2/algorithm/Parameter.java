@@ -4,7 +4,7 @@ package org.clematis.math.v2.algorithm;
 import java.io.StringReader;
 
 import org.clematis.math.StringUtils;
-import org.clematis.math.v1.io.XMLConstants;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.Constant;
@@ -201,7 +201,7 @@ public class Parameter extends SimpleParameter {
 
     public boolean getSdEnable() {
         if (container != null && container.getFormatSettings() != null) {
-            return isSdApplicable() && container.getFormatSettings().isSdEnable();
+            return isSdApplicable() && container.getFormatSettings().isSdEnabled();
         } else {
             return this.isSdApplicable();
         }
@@ -212,7 +212,7 @@ public class Parameter extends SimpleParameter {
 
         if (container != null && container.getFormatSettings() != null) {
             if (!isSdIndependent()) {
-                return !container.getFormatSettings().isQTolerance() || pureApplicable;
+                return !container.getFormatSettings().isToleranceEnabled() || pureApplicable;
             }
         }
 

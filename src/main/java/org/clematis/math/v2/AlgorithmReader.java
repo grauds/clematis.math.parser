@@ -2,7 +2,7 @@
 package org.clematis.math.v2;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.io.XMLConstants;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.generic;

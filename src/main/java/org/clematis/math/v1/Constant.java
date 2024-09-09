@@ -10,7 +10,7 @@ import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.Decimal;
 import org.clematis.math.v1.functions.Sig;
 import org.clematis.math.io.OutputFormatSettings;
-import org.clematis.math.v1.io.XMLConstants;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.operations.SimpleFraction;
 import org.jdom2.Element;
 

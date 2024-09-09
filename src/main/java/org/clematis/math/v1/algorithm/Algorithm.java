@@ -17,7 +17,7 @@ import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.v1.io.XMLConstants;
+import org.clematis.math.XMLConstants;
 import org.jdom2.Element;
 
 import lombok.Getter;
