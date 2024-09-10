@@ -2,14 +2,18 @@
 package org.clematis.math.v1.operations;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.Constant;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.Constant;
 import org.jdom2.Element;
 
 /**
  * Simple fraction is a division operation, waiting
  */
 public class SimpleFraction extends aOperation {
+
+    public SimpleFraction() {
+
+    }
 
     public SimpleFraction(IExpressionItem operand1, IExpressionItem operand2) {
         super(operand1, operand2);

@@ -18,14 +18,15 @@ repositories {
 }
 
 compileJjtree {
-    inputDirectory = file('src/main/resources/org/clematis/math/parsers')
-    outputDirectory = file('src/main/java/org/clematis/math/v2/parsers/jjt')
+    include '**/*.java'
+    inputDirectory = file('src/main/resources/javacc')
+    outputDirectory = file(project.buildDir.absolutePath + '/generated/parsers')
     arguments = [grammar_encoding: 'UTF-8', static: 'false']
 }
 
 compileJavacc {
-    inputDirectory = file('src/main/java/org/clematis/math/v2/parsers/jjt')
-    outputDirectory = file('src/main/java/org/clematis/math/v2/parsers')
+    inputDirectory = file(project.buildDir.absolutePath + '/generated/parsers')
+    outputDirectory = file(project.buildDir.absolutePath + '/generated/parsers')
 } dependsOn(compileJjtree)
 
 dependencies {
@@ -43,6 +44,11 @@ dependencies {
     implementation group: 'org.jdom', name: 'jdom', version: '2.0.2'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
+    testCompileOnly(
+            'org.projectlombok:lombok:1.18.20',
+            "com.github.spotbugs:spotbugs:4.8.4",
+            "com.google.code.findbugs:annotations:3.0.1u2"
+    )
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

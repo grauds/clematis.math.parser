@@ -41,7 +41,7 @@ public class Variable implements IExpressionItem, Serializable {
      *
      * @param name String containing the variable name.
      */
-    private Variable(String name) {
+    public Variable(String name) {
         this.name = name;
     }
 
