@@ -44,47 +44,47 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
     }
 
     private static void registerFunctions() {
-        CLASSES.put("rand", "org.clematis.math.v1.functions.reference.Rand");
-        CLASSES.put("sig", "org.clematis.math.v1.functions.reference.Sig");
-        CLASSES.put("cntsig", "org.clematis.math.v1.functions.reference.cntSig");
-        CLASSES.put("lsu", "org.clematis.math.v1.functions.reference.Lsu");
-        CLASSES.put("abs", "org.clematis.math.v1.functions.reference.abs");
-        CLASSES.put("and", "org.clematis.math.v1.functions.reference.and");
-        CLASSES.put("arccos", "org.clematis.math.v1.functions.reference.arccos");
-        CLASSES.put("arccosh", "org.clematis.math.v1.functions.reference.arccosh");
-        CLASSES.put("arcsin", "org.clematis.math.v1.functions.reference.arcsin");
-        CLASSES.put("arcsinh", "org.clematis.math.v1.functions.reference.arcsinh");
-        CLASSES.put("arctan", "org.clematis.math.v1.functions.reference.arctan");
-        CLASSES.put("arctanh", "org.clematis.math.v1.functions.reference.arctanh");
-        CLASSES.put("cos", "org.clematis.math.v1.functions.reference.cos");
-        CLASSES.put("cosh", "org.clematis.math.v1.functions.reference.cosh");
-        CLASSES.put("cot", "org.clematis.math.v1.functions.reference.cot");
-        CLASSES.put("csc", "org.clematis.math.v1.functions.reference.csc");
-        CLASSES.put("decimal", "org.clematis.math.v1.functions.reference.Decimal");
-        CLASSES.put("eq", "org.clematis.math.v1.functions.reference.eq");
-        CLASSES.put("erf", "org.clematis.math.v1.functions.reference.erf");
-        CLASSES.put("exp", "org.clematis.math.v1.functions.reference.exp");
-        CLASSES.put("gt", "org.clematis.math.v1.functions.reference.gt");
-        CLASSES.put("gti", "org.clematis.math.v1.functions.reference.gti");
-        CLASSES.put("if", "org.clematis.math.v1.functions.reference.If");
-        CLASSES.put("int", "org.clematis.math.v1.functions.reference.Int");
-        CLASSES.put("rint", "org.clematis.math.v1.functions.reference.rInt");
-        CLASSES.put("ln", "org.clematis.math.v1.functions.reference.ln");
-        CLASSES.put("log", "org.clematis.math.v1.functions.reference.log");
-        CLASSES.put("lt", "org.clematis.math.v1.functions.reference.lt");
-        CLASSES.put("lti", "org.clematis.math.v1.functions.reference.lti");
-        CLASSES.put("ne", "org.clematis.math.v1.functions.reference.ne");
-        CLASSES.put("not", "org.clematis.math.v1.functions.reference.not");
-        CLASSES.put("or", "org.clematis.math.v1.functions.reference.or");
-        CLASSES.put("sec", "org.clematis.math.v1.functions.reference.sec");
-        CLASSES.put("sin", "org.clematis.math.v1.functions.reference.sin");
-        CLASSES.put("sinh", "org.clematis.math.v1.functions.reference.sinh");
-        CLASSES.put("sqrt", "org.clematis.math.v1.functions.reference.sqrt");
-        CLASSES.put("sum", "org.clematis.math.v1.functions.reference.sum");
-        CLASSES.put("switch", "org.clematis.math.v1.functions.reference.Switch");
-        CLASSES.put("tan", "org.clematis.math.v1.functions.reference.tan");
-        CLASSES.put("tanh", "org.clematis.math.v1.functions.reference.tanh");
-        CLASSES.put("rList", "org.clematis.math.v1.functions.reference.rList");
+        CLASSES.put("rand", "org.clematis.math.v1.functions.Rand");
+        CLASSES.put("sig", "org.clematis.math.v1.functions.Sig");
+        CLASSES.put("cntsig", "org.clematis.math.v1.functions.cntSig");
+        CLASSES.put("lsu", "org.clematis.math.v1.functions.Lsu");
+        CLASSES.put("abs", "org.clematis.math.v1.functions.abs");
+        CLASSES.put("and", "org.clematis.math.v1.functions.and");
+        CLASSES.put("arccos", "org.clematis.math.v1.functions.arccos");
+        CLASSES.put("arccosh", "org.clematis.math.v1.functions.arccosh");
+        CLASSES.put("arcsin", "org.clematis.math.v1.functions.arcsin");
+        CLASSES.put("arcsinh", "org.clematis.math.v1.functions.arcsinh");
+        CLASSES.put("arctan", "org.clematis.math.v1.functions.arctan");
+        CLASSES.put("arctanh", "org.clematis.math.v1.functions.arctanh");
+        CLASSES.put("cos", "org.clematis.math.v1.functions.cos");
+        CLASSES.put("cosh", "org.clematis.math.v1.functions.cosh");
+        CLASSES.put("cot", "org.clematis.math.v1.functions.cot");
+        CLASSES.put("csc", "org.clematis.math.v1.functions.csc");
+        CLASSES.put("decimal", "org.clematis.math.v1.functions.Decimal");
+        CLASSES.put("eq", "org.clematis.math.v1.functions.eq");
+        CLASSES.put("erf", "org.clematis.math.v1.functions.erf");
+        CLASSES.put("exp", "org.clematis.math.v1.functions.exp");
+        CLASSES.put("gt", "org.clematis.math.v1.functions.gt");
+        CLASSES.put("gti", "org.clematis.math.v1.functions.gti");
+        CLASSES.put("if", "org.clematis.math.v1.functions.If");
+        CLASSES.put("int", "org.clematis.math.v1.functions.Int");
+        CLASSES.put("rint", "org.clematis.math.v1.functions.rInt");
+        CLASSES.put("ln", "org.clematis.math.v1.functions.ln");
+        CLASSES.put("log", "org.clematis.math.v1.functions.log");
+        CLASSES.put("lt", "org.clematis.math.v1.functions.lt");
+        CLASSES.put("lti", "org.clematis.math.v1.functions.lti");
+        CLASSES.put("ne", "org.clematis.math.v1.functions.ne");
+        CLASSES.put("not", "org.clematis.math.v1.functions.not");
+        CLASSES.put("or", "org.clematis.math.v1.functions.or");
+        CLASSES.put("sec", "org.clematis.math.v1.functions.sec");
+        CLASSES.put("sin", "org.clematis.math.v1.functions.sin");
+        CLASSES.put("sinh", "org.clematis.math.v1.functions.sinh");
+        CLASSES.put("sqrt", "org.clematis.math.v1.functions.sqrt");
+        CLASSES.put("sum", "org.clematis.math.v1.functions.sum");
+        CLASSES.put("switch", "org.clematis.math.v1.functions.Switch");
+        CLASSES.put("tan", "org.clematis.math.v1.functions.tan");
+        CLASSES.put("tanh", "org.clematis.math.v1.functions.tanh");
+        CLASSES.put("rList", "org.clematis.math.v1.functions.rList");
     }
 
     static {
@@ -121,7 +121,6 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
                 f.setSignature(functionName);
             }
         } catch (Exception ex) {
-            f = null;
             throw new AlgorithmException("Function factory cannot create function " + functionName);
         }
         return f;
@@ -171,7 +170,16 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
 
     @Override
     public boolean hasFunction(String name) {
-        return functions.containsKey(new Key(name));
+        String className = CLASSES.get(name);
+        if (className != null) {
+            return true;
+        } else {
+            if (functionsInUse.containsKey(name)) {
+                return true;
+            } else {
+                return getLatestFunction(name) != null;
+            }
+        }
     }
 
     /**

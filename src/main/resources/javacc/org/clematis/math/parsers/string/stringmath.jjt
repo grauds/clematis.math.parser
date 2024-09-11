@@ -51,10 +51,13 @@ If index contains only one letter it may not have brackets.
 
 @author Anton Troshin
 ***************************************************************/
+import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.FunctionFactory;
+import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
+import org.clematis.math.v1.algorithm.SimpleParameter;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -400,14 +403,13 @@ Token Variable() #VAR :
             * result in parameter provider
             */
            String name = t.image;
-          /* if ( getParameterProvider() != null )
-           {
+           if ( getParameterProvider() != null ) {
                AbstractConstant constant = getParameterProvider().getParameterConstant(name);
-               if ( constant != null && (jjtThis instanceof SimpleParameter) ) {
+               if ( constant != null && (jjtThis.getExpressionItem() instanceof SimpleParameter) ) {
                    // set current result
-                   ((SimpleParameter) jjtThis).setCurrentResult(constant.copy());
+                   ((SimpleParameter) jjtThis.getExpressionItem()).setCurrentResult(constant.copy());
                }
-           }*/
+           }
            jjtThis.setName(name);
         }
 
@@ -443,15 +445,13 @@ Token Identifier() #IDENTIFIER :
             * Provided name of identifier, we can search for constant result in variable provider
             */
            String name = t.image;
-          /* if ( getVariableProvider() != null )
-           {
+           if ( getVariableProvider() != null ) {
                AbstractConstant constant = getVariableProvider().getVariableConstant(name);
-               if ( constant != null && (jjtThis instanceof Variable) )
-               {
+               if ( constant != null && (jjtThis.getExpressionItem() instanceof Variable) ) {
                    // set current result
-                   ((Variable) jjtThis).setCurrentResult(constant.copy());
+                   ((Variable) jjtThis.getExpressionItem()).setCurrentResult(constant.copy());
                }
-           }*/
+           }
            jjtThis.setName(name);
         }
 

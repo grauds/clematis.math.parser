@@ -186,9 +186,11 @@ public class Addition extends aOperation {
             sb.append("(");
         }
 
-        sb.append(getOperand1().toString());
-        sb.append("+");
-        sb.append(getOperand2().toString());
+        if (getOperand1() != null && getOperand2() != null) {
+            sb.append(getOperand1().toString());
+            sb.append("+");
+            sb.append(getOperand2().toString());
+        }
 
         if (getMultiplier() != 1) {
             sb.append(")");

@@ -225,7 +225,7 @@ public class GenericFunction extends AbstractFunction {
          * @return parameter value, string or double
          */
         @SuppressWarnings("checkstyle:NestedIfDepth")
-        public AbstractConstant getParameterConstant(String name) throws AlgorithmException {
+        public AbstractConstant getParameterConstant(String name) {
             /* name ignored */
             AbstractConstant result = super.getParameterConstant(name);
             if (result != null) {
@@ -234,12 +234,15 @@ public class GenericFunction extends AbstractFunction {
                 /* get index of name in formal parameters and get argument by this index */
                 int index = lines.indexOf(new Key(name));
                 if ((index >= 0) && (index < arguments.size())) {
-                    IExpressionItem argument = arguments.get(index);
-                    argument = argument.calculate();
-                    if (argument instanceof AbstractConstant) {
-                        /* join constant and its name */
-                        addParameter(new Parameter(name, (AbstractConstant) argument));
-                        result = (AbstractConstant) argument;
+                    try {
+                        IExpressionItem argument = arguments.get(index);
+                        argument = argument.calculate();
+                        if (argument instanceof AbstractConstant) {
+                            /* join constant and its name */
+                            addParameter(new Parameter(name, (AbstractConstant) argument));
+                            result = (AbstractConstant) argument;
+                        }
+                    } catch (AlgorithmException ignored) {
                     }
                 }
             }

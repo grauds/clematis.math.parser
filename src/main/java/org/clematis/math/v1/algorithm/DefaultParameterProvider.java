@@ -369,7 +369,7 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
      * @param name the name of required parameter
      * @return the value of required parameter
      */
-    public AbstractConstant getParameterConstant(String name) throws AlgorithmException {
+    public AbstractConstant getParameterConstant(String name) {
         Parameter param = getParameter(name);
         if (param != null) {
             return param.getCurrentResult();

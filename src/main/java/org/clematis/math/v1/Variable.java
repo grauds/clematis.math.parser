@@ -37,6 +37,11 @@ public class Variable implements IExpressionItem, Serializable {
     @Setter
     private double multiplier = 1.0;
 
+    /**
+     * The assigned value to this variable.
+     */
+    private AbstractConstant currentResult = null;
+
     public Variable() {
 
     }
@@ -131,7 +136,11 @@ public class Variable implements IExpressionItem, Serializable {
      * @return expression item instance
      */
     public IExpressionItem calculate() {
-        return this;
+        if (getCurrentResult() == null) {
+            return this;
+        } else {
+            return getCurrentResult().copy();
+        }
     }
 
     /**
@@ -247,6 +256,19 @@ public class Variable implements IExpressionItem, Serializable {
                    && (getMultiplier() == item.getMultiplier());
         }
         return false;
+    }
+
+    /**
+     * Sets current result violently
+     *
+     * @param currentResult
+     */
+    public void setCurrentResult(AbstractConstant currentResult) {
+        if (currentResult != null) {
+            this.currentResult = currentResult.copy();
+        } else {
+            this.currentResult = null;
+        }
     }
 
     /**

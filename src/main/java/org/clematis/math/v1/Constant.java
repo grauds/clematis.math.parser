@@ -449,7 +449,7 @@ public class Constant extends AbstractConstant {
         if (getExactBigDecimalValue().compareTo(new BigDecimal(0)) > 0) {
             return getValue(null);
         } else {
-            return "(" + getValue(null) + ")";
+            return getValue(null);
         }
     }
 

@@ -98,52 +98,67 @@ public class SimpleNode implements Node {
                 break;
             case StringMathParserTreeConstants.JJTPLUS_EXPR: {
                 expressionItem = new Addition();
+                break;
             }
             case StringMathParserTreeConstants.JJTMINUS_EXPR: {
                 expressionItem = new Substraction();
+                break;
             }
             case StringMathParserTreeConstants.JJTMULT_EXPR: {
                 expressionItem = new Multiplication();
+                break;
             }
             case StringMathParserTreeConstants.JJTDIV_EXPR: {
                 expressionItem = new SimpleFraction();
+                break;
             }
             case StringMathParserTreeConstants.JJTUNARY_MINUS: {
                 Unary unary = new Unary();
                 unary.setKind(Unary.MINUS);
                 expressionItem = unary;
+                break;
             }
             case StringMathParserTreeConstants.JJTUNARY_PLUS: {
                 Unary unary = new Unary();
                 unary.setKind(Unary.PLUS);
                 expressionItem = unary;
+                break;
             }
             case StringMathParserTreeConstants.JJTPOWER_EXPR: {
                 expressionItem = new Power();
+                break;
             }
             case StringMathParserTreeConstants.JJTSTRING: {
                 expressionItem = new StringConstant();
+                break;
             }
             case StringMathParserTreeConstants.JJTVAR: {
               //  expressionItem = new SimpleParameter();
+                break;
             }
             case StringMathParserTreeConstants.JJTNUMBER: {
                 expressionItem = new Constant();
+                break;
             }
             case StringMathParserTreeConstants.JJTIDENTIFIER: {
                 expressionItem = new Variable();
+                break;
             }
             case StringMathParserTreeConstants.JJTCONSTANT: {
                 expressionItem = new Constant();
+                break;
             }
             case StringMathParserTreeConstants.JJTDELTA_EXPR: {
                 expressionItem = new StringConstant();
+                break;
             }
             case StringMathParserTreeConstants.JJTHAT_EXPR: {
                 expressionItem = new StringConstant();
+                break;
             }
             case StringMathParserTreeConstants.JJTFUNCTION: {
                 expressionItem = new FunctionReference(parser.getFunctionProvider());
+                break;
             }
             default:
 
