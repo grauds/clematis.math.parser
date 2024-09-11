@@ -14,6 +14,10 @@ public class StringConstant extends AbstractConstant {
 
     public static final String APOS = "\"";
 
+    public StringConstant() {
+
+    }
+
     /**
      * Constructor.
      *

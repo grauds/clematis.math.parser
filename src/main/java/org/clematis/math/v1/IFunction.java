@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.clematis.math.IExpressionItem;
-import org.clematis.math.v1.algorithm.Key;
 
 /**
  * Function is an expression item with parameter

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.clematis.math.AlgorithmException;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.GenericFunction;
-import org.clematis.math.XMLConstants;
 
 /**
  * Parses the question algrorithm used for dynamical changing of the

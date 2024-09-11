@@ -30,12 +30,16 @@ public class Variable implements IExpressionItem, Serializable {
     /**
      * Variable name.
      */
-    private final String name;
+    private String name;
     /**
      * Variable multiplier.
      */
     @Setter
     private double multiplier = 1.0;
+
+    public Variable() {
+
+    }
     /**
      * Constructor.
      *

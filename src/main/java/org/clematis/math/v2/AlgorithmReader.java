@@ -1,14 +1,14 @@
 // Created: Jan 17, 2003 T 5:13:06 PM
 package org.clematis.math.v2;
 
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.XMLConstants;
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.v2.functions.generic;
-
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * Parses algorithm in following format per line: [parameter]=[code];

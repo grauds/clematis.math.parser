@@ -17,6 +17,15 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated/parsers"
+            exclude "**/*.jj"
+        }
+    }
+}
+
 compileJjtree {
     include '**/*.java'
     inputDirectory = file('src/main/resources/javacc')
@@ -31,6 +40,7 @@ compileJavacc {
 
 dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    checkstyle "com.puppycrawl.tools:checkstyle:10.17.0"
 
     compileOnly (
             'org.projectlombok:lombok:1.18.20',
@@ -38,12 +48,11 @@ dependencies {
             "com.google.code.findbugs:annotations:3.0.1u2"
     )
 
-    checkstyle "com.puppycrawl.tools:checkstyle:10.17.0"
-
     implementation "javax.xml.bind:jaxb-api:2.3.0"
     implementation group: 'org.jdom', name: 'jdom', version: '2.0.2'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
     testCompileOnly(
             'org.projectlombok:lombok:1.18.20',
             "com.github.spotbugs:spotbugs:4.8.4",
@@ -60,6 +69,7 @@ checkstyle {
 }
 
 tasks.withType(Checkstyle).configureEach {
+    exclude '**/org/clematis/math/parsers/string/**'
     exclude '**/org/clematis/math/v2/parsers/**'
 }
 

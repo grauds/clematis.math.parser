@@ -246,7 +246,7 @@ void EqualsExpression() #EQUALS_EXPR (>1):
      PlusExpression() (  t=<EQUALS>{name=t.image;}  PlusExpression() )*
 
   {
-     jjtThis.setTokenName(name);
+     jjtThis.setName(name);
   }
 }
 
@@ -256,7 +256,7 @@ void PlusExpression()  #PLUS_EXPR (>1):
 }
 {
 
-    MinusExpression() (  (( t=<PLUS>){jjtThis.setTokenName(t.image);} MinusExpression()))*
+    MinusExpression() (  (( t=<PLUS>){jjtThis.setName(t.image);} MinusExpression()))*
 
 }
 
@@ -266,7 +266,7 @@ void MinusExpression()  #MINUS_EXPR (>1):
 }
 {
 
-    MultExpression() (  (( t=<MINUS> ){jjtThis.setTokenName(t.image);} MultExpression()))*
+    MultExpression() (  (( t=<MINUS> ){jjtThis.setName(t.image);} MultExpression()))*
 
 }
 
@@ -276,7 +276,7 @@ void MultExpression()  #MULT_EXPR (>1):
 }
 {
 
-    DivExpressionMinus() ( ( t=<MULT> {jjtThis.setTokenName(t.image);}  DivExpressionMinus()) | {jjtThis.setTokenName("*");}DivExpression())*
+    DivExpressionMinus() ( ( t=<MULT> {jjtThis.setName(t.image);}  DivExpressionMinus()) | {jjtThis.setName("*");}DivExpression())*
 
 }
 
@@ -287,7 +287,7 @@ void DivExpression()  #DIV_EXPR (>1):
 }
 {
 
-     PowerExpression() (  ( t=<DIV> ){jjtThis.setTokenName(t.image);} PowerExpression())*
+     PowerExpression() (  ( t=<DIV> ){jjtThis.setName(t.image);} PowerExpression())*
 
 }
 
@@ -298,7 +298,7 @@ void DivExpressionMinus()  #DIV_EXPR (>1):
 }
 {
 
-     NegativeExpr() (  ( t=<DIV> ){jjtThis.setTokenName(t.image);} NegativeExpr())*
+     NegativeExpr() (  ( t=<DIV> ){jjtThis.setName(t.image);} NegativeExpr())*
 
 }
 
@@ -322,7 +322,7 @@ void PowerExpression() #POWER_EXPR (>1) :
 }
 {
 
-    IndexExpression() ( t=<POWER> {jjtThis.setTokenName(t.image);} IndexExpression() )*
+    IndexExpression() ( t=<POWER> {jjtThis.setName(t.image);} IndexExpression() )*
 
 }
 
@@ -332,7 +332,7 @@ void IndexExpression() #INDEX_EXPR (>1) :
 }
 {
 
-    UnaryExpression() ( t=<UNDERLINE> {jjtThis.setTokenName(t.image);} Index()  )*
+    UnaryExpression() ( t=<UNDERLINE> {jjtThis.setName(t.image);} Index()  )*
 
 }
 
@@ -365,7 +365,7 @@ void Index() #INDEX:
 
      <OPEN_BR>
           ( (t=<IDENTIFIER> | t=<NUMBER> | t=<EXP_E>) { index.append(t.image); } )+
-          { jjtThis.setTokenName(index.toString()); }
+          { jjtThis.setName(index.toString()); }
      <CLOSE_BR>
    | Identifier()
    | Number()
@@ -382,7 +382,7 @@ Token String() #STRING :
    t=<STRING>
  )
  {
-   jjtThis.setTokenName(t.image);
+   jjtThis.setName(t.image);
    return t;
  }
 }
@@ -408,7 +408,7 @@ Token Variable() #VAR :
                    ((SimpleParameter) jjtThis).setCurrentResult(constant.copy());
                }
            }*/
-           jjtThis.setTokenName(name);
+           jjtThis.setName(name);
         }
 
 
@@ -426,7 +426,7 @@ Token Number() #NUMBER :
    t=<NUMBER>
  )
  {
-   jjtThis.setTokenName(t.image);
+   jjtThis.setName(t.image);
    return t;
  }
 }
@@ -452,7 +452,7 @@ Token Identifier() #IDENTIFIER :
                    ((Variable) jjtThis).setCurrentResult(constant.copy());
                }
            }*/
-           jjtThis.setTokenName(name);
+           jjtThis.setName(name);
         }
 
  {
@@ -469,8 +469,8 @@ Token Constant() #CONSTANT :
      t=<EXP_E> | t=<PI>
  )
  {
-     jjtThis.setTokenName(t.image);
-   //  jjtThis.setTokenKind(t.kind);
+     jjtThis.setName(t.image);
+     jjtThis.setKind(t.kind);
      return t;
  }
 }
@@ -481,7 +481,7 @@ void DeltaExpression() #DELTA_EXPR :
 }
 {
 
-     t=<DELTA> {jjtThis.setTokenName(t.image);}
+     t=<DELTA> {jjtThis.setName(t.image);}
        UnaryExpression()
 
 }
@@ -492,7 +492,7 @@ void HatExpression() #HAT_EXPR :
 }
 {
 
-     t=<HAT> {jjtThis.setTokenName(t.image);}
+     t=<HAT> {jjtThis.setName(t.image);}
        UnaryExpression()
 
 }
@@ -501,7 +501,7 @@ void VectorExpression() #VECTOR_EXPR :
 {
 }
 {
-    "vec" {jjtThis.setTokenName("vec");}
+    "vec" {jjtThis.setName("vec");}
     UnaryExpression()
 }
 
@@ -514,7 +514,7 @@ void Function() #FUNCTION :
     (t=<IDENTIFIER>|t=<EXP_E>) { signature.append(t.image); }
     ( (t=<IDENTIFIER>|t=<NUMBER>|t=<EXP_E>) { signature.append(t.image); } )*
     {
-        jjtThis.setTokenName(signature.toString());
+        jjtThis.setName(signature.toString());
     }
     <OPEN_BR> Expression() (","  Expression() )* <CLOSE_BR>
 }

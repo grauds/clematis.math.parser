@@ -19,6 +19,9 @@ public class Power extends aOperation {
 
     public static final String POWER_ELEMENT_NAME = "power";
 
+    public Power() {
+
+    }
     /**
      * Common constructor. Note, that constructor does not simplify the expression.
      *

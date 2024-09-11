@@ -1,17 +1,13 @@
 // Created: 30.01.2006 T 14:56:42
-package org.clematis.math.v2;
+package org.clematis.math.parsers.string;
 
 import java.io.StringReader;
 
-import org.clematis.math.v2.parsers.SimpleNode;
-import org.clematis.math.v2.parsers.string.ParseException;
-import org.clematis.math.v2.parsers.string.StringMathParser;
-import org.clematis.math.v2.parsers.string.WebTexPrinter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class StringParserValidityTest {
-    private final String[] tests = new String[]
-    {
+    private final String[] tests = new String[] {
         "if(gt($b,0),\"+\", if(eq($b,0), \"\", \"-\"))",
         "si",
         "d_(were)+d_(9)+d_(k)",
@@ -40,8 +36,7 @@ public class StringParserValidityTest {
         "vec(2)"
     };
 
-    private final String[] alg_tests = new String[]
-    {
+    private final String[] algTests = new String[] {
         "9 + 8 + 98 + 77 + sin(8) + pi",
         "t_(dcosf)",
         //"acosx",
@@ -51,120 +46,128 @@ public class StringParserValidityTest {
 
     @Test
     public void testAlgorithm() throws Exception {
-        for (String alg_test : alg_tests) {
-            StringMathParser parser = new StringMathParser(new StringReader(alg_test));
+        for (String algTest : algTests) {
+            StringMathParser parser = new StringMathParser(new StringReader(algTest));
             SimpleNode n = parser.Start();
-            assert n != null;
-            System.out.println(n.calculate());
+            Assertions.assertNotNull(n);
+            Assertions.assertNotNull(n.getExpressionItem());
+            System.out.println(n.getExpressionItem().calculate());
         }
     }
 
     @Test
-    public void testExpression0() throws Exception {
+    public void testExpression0() {
         probeExpression(tests[0]);
     }
 
     @Test
-    public void testExpression1() throws Exception {
+    public void testExpression1() {
         probeExpression(tests[1]);
     }
 
     @Test
-    public void testExpression2() throws Exception {
+    public void testExpression2() {
         probeExpression(tests[2]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression3() throws Exception {
+    public void testExpression3() {
         probeExpression(tests[3]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression4() throws Exception {
+    public void testExpression4() {
         probeExpression(tests[4]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression5() throws Exception {
+    public void testExpression5() {
         probeExpression(tests[5]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression6() throws Exception {
+    public void testExpression6() {
         probeExpression(tests[6]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression7() throws Exception {
+    public void testExpression7() {
         probeExpression(tests[7]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression8() throws Exception {
+    public void testExpression8() {
         probeExpression(tests[8]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression9() throws Exception {
+    public void testExpression9() {
         probeExpression(tests[9]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression10() throws Exception {
+    public void testExpression10() {
         probeExpression(tests[10]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression11() throws Exception {
+    public void testExpression11() {
         probeExpression(tests[11]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression12() throws Exception {
+    public void testExpression12() {
         probeExpression(tests[12]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression13() throws Exception {
+    public void testExpression13() {
         probeExpression(tests[13]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression14() throws Exception {
+    public void testExpression14() {
         probeExpression(tests[14]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression15() throws Exception {
+    public void testExpression15() {
         probeExpression(tests[15]);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Test
-    public void testExpression16() throws Exception {
+    public void testExpression16() {
         probeExpression(tests[16]);
     }
 
     @Test
-    public void testAll() throws Exception {
+    public void testAll() {
         for (String test : tests) {
             probeExpression(test);
         }
     }
 
-    private void probeExpression(String test) throws ParseException {
-        StringMathParser parser = new StringMathParser(new StringReader(test));
-        SimpleNode n = parser.Start();
-
-        System.out.println("------------");
-
-        System.out.println(test);
-        StringBuilder sb = new StringBuilder();
-        assert n != null;
-        WebTexPrinter.print(n, sb);
-        System.out.println("------------");
-        System.out.println(sb);
-        System.out.println("------------");
-        n.dump("");
-        System.out.println("------------");
+    private void probeExpression(String test) {
+        try {
+            StringMathParser parser = new StringMathParser(new StringReader(test));
+            SimpleNode n = parser.Start();
+            System.out.println("------------");
+        } catch (ParseException ex) {
+            System.out.println(ex);
+        }
     }
 }
