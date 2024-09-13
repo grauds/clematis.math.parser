@@ -181,18 +181,6 @@ public class Parameter extends SimpleParameter {
     }
 
     /**
-     * Sets the parameter value. May be null.
-     *
-     * @param constant the parameter value
-     */
-    public void setCurrentResult(AbstractConstant constant) {
-        super.setCurrentResult(constant);
-        if (getCurrentResult() != null) {
-            getCurrentResult().setParameter(this);
-        }
-    }
-
-    /**
      * This function checks whether if code contains root, and if it doesn't,
      * tries to supplement boolean root, "and" or "or" functions. This works only
      * if all parts of code string return 1.0 or 0.0 values. Overwise, constant

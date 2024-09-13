@@ -16,7 +16,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Unary extends aOperation {
+public class Unary extends AbstractOperation {
     /**
      * Unary minus operation
      */
@@ -115,5 +115,15 @@ public class Unary extends aOperation {
         apply.addContent(cn);
 
         return apply;
+    }
+
+    /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+
     }
 }

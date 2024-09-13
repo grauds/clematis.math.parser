@@ -10,10 +10,7 @@ import org.clematis.math.v1.algorithm.IFunctionProvider;
  * Class to wrap and create functions on expression parsing
  */
 public class FunctionReference extends AbstractFunction {
-    /**
-     * Reference to function provider
-     */
-    private IFunctionProvider functionProvider = null;
+
     /**
      * Abstract function
      */
@@ -23,7 +20,7 @@ public class FunctionReference extends AbstractFunction {
      * Constructor with ident
      */
     public FunctionReference(IFunctionProvider functionProvider) {
-        this.functionProvider = functionProvider;
+        this.functionFactory = functionProvider;
     }
 
     /**
@@ -32,8 +29,9 @@ public class FunctionReference extends AbstractFunction {
      * @return the instance reference if function has already been created
      */
     protected IFunction getFunction() throws AlgorithmException {
-        if (function == null && functionProvider != null) {
-            function = functionProvider.getFunction("token");
+        if (function == null && functionFactory != null) {
+            function = functionFactory.getFunction(signature);
+            function.addArguments(this.arguments);
         }
         return function;
     }
@@ -45,8 +43,8 @@ public class FunctionReference extends AbstractFunction {
      */
     @Override
     public IExpressionItem calculate() throws AlgorithmException {
-        if (this.function != null) {
-            return this.function.calculate();
+        if (this.getFunction() != null) {
+            return this.getFunction().calculate();
         }
         return null;
     }

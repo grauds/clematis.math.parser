@@ -152,7 +152,11 @@ public class Variable implements IExpressionItem, Serializable {
      * @return expression item instance
      */
     public IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
-        return this;
+        if (getCurrentResult() == null) {
+            return this;
+        } else {
+            return getCurrentResult().copy();
+        }
     }
 
     /**
@@ -193,6 +197,27 @@ public class Variable implements IExpressionItem, Serializable {
         apply.addContent(ci);
 
         return apply;
+    }
+
+    /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+
+    }
+
+    /**
+     * Sets another argument to required position
+     *
+     * @param argument to add
+     * @param i        - number of position to add, zero based
+     */
+    @Override
+    public void setArgument(IExpressionItem argument, int i) {
+
     }
 
     /**

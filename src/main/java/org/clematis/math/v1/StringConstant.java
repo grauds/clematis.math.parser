@@ -131,6 +131,15 @@ public class StringConstant extends AbstractConstant {
     }
 
     /**
+     * Returns textual representation of the <code>StringConstant</code> value.
+     *
+     * @return <code>String</code> containing the value of the constant.
+     */
+    public String toString() {
+        return this.value;
+    }
+
+    /**
      * Writes constant to xml element
      *
      * @return xml element, representing constant

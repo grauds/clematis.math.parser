@@ -1,31 +1,34 @@
-// Created: 16.07.2004 T 12:49:06
-package org.clematis.math.v1.algorithm;
+package org.clematis.math.v1.operations;
+
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.jdom2.Element;
 
 import lombok.Getter;
+import lombok.Setter;
+
 /**
- * Class contains an instance of {@link Parameter} and serves as a reference to it.
+ * This class is for expression which holds one root expression item.
+ * Some parsers may want this class as a starting point for parsing
+ * equations, vector expressions or any other types of expressions.
  */
 @Getter
-public class ParameterReference implements IExpressionItem {
+@Setter
+public class Expression implements IExpressionItem {
 
-    Parameter origin;
-
-    public ParameterReference(Parameter origin) {
-        this.origin = origin;
-    }
+    private IExpressionItem root = null;
 
     /**
      * Calculate a subtree of expression items
      *
      * @return expression item instance
      */
+    @Override
     public IExpressionItem calculate() throws AlgorithmException {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().calculate();
+        if (root != null) {
+            return root.calculate();
         }
         return null;
     }
@@ -38,8 +41,12 @@ public class ParameterReference implements IExpressionItem {
      *                          and functions provider
      * @return expression item instance
      */
+    @Override
     public IExpressionItem calculate(IParameterProvider parameterProvider) throws AlgorithmException {
-        return calculate();
+        if (root != null) {
+            return root.calculate(parameterProvider);
+        }
+        return null;
     }
 
     /**
@@ -48,9 +55,10 @@ public class ParameterReference implements IExpressionItem {
      * @param item another expression item
      * @return result expression item
      */
+    @Override
     public IExpressionItem add(IExpressionItem item) throws AlgorithmException {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().add(item);
+        if (root != null) {
+            return root.add(item);
         }
         return null;
     }
@@ -61,9 +69,10 @@ public class ParameterReference implements IExpressionItem {
      * @param item another expression item
      * @return result expression item
      */
+    @Override
     public IExpressionItem multiply(IExpressionItem item) throws AlgorithmException {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().multiply(item);
+        if (root != null) {
+            return root.multiply(item);
         }
         return null;
     }
@@ -75,9 +84,10 @@ public class ParameterReference implements IExpressionItem {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
+    @Override
     public boolean aKindOf(IExpressionItem item) {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().aKindOf(item);
+        if (root != null) {
+            return root.aKindOf(item);
         }
         return false;
     }
@@ -89,9 +99,10 @@ public class ParameterReference implements IExpressionItem {
      * @param item expression item to compare
      * @return true, if expression items are similar
      */
+    @Override
     public boolean equals(IExpressionItem item) {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().equals(item);
+        if (root != null) {
+            return root.equals(item);
         }
         return false;
     }
@@ -101,54 +112,54 @@ public class ParameterReference implements IExpressionItem {
      *
      * @return constant coefficient
      */
+    @Override
     public double getMultiplier() {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().getMultiplier();
-        }
-        return 1.0;
+        return 1;
     }
 
     /**
-     * Sets constant multiplier, the expression will be multiplied by this number in calculation
+     * Sets constant multiplier
      *
-     * @param multiplier for the expression
+     * @param multiplier for expression item
      */
+    @Override
     public void setMultiplier(double multiplier) {
-        if (origin.getExpressionRoot() != null) {
-            origin.getExpressionRoot().setMultiplier(multiplier);
-        }
+
     }
 
     /**
-     * Provides mathml formatted element, representing expression subtree.
+     * Provides mathml formatted element, representing
+     * expression subtree.
      *
      * @return mathml formatted element
      */
+    @Override
     public Element toMathML() {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().toMathML();
+        if (root != null) {
+            return root.toMathML();
         }
         return null;
     }
 
     /**
-     * Add another argument to this expression item
+     * This expression only has one argument which is replaced with
+     * every method call
      *
-     * @param argument to this expression item
+     * @param argument to this expression
      */
     @Override
     public void addArgument(IExpressionItem argument) {
-
+        this.root = argument;
     }
 
     /**
-     * Sets another argument to required position
+     * Sets another argument to one available position
      *
      * @param argument to add
-     * @param i        - number of position to add, zero based
+     * @param i        - number of position to add, zero based, is not used
      */
     @Override
     public void setArgument(IExpressionItem argument, int i) {
-
+        this.root = argument;
     }
 }

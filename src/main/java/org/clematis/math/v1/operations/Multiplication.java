@@ -11,7 +11,7 @@ import org.jdom2.Element;
 /**
  * Multiplication operation
  */
-public class Multiplication extends aOperation {
+public class Multiplication extends AbstractOperation {
 
     public static final String MULTIPLY_SIGN = "*";
 
@@ -38,16 +38,20 @@ public class Multiplication extends aOperation {
      * @return new or modified expression.
      */
     public IExpressionItem calculate() throws AlgorithmException {
-        IExpressionItem a = getOperand1().calculate();
+        IExpressionItem a = null;
         for (IExpressionItem op : this.getOperands()) {
-            IExpressionItem b = op.calculate();
-            a = a.multiply(b);
-            if (a == null) {
-                a = new Multiplication(a, b);
-                break;
+            if (op != null) {
+                IExpressionItem b = op.calculate();
+                a = a != null ? a.multiply(b) : b;
+                if (a == null) {
+                    a = new Multiplication(a, b);
+                    break;
+                }
             }
         }
-        a.setMultiplier(this.getMultiplier() * a.getMultiplier());
+        if (a != null) {
+            a.setMultiplier(this.getMultiplier() * a.getMultiplier());
+        }
         return a;
     }
 
@@ -184,6 +188,16 @@ public class Multiplication extends aOperation {
     }
 
     /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+        this.addOperand(argument);
+    }
+
+    /**
      * Returns a string representation of the object.
      * <p>
      * 2 xy
@@ -194,12 +208,21 @@ public class Multiplication extends aOperation {
         StringBuilder sb = new StringBuilder();
         if (getMultiplier() != 1) {
             sb.append(new Constant(getMultiplier()));
-            sb.append(MULTIPLY_SIGN);
+            sb.append("*");
             sb.append("(");
         }
-        sb.append(getOperand1().toString());
-        sb.append(MULTIPLY_SIGN);
-        sb.append(getOperand2().toString());
+
+        for (int i = 0; i < getOperands().size(); i++) {
+
+            if (getOperands().get(i) != null) {
+                if (i > 0) {
+                    sb.append(MULTIPLY_SIGN);
+                }
+                sb.append(getOperands().get(i).toString());
+            }
+
+        }
+
         if (getMultiplier() != 1) {
             sb.append(")");
         }

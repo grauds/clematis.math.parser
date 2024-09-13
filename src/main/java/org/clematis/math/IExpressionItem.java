@@ -95,4 +95,18 @@ public interface IExpressionItem {
      * @return mathml formatted element
      */
     Element toMathML();
+
+    /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    void addArgument(IExpressionItem argument);
+
+    /**
+     * Sets another argument to required position
+     * @param argument to add
+     * @param i - number of position to add, zero based
+     */
+    void setArgument(IExpressionItem argument, int i);
 }

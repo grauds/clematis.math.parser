@@ -44,7 +44,7 @@ public class sum extends AbstractMathMLFunction {
         /**
          * Function factory
          */
-        protected FunctionFactory functionFactory = new FunctionFactory();
+        protected IFunctionProvider functionFactory = new FunctionFactory();
 
         /**
          * Return parameter constant

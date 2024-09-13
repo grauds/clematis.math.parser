@@ -8,7 +8,6 @@ import java.io.Serializable;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.algorithm.IParameterProvider;
-import org.clematis.math.v1.algorithm.Parameter;
 import org.jdom2.Element;
 
 import lombok.Getter;
@@ -20,20 +19,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class AbstractConstant extends SimpleValue implements IExpressionItem, Serializable {
+
     /**
      * This flag allows application of significant digits.
      * If set to 1, answers will be cut to required number
      * of significant digits.
      */
     protected boolean sdEnable = false;
+
     /**
      * Number of sig digits
      */
     protected int sdNumber = 0;
-    /**
-     * Link to embracing parameter with settings from algorithm
-     */
-    protected Parameter parameter = null;
 
     /**
      * Implementation of <code>calculate()</code> method of the
@@ -81,6 +78,25 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
      * @param multiplier for the result of this calculation
      */
     public void setMultiplier(double multiplier) {
+    }
+
+    /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+    }
+
+    /**
+     * Sets another argument to required position
+     *
+     * @param argument to add
+     * @param i        - number of position to add, zero based
+     */
+    @Override
+    public void setArgument(IExpressionItem argument, int i) {
     }
 
     /**
@@ -141,19 +157,6 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
     public abstract Element toXML();
 
     /**
-     * Returns the number of significant digits.
-     *
-     * @return the number of significant digits.
-     */
-    public int getSdNumber() {
-        if (parameter != null && parameter.isCorrectAnswer()) {
-            return parameter.getSdNumber();
-        } else {
-            return this.sdNumber;
-        }
-    }
-
-    /**
      * Set enable significant digits flag
      *
      * @param sdEnable 1 - enable, 0 - disable
@@ -169,18 +172,5 @@ public abstract class AbstractConstant extends SimpleValue implements IExpressio
      */
     public boolean isZero() {
         return false;
-    }
-
-    /**
-     * Returns enable significant digits flag
-     *
-     * @return 1 - enable, 0 - disable, -1 - not applicable
-     */
-    public boolean getSdEnable() {
-        if (parameter != null && parameter.isCorrectAnswer()) {
-            return parameter.getSdEnable();
-        } else {
-            return this.sdEnable;
-        }
     }
 }

@@ -6,6 +6,8 @@ package org.clematis.math.parsers.string;
    machinery for constructing the parent and child relationships
    between nodes. */
 
+import org.clematis.math.IExpressionItem;
+
 public interface Node {
 
     int getId();
@@ -55,4 +57,10 @@ public interface Node {
      * Dump this node along with its children to text tree to standard output stream
      */
     void dump(String prefix);
+
+    /**
+     * Return expression item
+     * @return expressio item
+     */
+    IExpressionItem getExpressionItem();
 }

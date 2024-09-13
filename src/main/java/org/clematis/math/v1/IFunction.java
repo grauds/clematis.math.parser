@@ -10,12 +10,6 @@ import org.clematis.math.IExpressionItem;
  * Function is an expression item with parameter
  */
 public interface IFunction extends IExpressionItem {
-    /**
-     * Add parameter to a function
-     *
-     * @param item expression item as a parameter
-     */
-    void addArgument(IExpressionItem item);
 
     /**
      * Add arguments to a function

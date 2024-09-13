@@ -9,7 +9,7 @@ import org.jdom2.Element;
 /**
  * Simple fraction is a division operation, waiting
  */
-public class SimpleFraction extends aOperation {
+public class SimpleFraction extends AbstractOperation {
 
     public SimpleFraction() {
 
@@ -123,6 +123,16 @@ public class SimpleFraction extends aOperation {
      */
     public Element toMathML() {
         return new Element("simple_fraction_stub");
+    }
+
+    /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+
     }
 
     /**

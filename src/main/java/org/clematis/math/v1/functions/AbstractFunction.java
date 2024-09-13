@@ -11,6 +11,7 @@ import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IFunction;
+import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.operations.Power;
 import org.jdom2.Element;
@@ -34,7 +35,7 @@ public abstract class AbstractFunction implements IFunction, Serializable {
     /**
      * Function factory
      */
-    protected FunctionFactory functionFactory = new FunctionFactory();
+    protected IFunctionProvider functionFactory = new FunctionFactory();
 
     /**
      * Function signature
@@ -53,6 +54,23 @@ public abstract class AbstractFunction implements IFunction, Serializable {
      */
     public void addArgument(IExpressionItem item) {
         arguments.add(item);
+    }
+
+    /**
+     * Sets another argument to required position
+     *
+     * @param argument to add
+     * @param i        - number of position to add, zero based
+     */
+    @Override
+    public void setArgument(IExpressionItem argument, int i) {
+        if (this.arguments.size() <= i) {
+            this.arguments.ensureCapacity(i + 1);
+            while (this.arguments.size() <= i) {
+                this.arguments.add(null);
+            }
+        }
+        this.arguments.set(i, argument);
     }
 
     /**
@@ -212,9 +230,11 @@ public abstract class AbstractFunction implements IFunction, Serializable {
         sb.append("(");
         for (int i = 0; i < arguments.size(); i++) {
             IExpressionItem arg = arguments.get(i);
-            sb.append(arg.toString());
-            if (i + 1 != arguments.size()) {
-                sb.append(",");
+            if (arg != null) {
+                sb.append(arg.toString());
+                if (i + 1 != arguments.size()) {
+                    sb.append(",");
+                }
             }
         }
         sb.append(")");

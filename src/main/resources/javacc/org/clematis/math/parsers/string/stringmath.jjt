@@ -342,7 +342,7 @@ void IndexExpression() #INDEX_EXPR (>1) :
 void UnaryExpression() : {}
 {
 
- // this construction gives warning due to FORCE_LA_CHECK=true, though it works correctly
+ // this construction gives a warning due to FORCE_LA_CHECK=true, though it works correctly
 	( LOOKAHEAD( { isFunctionAhead() } )  Function()
 		|
         Identifier()

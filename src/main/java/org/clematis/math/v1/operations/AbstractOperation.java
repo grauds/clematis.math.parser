@@ -22,7 +22,7 @@ import lombok.Setter;
 @SuppressWarnings("checkstyle:TypeName")
 @Getter
 @Setter
-public abstract class aOperation implements IExpressionItem, Serializable {
+public abstract class AbstractOperation implements IExpressionItem, Serializable {
     /**
      * Operands
      */
@@ -32,16 +32,33 @@ public abstract class aOperation implements IExpressionItem, Serializable {
      */
     private double multiplier = 1.0;
 
-    protected aOperation() { }
+    protected AbstractOperation() { }
 
-    public aOperation(IExpressionItem... operand) {
+    public AbstractOperation(IExpressionItem... operand) {
         this.operands.addAll(Arrays.asList(operand));
-
     }
 
     public void addOperand(IExpressionItem item) {
         this.operands.add(item);
     }
+
+    /**
+     * Sets another argument to required position
+     *
+     * @param argument to add
+     * @param i        - number of position to add, zero based
+     */
+    @Override
+    public void setArgument(IExpressionItem argument, int i) {
+        if (this.operands.size() <= i) {
+            ((ArrayList<?>) this.operands).ensureCapacity(i + 1);
+            while (this.operands.size() <= i) {
+                this.operands.add(null);
+            }
+        }
+        this.operands.set(i, argument);
+    }
+
 
     public IExpressionItem getOperand1() {
         return operands.size() > 1 ? operands.get(0) : null;

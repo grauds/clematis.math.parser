@@ -7,11 +7,13 @@ import java.util.List;
 
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.Constant;
+import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.functions.FunctionReference;
 import org.clematis.math.v1.operations.Addition;
+import org.clematis.math.v1.operations.Expression;
 import org.clematis.math.v1.operations.Multiplication;
 import org.clematis.math.v1.operations.Power;
 import org.clematis.math.v1.operations.SimpleFraction;
@@ -82,6 +84,8 @@ public class SimpleNode implements Node {
         this.name = name;
         if (this.expressionItem instanceof SimpleValue) {
             ((SimpleValue) this.expressionItem).setValue(name);
+        } else if (this.expressionItem instanceof IFunction) {
+            ((IFunction) this.expressionItem).setSignature(name);
         }
     }
 
@@ -104,6 +108,7 @@ public class SimpleNode implements Node {
             case StringMathParserTreeConstants.JJTVECTOR_EXPR:
             case StringMathParserTreeConstants.JJTINDEX_EXPR:
             case StringMathParserTreeConstants.JJTEQUALS_EXPR:
+                expressionItem = new Expression();
                 break;
             case StringMathParserTreeConstants.JJTPLUS_EXPR: {
                 expressionItem = new Addition();
@@ -202,6 +207,9 @@ public class SimpleNode implements Node {
             }
         }
         this.children.set(i, n);
+        if (this.expressionItem != null) {
+            this.expressionItem.setArgument(n.getExpressionItem(), i);
+        }
     }
 
     public Node jjtGetChild(int i) {
@@ -233,6 +241,10 @@ public class SimpleNode implements Node {
                 }
             }
         }
+    }
+
+    public IExpressionItem getExpressionItem() {
+        return this.expressionItem;
     }
 
 }

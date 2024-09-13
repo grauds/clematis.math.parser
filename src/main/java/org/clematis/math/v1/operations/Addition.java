@@ -10,7 +10,7 @@ import org.jdom2.Element;
 /**
  * Addition operation.
  */
-public class Addition extends aOperation {
+public class Addition extends AbstractOperation {
     /**
      * Public constructor for addition operation.
      *
@@ -22,16 +22,21 @@ public class Addition extends aOperation {
 
     public IExpressionItem calculate() throws AlgorithmException {
 
-        IExpressionItem a = getOperand1().calculate();
+        IExpressionItem a = null;
         for (IExpressionItem op : this.getOperands()) {
-            IExpressionItem b = op.calculate();
-            a = a.add(b);
-            if (a == null) {
-                a = new Addition(a, b);
-                break;
+            if (op != null) {
+                IExpressionItem b = op.calculate();
+                a = a != null ? a.add(b) : b;
+                if (a == null) {
+                    a = new Addition(a, b);
+                    break;
+                }
             }
         }
-        return a.multiply(new Constant(getMultiplier()));
+        if (a != null) {
+            a = a.multiply(new Constant(getMultiplier()));
+        }
+        return a;
     }
 
     /**
@@ -172,6 +177,16 @@ public class Addition extends aOperation {
     }
 
     /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+        addOperand(argument);
+    }
+
+    /**
      * Returns a string representation of the object.
      * <p>
      * x + y or 2 * (x + y)
@@ -186,10 +201,15 @@ public class Addition extends aOperation {
             sb.append("(");
         }
 
-        if (getOperand1() != null && getOperand2() != null) {
-            sb.append(getOperand1().toString());
-            sb.append("+");
-            sb.append(getOperand2().toString());
+        for (int i = 0; i < getOperands().size(); i++) {
+
+            if (getOperands().get(i) != null) {
+                if (i > 0) {
+                    sb.append("+");
+                }
+                sb.append(getOperands().get(i).toString());
+            }
+
         }
 
         if (getMultiplier() != 1) {

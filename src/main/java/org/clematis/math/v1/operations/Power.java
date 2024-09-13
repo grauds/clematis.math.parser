@@ -15,7 +15,7 @@ import org.jdom2.Element;
 /**
  * Power operation
  */
-public class Power extends aOperation {
+public class Power extends AbstractOperation {
 
     public static final String POWER_ELEMENT_NAME = "power";
 
@@ -210,6 +210,16 @@ public class Power extends aOperation {
         apply.addContent(apply2);
 
         return apply;
+    }
+
+    /**
+     * Add another argument to this expression item
+     *
+     * @param argument to this expression item
+     */
+    @Override
+    public void addArgument(IExpressionItem argument) {
+
     }
 
     /**
