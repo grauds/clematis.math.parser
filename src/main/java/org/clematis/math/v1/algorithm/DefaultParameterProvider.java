@@ -13,8 +13,8 @@ import java.util.Set;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IValue;
-import org.clematis.math.StringUtils;
 import org.clematis.math.io.AbstractParameterFormatter;
+import org.clematis.math.utils.StringUtils;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.FunctionFactory;
 import org.clematis.math.v1.IFunction;

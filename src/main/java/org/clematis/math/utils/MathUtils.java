@@ -1,7 +1,7 @@
 // $Id: MathUtils.java,v 1.1 2009-04-27 07:11:09 anton Exp $
 // Created: Feb 12, 2003 T 10:48:45 AM
 
-package org.clematis.math;
+package org.clematis.math.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

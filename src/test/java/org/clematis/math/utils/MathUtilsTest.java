@@ -1,14 +1,7 @@
-package org.clematis.math;
+package org.clematis.math.utils;
 
 import java.math.BigDecimal;
 
-import org.clematis.math.io.OutputFormatSettings;
-import org.clematis.math.v2.Constant;
-import org.clematis.math.v2.algorithm.Algorithm;
-import org.clematis.math.v2.algorithm.Parameter;
-import org.clematis.math.v2.functions.Decimal;
-import org.clematis.math.v2.functions.Lsu;
-import org.clematis.math.v2.functions.Sig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

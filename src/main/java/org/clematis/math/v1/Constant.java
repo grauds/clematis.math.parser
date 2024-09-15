@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
-import org.clematis.math.MathUtils;
 import org.clematis.math.XMLConstants;
 import org.clematis.math.io.OutputFormatSettings;
+import org.clematis.math.utils.MathUtils;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.Decimal;
 import org.clematis.math.v1.functions.Sig;

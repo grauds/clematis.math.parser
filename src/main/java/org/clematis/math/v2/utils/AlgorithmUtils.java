@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.clematis.math.StringUtils;
+import org.clematis.math.utils.StringUtils;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.v2.StringConstant;
 import org.clematis.math.AlgorithmException;

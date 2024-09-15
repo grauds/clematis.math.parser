@@ -3,7 +3,7 @@ package org.clematis.math.v2.algorithm;
 
 import java.io.StringReader;
 
-import org.clematis.math.StringUtils;
+import org.clematis.math.utils.StringUtils;
 import org.clematis.math.XMLConstants;
 import org.clematis.math.v2.AbstractConstant;
 import org.clematis.math.AlgorithmException;

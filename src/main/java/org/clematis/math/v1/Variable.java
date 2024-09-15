@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
-import org.clematis.math.MathUtils;
-import org.clematis.math.StringUtils;
+import org.clematis.math.utils.MathUtils;
+import org.clematis.math.utils.StringUtils;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.operations.Multiplication;

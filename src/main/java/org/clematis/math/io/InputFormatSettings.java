@@ -1,9 +1,9 @@
 // Created: 28.06.2004 T 12:44:01
 package org.clematis.math.io;
 
-import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
-import org.clematis.math.MathUtils;
-import org.clematis.math.StringUtils;
+import static org.clematis.math.utils.MathUtils.DECIMAL_SEPARATOR;
+import org.clematis.math.utils.MathUtils;
+import org.clematis.math.utils.StringUtils;
 import org.clematis.math.XMLConstants;
 
 import lombok.Getter;

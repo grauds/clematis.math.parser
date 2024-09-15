@@ -1,7 +1,7 @@
 // Created: Mar 25, 2003 T 4:13:33 PM
 package org.clematis.math.v2.functions;
 
-import org.clematis.math.XMath;
+import org.clematis.math.utils.XMath;
 import org.clematis.math.v2.Constant;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.v2.algorithm.IParameterProvider;

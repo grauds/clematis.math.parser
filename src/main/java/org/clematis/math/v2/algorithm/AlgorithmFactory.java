@@ -234,9 +234,9 @@ public class AlgorithmFactory {
      */
     public static String toXML(IParameterProvider algorithm) throws IOException {
         if (algorithm instanceof BshParameterProvider) {
-            return printToString(((BshParameterProvider) algorithm).toXML());
+            return printToString(algorithm.toXML());
         } else if (algorithm instanceof Algorithm) {
-            return printToString(((Algorithm) algorithm).toXML());
+            return printToString(algorithm.toXML());
         }
         return "";
     }

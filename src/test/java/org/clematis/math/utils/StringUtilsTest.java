@@ -1,4 +1,4 @@
-package org.clematis.math;
+package org.clematis.math.utils;
 
 import org.junit.jupiter.api.Test;
 

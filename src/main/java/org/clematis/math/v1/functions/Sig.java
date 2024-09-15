@@ -6,13 +6,13 @@ package org.clematis.math.v1.functions;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
-import static org.clematis.math.MathUtils.E;
-import static org.clematis.math.MathUtils.MINUS_SIGN;
-import static org.clematis.math.MathUtils.ZERO_STRING;
+import static org.clematis.math.utils.MathUtils.DECIMAL_SEPARATOR;
+import static org.clematis.math.utils.MathUtils.E;
+import static org.clematis.math.utils.MathUtils.MINUS_SIGN;
+import static org.clematis.math.utils.MathUtils.ZERO_STRING;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
-import org.clematis.math.MathUtils;
+import org.clematis.math.utils.MathUtils;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 

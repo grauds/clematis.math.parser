@@ -1,5 +1,5 @@
 // Created: Mar 25, 2003 T 4:00:23 PM
-package org.clematis.math;
+package org.clematis.math.utils;
 
 /**
  * Extensions to <code>java.lang.Math</code>

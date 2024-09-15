@@ -1,13 +1,9 @@
 // Created: 07.07.2005 T 10:00:19
-package org.clematis.math.v2;
+package org.clematis.math;
 
-import org.clematis.math.AlgorithmException;
 import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.test.cases.AlgorithmTestCases;
 import org.clematis.math.test.cases.BooleanTestCases;
-import org.clematis.math.v2.algorithm.Algorithm;
-import org.clematis.math.v2.algorithm.AlgorithmFactory;
-import org.clematis.math.v2.algorithm.Parameter;
 import org.clematis.math.test.cases.DecimalTestCases;
 import org.clematis.math.test.cases.GenericFunctionsTestCases;
 import org.clematis.math.test.cases.ImplicitMultiplicationTestCases;
@@ -15,6 +11,12 @@ import org.clematis.math.test.cases.ParameterAssignTestCases;
 import org.clematis.math.test.cases.PlainTestCases;
 import org.clematis.math.test.cases.SigDigitsTestCases;
 import org.clematis.math.test.cases.StringsTestCases;
+import org.clematis.math.v1.AbstractConstant;
+import org.clematis.math.v1.AlgorithmReader;
+import org.clematis.math.v1.algorithm.Algorithm;
+import org.clematis.math.v1.algorithm.AlgorithmFactory;
+import org.clematis.math.v1.algorithm.Parameter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,37 +24,28 @@ import org.junit.jupiter.api.Test;
  */
 public class BackwardCompatibilityTest {
     /**
+     * Iteration counter
+     */
+    private static final int CNT = 30;
+
+    /**
      * Instance of current algorithm reader
      */
     private final AlgorithmReader reader = new AlgorithmReader();
-    /**
-     * Iteration counter
-     */
-    private final int cnt = 30;
-    /**
-     * Format output parameters toggle
-     */
-    private final boolean format = true;
-    /**
-     * Compare output parameters toggle
-     */
-    private final boolean compare = true;
-    /**
-     * Stop and throw exception if errorneous descrepance occur
-     */
-    private final boolean stopOnError = true;
+
 
     /**
      * Probe algorithm against reference algorithm
      *
      * @param sAlg algorithm body
-     * @throws Exception
+     * @throws Exception in case algorithm can't be processed
      */
+    @SuppressWarnings("checkstyle:NestedIfDepth")
     void probeAlgorithm(String sAlg) throws Exception {
 
         Algorithm algorithm = reader.createAlgorithm(sAlg);
 
-        for (int i = 0; i < cnt; i++) {
+        for (int i = 0; i < CNT; i++) {
 
             algorithm.calculateParameters();
 
@@ -66,42 +59,27 @@ public class BackwardCompatibilityTest {
 
             /* go through tested algorithm parameters */
             Parameter[] params = algorithm.getParameters();
-            for (int k = 0; k < params.length; k++) {
-                Parameter p = params[k];
+            for (Parameter p : params) {
                 if (p != null && reference.getParameter(p.getName()) != null) {
                     /* new and old abstract constants */
-                    AbstractConstant ac_NEW = p.getCurrentResult();
+                    AbstractConstant currentResult = p.getCurrentResult();
                     if (reference.getParameter(p.getName()).getCurrentResult() != null) {
-                        String NEW_STRING;
-                        String OLD_STRING;
+                        String newString;
+                        String oldString;
 
-                        if (format) {
-                            NEW_STRING = ac_NEW.getValue(new OutputFormatSettings());
-                            OLD_STRING = loader.getAlgorithmReference(alg, save).getParameter(p.getName()).
-                                getCurrentResult().getValue(loader.getOutputFormatSettings());
-                        } else {
-                            NEW_STRING = ac_NEW.getValue();
-                            OLD_STRING = loader.getAlgorithmReference(alg, save).getParameter(p.getName())
-                                .getCurrentResult().
-                                getValue(null);
-                        }
+                        newString = currentResult.getValue(new OutputFormatSettings());
+                        oldString = loader.getAlgorithmReference(alg, save).getParameter(p.getName()).
+                            getCurrentResult().getValue(loader.getOutputFormatSettings());
 
-                        System.out.println("CURRENT: " + p.getName() + " / " + p.getCode() + " / " + NEW_STRING);
-                        System.out.println("REFERENCE: " + p.getName() + " / " + p.getCode() + " / " + OLD_STRING);
+                        Assertions.assertEquals(newString, oldString);
 
-                        if (compare && !NEW_STRING.equals(OLD_STRING)) {
-                            if (stopOnError) {
-                                throw new AlgorithmException(
-                                    "Descrepance detected - new:" + NEW_STRING + " old:" + OLD_STRING, k + 1);
-                            } else {
-                                System.out.println(
-                                    "Descrepance detected - new:" + NEW_STRING + " old:" + OLD_STRING + " in " + k +
-                                        1);
-                            }
-                        }
+                        newString = currentResult.getValue();
+                        oldString = loader.getAlgorithmReference(alg, save).getParameter(p.getName())
+                            .getCurrentResult().
+                            getValue(null);
+
+                        Assertions.assertEquals(newString, oldString);
                     }
-                } else {
-                    System.out.println("Parameter number " + i + " is null");
                 }
             }
         }
@@ -161,12 +139,12 @@ public class BackwardCompatibilityTest {
 
     @Test
     public void testSimpleFractionProductError() throws Exception {
-        String err = "$t1=rand(21,22,5);" +
-            "$t2=sig(5,($t1+rand(2,7,5)));" +
-            "$mass=rand(0.1,0.9,4);" +
-            "$ans=sig(4,-1981.0000);" +
-            "$tol=lsu(4,$ans);" +
-            "$hc=sig(4,(-$ans*(1E+3)*($mass/480.9)/($t2-$t1)));";
+        String err = "$t1=rand(21,22,5);"
+            + "$t2=sig(5,($t1+rand(2,7,5)));"
+            + "$mass=rand(0.1,0.9,4);"
+            + "$ans=sig(4,-1981.0000);"
+            + "$tol=lsu(4,$ans);"
+            + "$hc=sig(4,(-$ans*(1E+3)*($mass/480.9)/($t2-$t1)));";
         probeAlgorithm(err);
     }
 }

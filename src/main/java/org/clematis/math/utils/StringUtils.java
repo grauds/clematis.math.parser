@@ -1,5 +1,5 @@
 // Created: Mar 24, 2003 T 4:01:16 PM
-package org.clematis.math;
+package org.clematis.math.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

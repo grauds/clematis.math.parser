@@ -3,12 +3,12 @@ package org.clematis.math.v1.functions;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
-import org.clematis.math.MathUtils;
+import org.clematis.math.utils.MathUtils;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 import java.math.BigDecimal;
-import static org.clematis.math.MathUtils.DECIMAL_SEPARATOR;
+import static org.clematis.math.utils.MathUtils.DECIMAL_SEPARATOR;
 
 /**
  * Returns x expressed as a floating-point number rounded to n decimal places.

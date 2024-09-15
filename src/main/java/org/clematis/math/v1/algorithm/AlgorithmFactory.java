@@ -175,6 +175,32 @@ public class AlgorithmFactory {
     }
 
     /**
+     * Save algorithm according to its version.
+     *
+     * @param algorithm instance to save
+     */
+    public static String saveAlgorithm(IParameterProvider algorithm) throws IOException {
+        if (algorithm != null) {
+            return printToString(algorithm.save());
+        }
+
+        return "";
+    }
+
+    /**
+     * Store algorithm in xml string
+     *
+     * @param algorithm to store
+     * @return xml string
+     */
+    public static String toXML(IParameterProvider algorithm) throws IOException {
+        if (algorithm != null) {
+            return printToString(algorithm.toXML());
+        }
+        return "";
+    }
+
+    /**
      * Prints the document into a string.
      *
      * @param doc the document.

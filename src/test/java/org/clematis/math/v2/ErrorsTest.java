@@ -1,9 +1,7 @@
 // Created: 24.01.2007 T 11:39:22
 package org.clematis.math.v2;
 
-import java.math.BigDecimal;
-
-import org.junit.jupiter.api.Assertions;
+import org.clematis.math.BackwardCompatibilityTest;
 
 public class ErrorsTest extends BackwardCompatibilityTest {
 
