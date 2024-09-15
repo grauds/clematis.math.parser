@@ -153,11 +153,11 @@ public class Constant extends AbstractConstant {
      */
     public void setValue(double value) {
         // get rid of zeros in integers
-        String str = Double.toString(value);
-        if (MathUtils.isInteger(str) && str.endsWith(".0")) {
-            str = str.substring(0, str.length() - 2);
+        this.value = Double.toString(value);
+        if (MathUtils.isInteger(this.value) && this.value.endsWith(".0")) {
+            this.value = this.value.substring(0, this.value.length() - 2);
         }
-        this.number = new BigDecimal(str);
+        this.number = new BigDecimal(this.value);
     }
 
     /**

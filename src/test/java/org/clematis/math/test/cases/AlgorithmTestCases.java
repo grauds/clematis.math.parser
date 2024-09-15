@@ -1,5 +1,5 @@
 // Created: 05.12.2006 T 15:53:03
-package org.clematis.math.v2.cases;
+package org.clematis.math.test.cases;
 
 /**
  * Common interface to groups of algorithm test cases

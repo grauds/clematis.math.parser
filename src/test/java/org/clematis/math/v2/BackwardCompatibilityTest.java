@@ -2,19 +2,19 @@
 package org.clematis.math.v2;
 
 import org.clematis.math.AlgorithmException;
+import org.clematis.math.io.OutputFormatSettings;
+import org.clematis.math.test.cases.AlgorithmTestCases;
+import org.clematis.math.test.cases.BooleanTestCases;
 import org.clematis.math.v2.algorithm.Algorithm;
 import org.clematis.math.v2.algorithm.AlgorithmFactory;
 import org.clematis.math.v2.algorithm.Parameter;
-import org.clematis.math.v2.cases.AlgorithmTestCases;
-import org.clematis.math.v2.cases.BooleanTestCases;
-import org.clematis.math.v2.cases.DecimalTestCases;
-import org.clematis.math.v2.cases.GenericFunctionsTestCases;
-import org.clematis.math.v2.cases.ImplicitMultiplicationTestCases;
-import org.clematis.math.v2.cases.ParameterAssignTestCases;
-import org.clematis.math.v2.cases.PlainTestCases;
-import org.clematis.math.v2.cases.SigDigitsTestCases;
-import org.clematis.math.v2.cases.StringsTestCases;
-import org.clematis.math.io.OutputFormatSettings;
+import org.clematis.math.test.cases.DecimalTestCases;
+import org.clematis.math.test.cases.GenericFunctionsTestCases;
+import org.clematis.math.test.cases.ImplicitMultiplicationTestCases;
+import org.clematis.math.test.cases.ParameterAssignTestCases;
+import org.clematis.math.test.cases.PlainTestCases;
+import org.clematis.math.test.cases.SigDigitsTestCases;
+import org.clematis.math.test.cases.StringsTestCases;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -43,74 +43,69 @@ public class BackwardCompatibilityTest {
     private final boolean stopOnError = true;
 
     /**
-     * Probe algorithm agains reference algorithm
+     * Probe algorithm against reference algorithm
      *
      * @param sAlg algorithm body
      * @throws Exception
      */
     void probeAlgorithm(String sAlg) throws Exception {
-        probeAlgorithm(sAlg, true);
-    }
 
-    void probeAlgorithm(String sAlg, boolean calculate) throws Exception {
-        System.out.println("*************** ALG ******************");
-        System.out.println(sAlg);
-        System.out.println("*************** ALG ******************");
         Algorithm algorithm = reader.createAlgorithm(sAlg);
 
         for (int i = 0; i < cnt; i++) {
+
             algorithm.calculateParameters();
-            /** output parameters */
-            algorithm.printParameters(System.out);
-            if (calculate) {
-                /* save algorithm and initial conditions */
-                String alg = AlgorithmFactory.toXML(algorithm);
-                String save = AlgorithmFactory.saveAlgorithm(algorithm);
-                /* create reference algorithms */
-                ReferenceAlgorithmLoader loader = new ReferenceAlgorithmLoader();
-                org.clematis.math.v1.algorithm.Algorithm reference = loader.getAlgorithmReference(alg, save);
-                /* go through tested algorithm parameters */
-                Parameter[] params = algorithm.getParameters();
-                for (int k = 0; k < params.length; k++) {
-                    Parameter p = params[k];
-                    if (p != null && reference.getParameter(p.getName()) != null) {
-                        /* new and old abstract constants */
-                        AbstractConstant ac_NEW = p.getCurrentResult();
-                        if (reference.getParameter(p.getName()).getCurrentResult() != null) {
-                            String NEW_STRING;
-                            String OLD_STRING;
 
-                            if (format) {
-                                NEW_STRING = ac_NEW.getValue(new OutputFormatSettings());
-                                OLD_STRING = loader.getAlgorithmReference(alg, save).getParameter(p.getName()).
-                                    getCurrentResult().getValue(loader.getOutputFormatSettings());
+            /* save algorithm and initial conditions */
+            String alg = AlgorithmFactory.toXML(algorithm);
+            String save = AlgorithmFactory.saveAlgorithm(algorithm);
+
+            /* create reference algorithms */
+            ReferenceAlgorithmLoader loader = new ReferenceAlgorithmLoader();
+            org.clematis.math.v1.algorithm.Algorithm reference = loader.getAlgorithmReference(alg, save);
+
+            /* go through tested algorithm parameters */
+            Parameter[] params = algorithm.getParameters();
+            for (int k = 0; k < params.length; k++) {
+                Parameter p = params[k];
+                if (p != null && reference.getParameter(p.getName()) != null) {
+                    /* new and old abstract constants */
+                    AbstractConstant ac_NEW = p.getCurrentResult();
+                    if (reference.getParameter(p.getName()).getCurrentResult() != null) {
+                        String NEW_STRING;
+                        String OLD_STRING;
+
+                        if (format) {
+                            NEW_STRING = ac_NEW.getValue(new OutputFormatSettings());
+                            OLD_STRING = loader.getAlgorithmReference(alg, save).getParameter(p.getName()).
+                                getCurrentResult().getValue(loader.getOutputFormatSettings());
+                        } else {
+                            NEW_STRING = ac_NEW.getValue();
+                            OLD_STRING = loader.getAlgorithmReference(alg, save).getParameter(p.getName())
+                                .getCurrentResult().
+                                getValue(null);
+                        }
+
+                        System.out.println("CURRENT: " + p.getName() + " / " + p.getCode() + " / " + NEW_STRING);
+                        System.out.println("REFERENCE: " + p.getName() + " / " + p.getCode() + " / " + OLD_STRING);
+
+                        if (compare && !NEW_STRING.equals(OLD_STRING)) {
+                            if (stopOnError) {
+                                throw new AlgorithmException(
+                                    "Descrepance detected - new:" + NEW_STRING + " old:" + OLD_STRING, k + 1);
                             } else {
-                                NEW_STRING = ac_NEW.getValue();
-                                OLD_STRING = loader.getAlgorithmReference(alg, save).getParameter(p.getName())
-                                    .getCurrentResult().
-                                    getValue(null);
-                            }
-
-                            System.out.println("CURRENT: " + p.getName() + " / " + p.getCode() + " / " + NEW_STRING);
-                            System.out.println("REFERENCE: " + p.getName() + " / " + p.getCode() + " / " + OLD_STRING);
-
-                            if (compare && !NEW_STRING.equals(OLD_STRING)) {
-                                if (stopOnError) {
-                                    throw new AlgorithmException(
-                                        "Descrepance detected - new:" + NEW_STRING + " old:" + OLD_STRING, k + 1);
-                                } else {
-                                    System.out.println(
-                                        "Descrepance detected - new:" + NEW_STRING + " old:" + OLD_STRING + " in " + k +
-                                            1);
-                                }
+                                System.out.println(
+                                    "Descrepance detected - new:" + NEW_STRING + " old:" + OLD_STRING + " in " + k +
+                                        1);
                             }
                         }
-                    } else {
-                        System.out.println("Parameter number " + i + " is null");
                     }
+                } else {
+                    System.out.println("Parameter number " + i + " is null");
                 }
             }
         }
+
     }
 
     /**

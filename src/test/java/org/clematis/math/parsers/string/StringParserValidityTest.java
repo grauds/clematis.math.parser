@@ -187,6 +187,13 @@ public class StringParserValidityTest {
         testExpressionWithTwoParsers(16);
     }
 
+    @Test
+    public void testAll() throws AlgorithmException, ParseException {
+        for (int i = 0; i < tests.length; i++) {
+            testExpressionWithTwoParsers(i);
+        }
+    }
+
     private void testExpressionWithTwoParsers(int i) throws AlgorithmException, ParseException {
 
         StringMathParser parser = new StringMathParser(new StringReader(tests[i]));

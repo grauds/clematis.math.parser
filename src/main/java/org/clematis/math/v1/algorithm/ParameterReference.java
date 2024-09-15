@@ -6,13 +6,19 @@ import org.clematis.math.IExpressionItem;
 import org.jdom2.Element;
 
 import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Class contains an instance of {@link Parameter} and serves as a reference to it.
  */
 @Getter
+@Setter
 public class ParameterReference implements IExpressionItem {
 
     Parameter origin;
+
+    public ParameterReference() {
+    }
 
     public ParameterReference(Parameter origin) {
         this.origin = origin;

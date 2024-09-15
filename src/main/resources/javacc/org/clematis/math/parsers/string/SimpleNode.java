@@ -11,6 +11,7 @@ import org.clematis.math.v1.IFunction;
 import org.clematis.math.v1.SimpleValue;
 import org.clematis.math.v1.StringConstant;
 import org.clematis.math.v1.Variable;
+import org.clematis.math.v1.algorithm.ParameterReference;
 import org.clematis.math.v1.functions.FunctionReference;
 import org.clematis.math.v1.operations.Addition;
 import org.clematis.math.v1.operations.Expression;
@@ -147,7 +148,7 @@ public class SimpleNode implements Node {
                 break;
             }
             case StringMathParserTreeConstants.JJTVAR: {
-              //  expressionItem = new SimpleParameter();
+                expressionItem = new ParameterReference();
                 break;
             }
             case StringMathParserTreeConstants.JJTNUMBER: {

@@ -1,8 +1,18 @@
 package org.clematis.math;
 
+import java.math.BigDecimal;
+
+import org.clematis.math.io.OutputFormatSettings;
+import org.clematis.math.v2.Constant;
+import org.clematis.math.v2.algorithm.Algorithm;
+import org.clematis.math.v2.algorithm.Parameter;
+import org.clematis.math.v2.functions.Decimal;
+import org.clematis.math.v2.functions.Lsu;
+import org.clematis.math.v2.functions.Sig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("checkstyle:MultipleStringLiterals")
 public class MathUtilsTest {
 
     @Test
@@ -49,5 +59,20 @@ public class MathUtilsTest {
         Assertions.assertEquals("983.345", MathUtils.cutTrailingZeros("983.3450000"));
         Assertions.assertEquals("9833450000", MathUtils.cutTrailingZeros("9833450000"));
         Assertions.assertEquals("-98334.5", MathUtils.cutTrailingZeros("-98334.50000"));
+    }
+
+    /**
+     * Tests out the zero trail in $B parameter in new maths against old maths
+     */
+    @Test
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public void testZeroTrail() {
+        /*
+         * Big decimal retains the precision expressed in decimal places
+         */
+        BigDecimal bd1 = new BigDecimal("0.02");
+        BigDecimal bd2 = new BigDecimal("200");
+        Assertions.assertEquals("4.00", bd1.multiply(bd2).toString());
+        Assertions.assertEquals(2, Double.valueOf(2).intValue());
     }
 }

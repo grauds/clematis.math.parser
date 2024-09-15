@@ -486,7 +486,7 @@ public class ExpressionParser {
         return calculable;
     }
 
-    private IExpressionItem evalVariable() throws AlgorithmException {
+    private IExpressionItem evalVariable() {
         IExpressionItem result = null;
         /* parameter */
         if (isParameter(operand)) {
@@ -512,7 +512,7 @@ public class ExpressionParser {
     }
 
     @SuppressWarnings("checkstyle:NestedIfDepth")
-    private IExpressionItem getParameter(String name) throws AlgorithmException {
+    private IExpressionItem getParameter(String name) {
         IExpressionItem result = null;
 
         if (paramProvider != null) {
