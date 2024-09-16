@@ -13,7 +13,7 @@ import org.clematis.math.v1.algorithm.DefaultParameterProvider;
 import org.clematis.math.v1.algorithm.IParameterProvider;
 import org.clematis.math.v1.algorithm.Key;
 import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.parsers.ExpressionParser;
+import org.clematis.math.v1.parsers.v1.ExpressionParser;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 

@@ -14,7 +14,7 @@ import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
 import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.parsers.ExpressionParser;
+import org.clematis.math.v1.parsers.v1.ExpressionParser;
 import org.clematis.math.v1.utils.AlgorithmUtils;
 
 /**

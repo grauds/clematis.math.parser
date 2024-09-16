@@ -57,7 +57,8 @@ import org.clematis.math.v1.Variable;
 import org.clematis.math.v1.algorithm.IFunctionProvider;
 import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
 import org.clematis.math.v1.algorithm.IVariableProvider;
-import org.clematis.math.v1.algorithm.SimpleParameter;
+import org.clematis.math.v1.algorithm.Parameter;
+import org.clematis.math.v1.algorithm.ParameterReference;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -398,20 +399,20 @@ Token Variable() #VAR :
 
     t= <VARIABLE>
         {
-           /**
-            * Provided name of variable parameter, we can search for constant
-            * result in parameter provider
-            */
-           String name = t.image;
-           if ( getParameterProvider() != null ) {
-               AbstractConstant constant = getParameterProvider().getParameterConstant(name);
-               if ( constant != null && (jjtThis.getExpressionItem() instanceof SimpleParameter) ) {
-                   // set current result
-                   ((SimpleParameter) jjtThis.getExpressionItem()).setCurrentResult(constant.copy());
-               }
-           }
-           jjtThis.setName(name);
-        }
+   /**
+    * Provided name of variable parameter, we can search for constant
+    * result in parameter provider
+    */
+   String name = t.image;
+   if ( getParameterProvider() != null ) {
+       Parameter p = getParameterProvider().getParameter(name);
+       if ( p != null && (jjtThis.getExpressionItem() instanceof ParameterReference) ) {
+           // set current result
+           ((ParameterReference) jjtThis.getExpressionItem()).setOrigin(p);
+       }
+   }
+   jjtThis.setName(name);
+}
 
 
  {

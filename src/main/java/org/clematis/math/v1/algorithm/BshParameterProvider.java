@@ -38,12 +38,6 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
     @Setter
     protected String ident = null;
     /**
-     * Version of originating persistent storage
-     */
-    @Getter
-    @Setter
-    protected String version = "1";
-    /**
      * Java code to eval
      */
     private String code = null;

@@ -2,6 +2,7 @@
 package org.clematis.math;
 
 import org.clematis.math.io.OutputFormatSettings;
+import org.clematis.math.test.AlgorithmLoader;
 import org.clematis.math.test.cases.AlgorithmTestCases;
 import org.clematis.math.test.cases.BooleanTestCases;
 import org.clematis.math.test.cases.DecimalTestCases;
@@ -55,7 +56,7 @@ public class BackwardCompatibilityTest {
             String save = AlgorithmFactory.saveAlgorithm(algorithm);
 
             /* create reference algorithms */
-            ReferenceAlgorithmLoader loader = new ReferenceAlgorithmLoader();
+            AlgorithmLoader loader = new AlgorithmLoader();
             org.clematis.math.v1.algorithm.Algorithm reference = loader.getAlgorithmReference(alg, save);
 
             /* go through tested algorithm parameters */

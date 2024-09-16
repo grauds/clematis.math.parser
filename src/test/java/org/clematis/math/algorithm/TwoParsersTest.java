@@ -7,7 +7,7 @@ import org.clematis.math.IExpressionItem;
 import org.clematis.math.parsers.string.ParseException;
 import org.clematis.math.parsers.string.SimpleNode;
 import org.clematis.math.parsers.string.StringMathParser;
-import org.clematis.math.v1.parsers.ExpressionParser;
+import org.clematis.math.v1.parsers.v1.ExpressionParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

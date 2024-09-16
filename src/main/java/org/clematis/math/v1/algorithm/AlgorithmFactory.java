@@ -109,11 +109,10 @@ public class AlgorithmFactory {
     }
 
     /**
-     * Loads algorithm with results of calculation either from algorithm xml from question bank
-     * and xml from taken question or only from taken question
+     * Loads algorithm with results of calculations from algorithm xml
      *
-     * @param algorithmXML        algorithm xml from question bank
-     * @param algorithmResultsXML algorithm xml from taken question
+     * @param algorithmXML        algorithm xml
+     * @param algorithmResultsXML algorithm results xml
      * @return algorithm with results of calculation
      */
     public static IParameterProvider loadAlgorithm(Element algorithmXML, Element algorithmResultsXML)
@@ -141,10 +140,6 @@ public class AlgorithmFactory {
             } else if (algorithm instanceof Algorithm) {
                 ((Algorithm) algorithm).load(algorithmResultsXML);
             }
-            /*
-             * Set version 2 to loaded algorithm
-             */
-            algorithm.setVersion(VERSION_2);
         } else {
             algorithm = AlgorithmFactory.createAlgorithm(algorithmResultsXML);
         }
@@ -161,12 +156,17 @@ public class AlgorithmFactory {
     public static IParameterProvider loadAlgorithm(String algorithmXML, String algorithmResultsXML)
         throws IOException, JDOMException, AlgorithmException {
 
-        Element algorithm = load(algorithmXML);
-        Element results = load(algorithmResultsXML);
-
-        return loadAlgorithm(algorithm, results);
+        return loadAlgorithm(load(algorithmXML), load(algorithmResultsXML));
     }
 
+    /**
+     * Uses JDom to parse string representation of XML either for the algorithm or for its results
+     *
+     * @param algorithmXML to parse
+     * @return JDOM element is returned
+     * @throws IOException is thrown if XML {@param algorithmXML} cannot be read
+     * @throws JDOMException is thrown if XML {@param algorithmXML} cannot be parsed
+     */
     public static Element load(String algorithmXML) throws IOException, JDOMException {
         if (algorithmXML != null && !algorithmXML.trim().isEmpty()) {
             return load(new StringReader(algorithmXML)).getRootElement();

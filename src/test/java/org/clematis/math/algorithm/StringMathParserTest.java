@@ -11,6 +11,7 @@ import org.clematis.math.test.cases.SigDigitsTestCases;
 import org.clematis.math.test.cases.StringsTestCases;
 import org.clematis.math.v1.AlgorithmReader;
 import org.clematis.math.v1.algorithm.Algorithm;
+import org.clematis.math.v1.parsers.v2.AdvancedParameterFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +34,7 @@ public class StringMathParserTest {
     }
 
     private void readAndParseAlgorithm(String algorithmString) throws Exception {
+        reader.setParameterFactory(new AdvancedParameterFactory());
         Algorithm algorithm = reader.createAlgorithm(algorithmString);
         algorithm.calculateParameters();
     }

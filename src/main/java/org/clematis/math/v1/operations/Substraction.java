@@ -1,10 +1,7 @@
 // Created: 11.01.2007 T 11:06:56
 package org.clematis.math.v1.operations;
 
-import java.util.ArrayList;
 import static org.clematis.math.XMLConstants.APPLY_ELEMENT_NAME;
-
-import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.Constant;
 import org.jdom2.Element;

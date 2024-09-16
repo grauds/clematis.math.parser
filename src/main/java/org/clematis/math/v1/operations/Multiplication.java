@@ -208,7 +208,7 @@ public class Multiplication extends AbstractOperation {
         StringBuilder sb = new StringBuilder();
         if (getMultiplier() != 1) {
             sb.append(new Constant(getMultiplier()));
-            sb.append("*");
+            sb.append(MULTIPLY_SIGN);
             sb.append("(");
         }
 

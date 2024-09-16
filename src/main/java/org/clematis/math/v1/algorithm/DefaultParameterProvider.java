@@ -56,11 +56,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     protected FunctionFactory functionFactory = new FunctionFactory();
 
     /**
-     * Version of originating persistent storage
-     */
-    protected String version = "1";
-
-    /**
      * Parent algorithm
      */
     protected IParameterProvider parent = null;

@@ -490,17 +490,6 @@ public class Algorithm extends DefaultParameterProvider {
         return algElement;
     }
 
-    /**
-     * Creates <code>Algorithm</code> object from QUESTION XML.
-     *
-     * @param algorithmXML XML representing the algorithm.
-     * @return instance of Algorithm
-     * @throws AlgorithmException if algorithm cannot be created
-     */
-    public static Algorithm createFromQuestionXML(Element algorithmXML) throws AlgorithmException {
-        return createFromXML(algorithmXML);
-    }
-
     /*
      * Finds all parameters dependent on the parameter.
      *
@@ -554,7 +543,7 @@ public class Algorithm extends DefaultParameterProvider {
             /*
              * Create algorithm instance
              */
-            IParameterProvider algorithm = Algorithm.createFromQuestionXML(algElement);
+            IParameterProvider algorithm = Algorithm.createFromXML(algElement);
             /*
              * Get algorithm with id of this taken algorithm
              */
@@ -600,37 +589,10 @@ public class Algorithm extends DefaultParameterProvider {
         }
     }
 
-    /**
-     * Replaces parameters references with expression roots
-     */
-    public void parseParametersWithFullTree() throws AlgorithmException {
-        Iterator<Key> it = lines.iterator();
-        int line = 1;
-        while (it.hasNext()) {
-            Key key = it.next();
-            /* parameter */
-            if (!key.isFunction()) {
-                /* directly get parameter */
-                Parameter param = getParameter(key);
-                try {
-                    param.parseWithFullTree(this);
-                } catch (AlgorithmException ex) {
-                    throw new AlgorithmException(ex.getMessage(), line);
-                }
-                /* load parameter for usage */
-                loadForUse(param);
-            } else {
-                this.functionFactory.loadForUse(key);
-            }
-            line++;
-        }
-        finishAndClear();
-    }
-
     /*
      * Replaces parameters references with ParameterReference objects.
      */
-    public void parseParametersWithReferences() throws AlgorithmException {
+    public void parse(int mode) throws AlgorithmException {
         Iterator<Key> it = lines.iterator();
         int line = 1;
         while (it.hasNext()) {
@@ -640,7 +602,7 @@ public class Algorithm extends DefaultParameterProvider {
                 /* directly get parameter */
                 Parameter param = getParameter(key);
                 try {
-                    param.parseWithReferences(this);
+                    param.parse(this, mode);
                 } catch (AlgorithmException ex) {
                     throw new AlgorithmException(ex.getMessage(), line);
                 }

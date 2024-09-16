@@ -12,7 +12,7 @@ import org.clematis.math.v1.Constant;
 
 import lombok.Getter;
 /**
- * Simple parameter - the holder for value and name of {@link Parameter}
+ * Simple parameter - the holder for value and name
  */
 @Getter
 public class SimpleParameter implements Serializable {

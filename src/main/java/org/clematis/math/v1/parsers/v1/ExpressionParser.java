@@ -1,5 +1,5 @@
 // Created: Jan 17, 2003 T 7:46:47 PM
-package org.clematis.math.v1.parsers;
+package org.clematis.math.v1.parsers.v1;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;

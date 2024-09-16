@@ -3,7 +3,7 @@ package org.clematis.math.v2;
 
 import java.io.StringReader;
 
-import org.clematis.math.v1.parsers.ExpressionParser;
+import org.clematis.math.v1.parsers.v1.ExpressionParser;
 import org.clematis.math.v2.parsers.SimpleNode;
 import org.clematis.math.v2.parsers.string.ParseException;
 import org.clematis.math.v2.parsers.string.StringMathParser;

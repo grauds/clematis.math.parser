@@ -11,18 +11,25 @@ import org.clematis.math.XMLConstants;
 import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.clematis.math.v1.functions.GenericFunction;
+import org.clematis.math.v1.parsers.v1.DefaultParameterFactory;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Parses the question algrorithm used for dynamical changing of the
- * question parameters.
- * The algorithm code is value of "algorithm" field in question bank.
+ * Reads algorithm lines and produces parameters which hold name and algorithmic code.
+ * This class doesn't parse algorithmic code.
  */
+@Getter
+@Setter
 public class AlgorithmReader {
 
+    IParameterFactory parameterFactory = new DefaultParameterFactory();
+
     /**
-     * Parses the code and creates the list of parameters.
+     * Reads code and creates the list of parameters.
      *
-     * @param code the algorithm code from question bank.
+     * @param code the algorithm code
      */
     public Algorithm createAlgorithm(String code)
         throws Exception {
@@ -39,11 +46,11 @@ public class AlgorithmReader {
     }
 
     /**
-     * Parses the code and returns the list with statements like:
+     * Reads the code and returns the list with statements like:
      * $paramname=expression.
      *
-     * @param code the parsed code.
-     * @return statements list.
+     * @param code from the algorithm line
+     * @return statements list
      */
     private ArrayList<String> getStatements(String code) {
         ArrayList<String> statements = new ArrayList<>();
@@ -94,8 +101,7 @@ public class AlgorithmReader {
         if (statement.startsWith(XMLConstants.CONDITION_NAME)) {
             name = XMLConstants.CONDITION_NAME;
             code = statement.substring(XMLConstants.CONDITION_NAME.length() + 1);
-
-            param = new Parameter(name, code);
+            param = createParameter(name, code);
             param.setCondition(true);
             algorithm.addParameter(param);
         } else if (statement.startsWith(GenericFunction.GENERIC_FUNCTION_NAME)) {
@@ -108,9 +114,13 @@ public class AlgorithmReader {
             }
             name = parseParameterName(statement, pos);
             code = statement.substring(pos + 1);
-            param = new Parameter(name, code);
+            param = createParameter(name, code);
             algorithm.addParameter(param);
         }
+    }
+
+    public Parameter createParameter(String name, String code) {
+        return parameterFactory.createParameter(name, code);
     }
 
     /**

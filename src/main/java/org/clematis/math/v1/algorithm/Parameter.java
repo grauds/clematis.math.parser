@@ -1,16 +1,16 @@
-// Created: Jan 21, 2003 T 5:23:42 PM
 package org.clematis.math.v1.algorithm;
 
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
+import org.clematis.math.IParameterCalculator;
 import org.clematis.math.XMLConstants;
 import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.utils.StringUtils;
 import org.clematis.math.v1.AbstractConstant;
 import org.clematis.math.v1.Constant;
 import org.clematis.math.v1.operations.SimpleFraction;
-import org.clematis.math.v1.parsers.ExpressionParser;
-import org.clematis.math.v1.utils.AlgorithmUtils;
+import org.clematis.math.v1.parsers.v1.ExpressionParser;
+import org.clematis.math.v1.parsers.v1.ParameterCalculator;
 import org.jdom2.CDATA;
 import org.jdom2.Element;
 
@@ -24,7 +24,7 @@ import lombok.Setter;
 @Getter
 public class Parameter extends SimpleParameter {
     /**
-     * Precision of values for presentation.
+     * Precision of outcoming values for presentation.
      */
     public static final int PRECISION = 12;
     /**
@@ -44,6 +44,10 @@ public class Parameter extends SimpleParameter {
      * Object representation of the expression code.
      */
     private IExpressionItem expressionRoot = null;
+    /**
+     * Adaptor to calculate the code of the parameter
+     */
+    private IParameterCalculator parameterCalculator = null;
     /**
      * Calculated qu algorithm, this parameter belongs to
      */
@@ -79,6 +83,7 @@ public class Parameter extends SimpleParameter {
     public Parameter(String name, String code) {
         setName(name);
         setCode(code);
+        setParameterCalculator(new ParameterCalculator());
     }
 
     /**
@@ -88,7 +93,7 @@ public class Parameter extends SimpleParameter {
      * @param currentResult <code>Constant</code> representing parameter value.
      */
     public Parameter(String name, AbstractConstant currentResult) {
-        setName(name);
+        this(name, "");
         setCurrentResult(currentResult);
     }
 
@@ -96,67 +101,26 @@ public class Parameter extends SimpleParameter {
      * Calculates parameter value.
      * It is an <code>AbstractConstant</code> object.
      */
-    void calculate(Algorithm paramProvider, int currentLine) throws AlgorithmException {
-        /*
-         * If code is not null, parameter is mutable, if null - immutable via calculation
-         */
-        IExpressionItem result = null;
-        if (code != null) {
-            try {
-                /* parse processed code string */
-                ExpressionParser exprParser = new ExpressionParser(
-                    AlgorithmUtils.replaceParameters(code, paramProvider, currentLine, false),
-                    paramProvider,
-                    null,
-                    paramProvider
-                );
-                expressionRoot = exprParser.parse();
-                /* calculate expression root */
-                if (expressionRoot != null) {
-                    result = expressionRoot.calculate(paramProvider);
-                }
-            } catch (AlgorithmException ex) {
-                throw new AlgorithmException("Error in "
-                    + this.getName()
-                    + EQUALS_SIGN
-                    + code
-                    + COLON
-                    + ex.getMessage());
-            }
-            if (result instanceof AbstractConstant) {
-                setCurrentResult((AbstractConstant) result);
-            } else if (result instanceof SimpleFraction) {
-                setCurrentResult(((SimpleFraction) result).getProduct());
-            } else {
-                throw new AlgorithmException("Parameter: "
-                    + this.getName()
-                    + EQUALS_SIGN
-                    + code
-                    + " is not a CONSTANT: "
-                    + (result == null ? null : result.toString()));
-            }
+    public void calculate(Algorithm algorithm, int currentLine) throws AlgorithmException {
+
+        IExpressionItem result = getParameterCalculator().calculate(
+            getName(),
+            getCode(),
+            algorithm,
+            algorithm,
+            currentLine
+        );
+
+        if (result instanceof AbstractConstant) {
+            setCurrentResult((AbstractConstant) result);
+        } else if (result instanceof SimpleFraction) {
+            setCurrentResult(((SimpleFraction) result).getProduct());
+        } else {
+            setCurrentResult(null);
         }
     }
 
-    /**
-     * Calculates parameter value.
-     * It is an <code>AbstractConstant</code> object.
-     */
-    void parseWithFullTree(Algorithm paramProvider)
-        throws AlgorithmException {
-        parse(paramProvider, ExpressionParser.MODE_COPY_PARAMETER_AS_TREE);
-    }
-
-    /**
-     * Calculates parameter value.
-     * It is an <code>AbstractConstant</code> object.
-     */
-    void parseWithReferences(Algorithm paramProvider)
-        throws AlgorithmException {
-        parse(paramProvider, ExpressionParser.MODE_COPY_PARAMETER_AS_REFERENCE);
-    }
-
-    private void parse(Algorithm paramProvider, int mode)
+    public void parse(Algorithm paramProvider, int mode)
         throws AlgorithmException {
         try {
             ExpressionParser exprParser = new ExpressionParser(code, paramProvider, null, paramProvider);
@@ -170,18 +134,6 @@ public class Parameter extends SimpleParameter {
                 + COLON
                 + ex.getMessage());
         }
-    }
-
-    /**
-     * This function checks whether if code contains root, and if it doesn't,
-     * tries to supplement boolean root, "and" or "or" functions. This works only
-     * if all parts of code string return 1.0 or 0.0 values. Overwise, constant
-     * will be never yeilded.
-     *
-     * @param code string
-     */
-    void setCode(String code) {
-        this.code = code;
     }
 
     /**
@@ -278,7 +230,7 @@ public class Parameter extends SimpleParameter {
      *
      * @param paramElement <code>Element</code> representing root of calculated algorithm's JDOM.
      */
-    static Parameter loadResult(Element paramElement) {
+    public static Parameter loadResult(Element paramElement) {
         if (paramElement != null) {
             String name = paramElement.getAttributeValue(XMLConstants.NAME_ATTRIBUTE_NAME);
             AbstractConstant c = null;

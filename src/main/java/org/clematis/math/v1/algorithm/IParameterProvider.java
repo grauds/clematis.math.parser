@@ -38,22 +38,6 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
     void setIdent(String ident);
 
     /**
-     * Returns version of parameter provider
-     * (for persistent storage versioning purposes)
-     *
-     * @return version of parameter provider
-     */
-    String getVersion();
-
-    /**
-     * Sets version of parameter provider
-     * (for persistent storage versioning purposes)
-     *
-     * @param version of parameter provider
-     */
-    void setVersion(String version);
-
-    /**
      * Calculates values of all parameters participating in algorithm.
      */
     void calculateParameters() throws AlgorithmException;

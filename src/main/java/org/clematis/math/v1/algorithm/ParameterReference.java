@@ -30,10 +30,14 @@ public class ParameterReference implements IExpressionItem {
      * @return expression item instance
      */
     public IExpressionItem calculate() throws AlgorithmException {
-        if (origin.getExpressionRoot() != null) {
-            return origin.getExpressionRoot().calculate();
+        IExpressionItem result = null;
+        if (origin != null) {
+            if (origin.getCurrentResult() == null) {
+                origin.calculate(origin.getContainer(), 0);
+            }
+            result = origin.getCurrentResult();
         }
-        return null;
+        return result;
     }
 
     /**
