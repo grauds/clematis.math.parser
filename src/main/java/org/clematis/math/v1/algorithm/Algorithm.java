@@ -71,26 +71,6 @@ public class Algorithm extends DefaultParameterProvider {
     }
 
     /**
-     * Finds parameter by its answer ident
-     *
-     * @param answerIdent answer ident
-     * @return found parameter or null
-     */
-    public Parameter getParameterByCustomIdent(String answerIdent) {
-        Parameter param = super.getParameterByCustomIdent(answerIdent);
-        /*
-         * Look for parameter in parent algorithm
-         */
-        if (param == null && getParent() != null) {
-            param = getParent().getParameterByCustomIdent(answerIdent);
-        }
-        /*
-         * Return parameter may be null
-         */
-        return param;
-    }
-
-    /**
      * Add child algorithm
      *
      * @param key       for storing algorithm

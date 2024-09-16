@@ -24,7 +24,7 @@ import lombok.Setter;
 @Getter
 public class Parameter extends SimpleParameter {
     /**
-     * Precision of outcoming values for presentation.
+     * Precision of values for presentation.
      */
     public static final int PRECISION = 12;
     /**
@@ -53,15 +53,6 @@ public class Parameter extends SimpleParameter {
      */
     private String code = null;
     /**
-     * Is this parameter a correct answer representation
-     */
-    private boolean correctAnswer = false;
-    /**
-     * Correct answer ident. This is an ident from varequal,
-     * should be not null if correctAnswer flag is set to true.
-     */
-    private String correctAnswerIdent = null;
-    /**
      * This flag allows application of significant digits.
      */
     private boolean sdApplicable = true;
@@ -75,9 +66,10 @@ public class Parameter extends SimpleParameter {
     @SuppressWarnings("checkstyle:MagicNumber")
     private int sdNumber = 3;
     /**
-     * Is this parameter contains MathML code
+     * Is this parameter a correct answer representation
      */
-    private boolean containsMathML = false;
+    private boolean correctAnswer = false;
+
     /**
      * Constructor.
      *
@@ -317,14 +309,8 @@ public class Parameter extends SimpleParameter {
             paramElement.setAttribute(XMLConstants.SDAPPLICABLE_ATTRIBUTE_NAME, Boolean.toString(isSdApplicable()));
             paramElement.setAttribute(XMLConstants.SDINDEPENDENT_ATTRIBUTE_NAME, Boolean.toString(isSdIndependent()));
         }
-        if (getCorrectAnswerIdent() != null) {
-            paramElement.setAttribute(XMLConstants.ANSWER_IDENT_ATTRIBUTE_NAME, getCorrectAnswerIdent());
-        }
         if (isCondition()) {
             paramElement.setAttribute(XMLConstants.CONDITION_NAME, Boolean.TRUE.toString());
-        }
-        if (containsMathML) {
-            paramElement.setAttribute(XMLConstants.CONTAINS_MATHML_ATTRIBUTE_NAME, Boolean.TRUE.toString());
         }
         /*
          * Add formula code
@@ -360,9 +346,6 @@ public class Parameter extends SimpleParameter {
         if (xml.getAttribute(XMLConstants.ANSWER_ATTRIBUTE_NAME) != null) {
             param.setCorrectAnswer(true);
         }
-        if (xml.getAttribute(XMLConstants.ANSWER_IDENT_ATTRIBUTE_NAME) != null) {
-            param.setCorrectAnswerIdent(xml.getAttributeValue(XMLConstants.ANSWER_IDENT_ATTRIBUTE_NAME));
-        }
         if (xml.getAttribute(XMLConstants.CODE_ELEMENT_NAME) != null) {
             param.setCode(xml.getAttributeValue(XMLConstants.CODE_ELEMENT_NAME));
         } else if (xml.getChild(XMLConstants.CODE_ELEMENT_NAME) != null) {
@@ -373,10 +356,6 @@ public class Parameter extends SimpleParameter {
         if (xml.getAttribute(XMLConstants.CONDITION_NAME) != null) {
             param.setCondition(true);
         }
-        if (xml.getAttribute(XMLConstants.CONTAINS_MATHML_ATTRIBUTE_NAME) != null) {
-            param.setContainsMathML(true);
-        }
-
         if (xml.getAttribute(XMLConstants.SIG_ATTRIBUTE_NAME) != null) {
             try {
                 param.setSdNumber(Integer.parseInt(xml.getAttributeValue(XMLConstants.SIG_ATTRIBUTE_NAME)));

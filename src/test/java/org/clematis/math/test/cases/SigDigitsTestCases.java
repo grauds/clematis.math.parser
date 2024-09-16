@@ -73,7 +73,7 @@ public class SigDigitsTestCases extends AlgorithmTestCases {
 
         "$SG=rand(0.50,1.50,2);"
             + "$pi=3.141592654;"
-            + "$V2=sig(5,(sqrt(2.0*32.2*((2.5/$SG)-1.0)*0.8)));"
+            + "$V2=sig(5,(sqrt(abs(2.0*32.2*((2.5/$SG)-1.0)*0.8))));"
             + "$ans=sig(3,(20.0*$V2/144.0));"
             + "$error=sig(3,($ans/200.0))",
 

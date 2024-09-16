@@ -14,10 +14,10 @@ import org.clematis.math.v1.algorithm.Algorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AlgorithmNaiveTest {
+public class ExpressionParserTest {
 
     /**
-     * Instance of naive algorithm reader
+     * Instance of algorithm reader
      */
     private final AlgorithmReader reader = new AlgorithmReader();
 

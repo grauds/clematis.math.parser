@@ -86,9 +86,6 @@ public class AlgorithmReader {
      */
     private void parseStatement(String statement, Algorithm algorithm) throws AlgorithmException {
 
-        /*
-         * Start position of parameter code
-         */
         int pos;
         String name;
         String code;

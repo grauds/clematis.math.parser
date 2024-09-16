@@ -66,14 +66,6 @@ public interface IParameterProvider extends ISimpleParameterProvider, IParameter
     void calculateParameters(Map<Key, IValue> params) throws AlgorithmException;
 
     /**
-     * Returns parameter, found by custom identifier.
-     *
-     * @param ident under which some parameters may store
-     * @return parameter, found by custom identifier
-     */
-    Parameter getParameterByCustomIdent(String ident);
-
-    /**
      * Checks whether this provider has specified parameter.
      *
      * @param paramName the name of parameter.

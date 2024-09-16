@@ -28,51 +28,48 @@ import lombok.Setter;
  * Default parameter provider is used to provide generic
  * parameters to expression tree.
  */
+@Getter
+@Setter
 public class DefaultParameterProvider extends AbstractParameterFormatter
     implements IParameterProvider, IFunctionProvider, Serializable {
+
+    /**
+     * Ident
+     */
+    protected String ident = null;
+
     /**
      * List of ordered parameters and functions ids
      */
     protected List<Key> lines = new ArrayList<>();
+
     /**
      * List of parameters.
      * <p>
      * parameterId -> parameter
      */
     protected Map<Key, Parameter> parameters = new HashMap<>();
-    /**
-     * List of answer idents - ids of parameters
-     * <p>
-     * answerIdent -> parameterId
-     */
-    protected Map<String, Key> idents = new HashMap<>();
+
     /**
      * Function factory
      */
-    @Setter
-    @Getter
     protected FunctionFactory functionFactory = new FunctionFactory();
-    /**
-     * Ident
-     */
-    @Getter
-    @Setter
-    protected String ident = null;
+
     /**
      * Version of originating persistent storage
      */
-    @Getter
-    @Setter
     protected String version = "1";
+
     /**
      * Parent algorithm
      */
-    protected DefaultParameterProvider parent = null;
+    protected IParameterProvider parent = null;
+
     /**
      * Collection of algorithmic parts.
      */
-    @Getter
     protected List<IParameterProvider> children = new ArrayList<>();
+
     /**
      * List of parameters currently in use
      * <p>
@@ -107,9 +104,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
              * Put parameter
              */
             parameters.put(key, p);
-            if (p.getCorrectAnswerIdent() != null) {
-                idents.put(p.getCorrectAnswerIdent(), key);
-            }
             /*
              * Add key
              */
@@ -284,20 +278,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Finds parameter by its answer ident
-     *
-     * @param answerIdent answer ident
-     * @return found parameter or null
-     */
-    public Parameter getParameterByCustomIdent(String answerIdent) {
-        if (answerIdent != null && idents.get(answerIdent) != null) {
-            return parameters.get(idents.get(answerIdent));
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Returns the array of all keys in this algorithm only
      *
      * @return the array of all keys in this algorithm only
@@ -421,17 +401,6 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
     }
 
     /**
-     * Sets correct anser ident to parameter.
-     *
-     * @param p           parameter
-     * @param answerIdent of parameter
-     */
-    public void setParameterCustomIdent(Parameter p, String answerIdent) {
-        p.setCorrectAnswerIdent(answerIdent);
-        idents.put(answerIdent, getParameterKey(p.getName()));
-    }
-
-    /**
      * Calculates values of all parameters participating in algorithm.
      *
      * @throws AlgorithmException on error.
@@ -496,21 +465,12 @@ public class DefaultParameterProvider extends AbstractParameterFormatter
             }
         }
 
-        if (parent != null && !parent.parameters.isEmpty()) {
+        if (parent != null && parent.getParameters().length != 0) {
             ps.println("Parent parameters:");
             parent.printParameters(ps);
         }
 
         finishAndClear();
-    }
-
-    /**
-     * Returns parent algorithm
-     *
-     * @return parent algorithm
-     */
-    public IParameterProvider getParent() {
-        return parent;
     }
 
     /**

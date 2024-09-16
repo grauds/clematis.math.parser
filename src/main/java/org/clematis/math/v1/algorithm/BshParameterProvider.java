@@ -81,16 +81,6 @@ public class BshParameterProvider extends AbstractParameterFormatter implements 
     }
 
     /**
-     * Returns parameter, found by custom ident.
-     *
-     * @param ident under which some parameters may store
-     * @return parameter, found by custom ident
-     */
-    public Parameter getParameterByCustomIdent(String ident) {
-        return null;
-    }
-
-    /**
      * Renames parameter
      *
      * @param paramName    of existing parameter
