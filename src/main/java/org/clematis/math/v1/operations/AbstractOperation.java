@@ -61,7 +61,7 @@ public abstract class AbstractOperation implements IExpressionItem, Serializable
 
 
     public IExpressionItem getOperand1() {
-        return operands.size() > 1 ? operands.get(0) : null;
+        return !operands.isEmpty() ? operands.get(0) : null;
     }
 
     public void setOperand1(IExpressionItem operand1) {
@@ -69,7 +69,7 @@ public abstract class AbstractOperation implements IExpressionItem, Serializable
     }
 
     public IExpressionItem getOperand2() {
-        return operands.size() > 2 ? operands.get(1) : null;
+        return operands.size() > 1 ? operands.get(1) : null;
     }
 
     public void setOperand2(IExpressionItem operand2) {

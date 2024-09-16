@@ -92,7 +92,6 @@ public class AlgorithmReader {
         int pos;
         String name;
         String code;
-        StringBuilder buffer = new StringBuilder();
         Parameter param;
 
         if (statement.startsWith(XMLConstants.CONDITION_NAME)) {
@@ -111,9 +110,9 @@ public class AlgorithmReader {
                 throw new AlgorithmException("Operand '=' is missed: " + statement);
             }
             name = parseParameterName(statement, pos);
-            param = new Parameter(name, buffer.toString());
+            code = statement.substring(pos + 1);
+            param = new Parameter(name, code);
             algorithm.addParameter(param);
-            buffer.setLength(0);
         }
     }
 

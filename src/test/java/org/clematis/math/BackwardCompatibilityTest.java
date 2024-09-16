@@ -23,13 +23,14 @@ import org.junit.jupiter.api.Test;
  * Backward compatibility tests, compares output from adopted to work separately and current Mathematics Parser
  */
 public class BackwardCompatibilityTest {
+
     /**
      * Iteration counter
      */
     private static final int CNT = 30;
 
     /**
-     * Instance of current algorithm reader
+     * Instance of naive algorithm reader
      */
     private final AlgorithmReader reader = new AlgorithmReader();
 

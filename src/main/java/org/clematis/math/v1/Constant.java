@@ -347,7 +347,7 @@ public class Constant extends AbstractConstant {
     public IExpressionItem pow(Constant c) {
         IExpressionItem result = null;
 
-        if (getValue(null) == null && ((int) c.getNumber()) == c.getNumber()) {
+        if (getValue(null) != null && ((int) c.getNumber()) == c.getNumber()) {
             Constant ret = new Constant(this);
             int power = (int) c.getNumber();
             /*

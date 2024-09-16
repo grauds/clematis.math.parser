@@ -83,8 +83,7 @@ public class AlgorithmReader {
         throws AlgorithmException {
         String name = null;
         String code = null;
-        StringBuilder buffer = new StringBuilder(1024);
-        /**
+        /*
          * Start position of parameter code
          */
         int pos = 0;
@@ -99,7 +98,7 @@ public class AlgorithmReader {
             param.setCondition(true);
             algorithm.addParameter(param);
         } else if (statement.startsWith(generic.GENERIC_FUNCTION_NAME)) {
-            /** add generic function to algorithm */
+            /* add generic function to algorithm */
             algorithm.addFunction(generic.create(statement));
         } else {
             pos = statement.indexOf('=');
@@ -110,7 +109,6 @@ public class AlgorithmReader {
             code = statement.substring(pos + 1);
             param = new Parameter(name, code);
             algorithm.addParameter(param);
-            buffer.setLength(0);
         }
     }
 

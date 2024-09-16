@@ -1,6 +1,8 @@
 // Created: Feb 15, 2003 T 4:54:17 PM
 package org.clematis.math;
 
+import static org.clematis.math.v1.utils.AlgorithmUtils.IN_LINE_MESSAGE;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +36,6 @@ public class AlgorithmException extends Exception {
     }
 
     public String toString() {
-        return super.toString() + " in line " + line;
+        return super.toString() + IN_LINE_MESSAGE + line;
     }
 }

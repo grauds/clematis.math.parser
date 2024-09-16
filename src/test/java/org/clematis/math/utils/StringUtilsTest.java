@@ -1,24 +1,22 @@
 package org.clematis.math.utils;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.clematis.math.v1.algorithm.Parameter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("checkstyle:MagicNumber")
 public class StringUtilsTest {
 
     @Test
-    public void testRegReplacement() {
-        /*
-    public static void main(String[] args) {
-        String str =
-            "</td>  </tr>  </table><br>  Enter the name without space, for example <strong>1,2-dinitrophenol</strong>.  <uni:link idref=\"sec14.1\"> Section 14.1</uni:link></br>  <uni:link idref=\"sec14.2\">Section 14.2</uni:link></p>";
-        List<String> tokens = StringUtils.tokenizeReg(str, "<[^<>]+>", false);
-        for (String token : tokens) {
-            System.out.println(token);
-        }
-        String[] tokensStrings = StringUtils.tokenizeReg(Pattern.compile("<[^<>]+>"), str, str.length());
-        for (String token : tokensStrings) {
-            System.out.println(token);
-        }
-    }
-*/
+    public void testTokenizer() {
+        String str = "if(eq($global_a,1),\"\",\"$global_a\")";
+        List<String> groups = StringUtils.tokenizeReg(
+            Pattern.compile(Parameter.FIND_EXPRESSION),
+            str
+        );
+        Assertions.assertEquals(5, groups.size());
     }
 }

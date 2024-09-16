@@ -52,7 +52,7 @@ public class PlainTestCases extends AlgorithmTestCases {
             + "$vB=sig(2, if($static, 8, sqrt(9.8*$c*$R+19.6*$R*(1-cos($ang)))));"
             + "$KB=.5*$vB*$vB;"
             + "$KA1=$KB-9.8*$R*(1-cos($ang));"
-            + "$vA1=sig(2, sqrt(2*$KA1));"
+            + "$vA1=sig(2, sqrt(abs(2*$KA1)));"
             + "$KB2=9.8*$R*(1-cos($ang));"
             + "$vB2=sig(2, sqrt(2*$KB2));"
             + "$W2=sig(2, if($static, 700, rand(1.3*$W1, 1.6*$W1, 2)));"

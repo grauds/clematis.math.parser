@@ -277,20 +277,19 @@ public class Sig extends AbstractMathMLFunction {
      * @param digitsRequired required number of significant digits
      * @return resulting number string
      */
-    @SuppressWarnings({"checkstyle:ReturnCount", "checkstyle:NestedIfDepth"})
+    @SuppressWarnings({"checkstyle:ReturnCount", "checkstyle:NestedIfDepth", "checkstyle:CyclomaticComplexity"})
     public static String formatWithSigDigits(String inputString, int digitsRequired) {
 
-        String numberString = inputString;
         /*
          * Validate input
          */
-        if (digitsRequired <= 0 || numberString == null || numberString.trim().isEmpty()) {
+        if (digitsRequired <= 0 || inputString == null || inputString.trim().isEmpty()) {
             return "";
         }
         /*
          * If number is zero, it has 1 sig digit
          */
-        if (MathUtils.isZero(numberString)) {
+        if (MathUtils.isZero(inputString)) {
             return ZERO_STRING;
         }
         /*
@@ -300,12 +299,12 @@ public class Sig extends AbstractMathMLFunction {
         /*
          * Negative flag
          */
-        boolean negative = numberString.charAt(0) == '-';
+        boolean negative = inputString.charAt(0) == '-';
         /*
          * Trim leading zeroes and validate input string as a number.
          * Note, that numbers like 0.1226 become .1226
          */
-        formatted = MathUtils.correctAndValidateInput(numberString);
+        formatted = MathUtils.correctAndValidateInput(inputString);
         /*
          * Wrong input, return null
          */
@@ -316,44 +315,39 @@ public class Sig extends AbstractMathMLFunction {
          * Find index of scientific "e" in input string and if
          * found, store exponent for future reference
          */
-        int scientificIndex = numberString.toLowerCase().indexOf(E);
+        int scientificIndex = formatted.toLowerCase().indexOf(E);
         String exp = "";
         if (scientificIndex != -1) {
-            exp = numberString.substring(scientificIndex);
-            numberString = numberString.substring(0, scientificIndex);
+            exp = formatted.substring(scientificIndex);
+            formatted = formatted.substring(0, scientificIndex);
         }
         /*
          * Get decimal point to find out the type of input number string
          */
-        int decimalPointIndex = numberString.indexOf(DECIMAL_SEPARATOR);
+        int decimalPointIndex = formatted.indexOf(DECIMAL_SEPARATOR);
         /*
          * Apply algorithms depending on decimal point index
          */
         switch (decimalPointIndex) {
             case 0: {
                 //If the number is decimal only: -1 < n < 1
-                formatted = getSigDigitsDecimal(numberString, digitsRequired);
+                formatted = getSigDigitsDecimal(formatted, digitsRequired);
                 /*
                  * Restore 0 before .[input number]
                  */
-                numberString = ZERO_STRING + numberString;
-                numberString = Decimal.addExtraDigit(formatted, numberString) + exp;
-                if (negative) {
-                    return MINUS_SIGN + numberString;
-                } else {
-                    return numberString;
-                }
+                formatted = ZERO_STRING + formatted;
+                formatted = Decimal.addExtraDigit(formatted, inputString) + exp;
             }
             case -1: {
                 //If the number is an integer
-                if (digitsRequired <= numberString.length()) {
+                if (digitsRequired <= formatted.length()) {
                     if (scientificIndex != -1) {
                         /*
                          * Before cutting the number we should increment
                          * exp by difference between required digits and
                          * length of number string
                          */
-                        int diff = numberString.length() - digitsRequired;
+                        int diff = formatted.length() - digitsRequired;
                         int iexp = 0;
                         if (exp.trim().length() > 1) {
                             iexp = Integer.parseInt(exp.substring(1));
@@ -364,36 +358,39 @@ public class Sig extends AbstractMathMLFunction {
                         } else {
                             exp = "";
                         }
-                        formatted = numberString.substring(0, digitsRequired);
+                        formatted = formatted.substring(0, digitsRequired);
                     } else {
-                        int diff = numberString.length() - digitsRequired;
+                        int diff = formatted.length() - digitsRequired;
                         String sb = ZERO_STRING.repeat(diff);
 
-                        formatted = numberString.substring(0, digitsRequired);
+                        formatted = formatted.substring(0, digitsRequired);
                         if (negative) {
-                            formatted = MINUS_SIGN + Decimal.addExtraDigit(formatted, numberString);
+                            formatted = Decimal.addExtraDigit(formatted, inputString);
                         } else {
-                            formatted = Decimal.addExtraDigit(formatted, numberString);
+                            formatted = Decimal.addExtraDigit(formatted, inputString);
                         }
                         formatted += sb;
                     }
                 } else {
                     //if there are too few significant digits, this code adds trailing
                     //zeroes to the number till the correct number of digits.
-                    formatted = numberString + DECIMAL_SEPARATOR
-                        + ZERO_STRING.repeat(digitsRequired - numberString.length());
+                    formatted = formatted
+                        + DECIMAL_SEPARATOR
+                        + ZERO_STRING.repeat(digitsRequired - inputString.length());
                 }
-                return formatted + exp;
             }
             default: {
-                //If it is a real number with an integer and decimal value
-                if (negative) {
-                    formatted = "-" + getSigDigitsFloat(numberString, digitsRequired);
-                } else {
-                    formatted = getSigDigitsFloat(numberString, digitsRequired);
-                }
+                formatted = getSigDigitsFloat(formatted, digitsRequired);
             }
-            return formatted + exp;
+        }
+        return output(negative, formatted);
+    }
+
+    private static String output(boolean negative, String formatted) {
+        if (negative) {
+            return MINUS_SIGN + formatted;
+        } else {
+            return formatted;
         }
     }
 

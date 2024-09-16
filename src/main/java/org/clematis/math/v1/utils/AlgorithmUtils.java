@@ -29,7 +29,7 @@ public class AlgorithmUtils {
 
     public static final String ATTRIBUTE_CODE = "code";
     public static final String TOKEN_DELIMITER = "\"";
-    private static final String IN_LINE_MESSAGE = " in line ";
+    public static final String IN_LINE_MESSAGE = " in line ";
     private static final String UNDEFINED_VARIABLE_MESSAGE = "Undefined variable: ";
     /**
      * Algorithm XML may be static, i.e. has only empty <algorithm> elements.
@@ -156,64 +156,63 @@ public class AlgorithmUtils {
                                            boolean skipInsideStrings
     ) throws AlgorithmException {
         if (provider != null && string != null && !string.trim().isEmpty()) {
-            List<String> tokens;
+
             /* this parameter stops recursion if failed to find something, that looks like parameter */
             boolean failedToFindParameter = false;
+
             /* not found */
             StringBuilder notFoundParams = new StringBuilder();
-            /* repeat until string has parameters */
-            while ((tokens = StringUtils.tokenizeReg(string, Parameter.FIND_EXPRESSION, false)).size() > 1
-                && !failedToFindParameter
-            ) {
-                /* number of apos signs */
-                int apos = 0;
-                /* substitution step results */
-                StringBuilder result = new StringBuilder();
-                for (String token : tokens) {
-                    /* filter only parameters */
-                    if (isParameterName(token) && (!skipInsideStrings || apos % 2 == 0)) {
-                        Parameter param = provider.getParameter(token);
+            List<String> tokens = StringUtils.tokenizeReg(string, Parameter.FIND_EXPRESSION, false);
 
-                        if (param != null) {
-                            if (param.getContainer() != null) {
-                                Key key = param.getContainer().getParameterKey(token);
-                                if (key != null && key.getLine() > currentLine) {
-                                    throw new AlgorithmException(
-                                        UNDEFINED_VARIABLE_MESSAGE
-                                        + param.getName()
-                                        + IN_LINE_MESSAGE
-                                        + (currentLine + 1)
-                                    );
-                                }
-                            }
+            /* number of apos signs */
+            int apos = 0;
 
-                            if (param.lessThanZero()) {
-                                result.append("(").append(param.getOutputValue(false)).append(")");
-                            } else {
-                                result.append(param.getOutputValue(false));
+            /* substitution step results */
+            StringBuilder result = new StringBuilder();
+            for (String token : tokens) {
+                /* filter only parameters */
+                if (isParameterName(token) && (!skipInsideStrings || apos % 2 == 0)) {
+                    Parameter param = provider.getParameter(token);
+
+                    if (param != null) {
+                        if (param.getContainer() != null) {
+                            Key key = param.getContainer().getParameterKey(token);
+                            if (key != null && key.getLine() > currentLine) {
+                                throw new AlgorithmException(
+                                    UNDEFINED_VARIABLE_MESSAGE
+                                    + param.getName()
+                                    + IN_LINE_MESSAGE
+                                    + (currentLine + 1)
+                                );
                             }
+                        }
+
+                        if (param.lessThanZero()) {
+                            result.append("(").append(param.getOutputValue(false)).append(")");
                         } else {
-                            /* cannot find parameter - leave it as it is*/
-                            int cursor = -1;
-                            while ((cursor = token.indexOf(TOKEN_DELIMITER, cursor + 1)) != -1) {
-                                apos++;
-                            }
-                            result.append(token);
-                            failedToFindParameter = true;
-                            notFoundParams.append(token);
-                            notFoundParams.append(",");
+                            result.append(param.getOutputValue(false));
                         }
                     } else {
+                        /* cannot find parameter - leave it as it is*/
                         int cursor = -1;
                         while ((cursor = token.indexOf(TOKEN_DELIMITER, cursor + 1)) != -1) {
                             apos++;
                         }
                         result.append(token);
+                        failedToFindParameter = true;
+                        notFoundParams.append(token);
+                        notFoundParams.append(",");
                     }
+                } else {
+                    int cursor = -1;
+                    while ((cursor = token.indexOf(TOKEN_DELIMITER, cursor + 1)) != -1) {
+                        apos++;
+                    }
+                    result.append(token);
                 }
-                /* save modified string */
-                string = result.toString();
             }
+            /* save modified string */
+            string = result.toString();
 
             if (failedToFindParameter) {
                 throw new AlgorithmException(UNDEFINED_VARIABLE_MESSAGE

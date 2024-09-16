@@ -2,7 +2,6 @@
 package org.clematis.math.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
@@ -17,8 +16,7 @@ public class StringUtils {
     public static final int NON_BREAKING_SPACE = 160;
 
     /**
-     * Search a string for all instances of a substring and replace
-     * it with another string.
+     * Search a string for all instances of a substring and replace it with another string.
      *
      * @param search          Substring to search for
      * @param replace         String to replace it with
@@ -319,34 +317,26 @@ public class StringUtils {
     }
 
     /**
-     * Find all regular occurences of search string within string and
-     * return tokenized string buffer, including occurences as separate
-     * tokens.
+     * Find all regular occurrences of search string within string and
+     * return tokenized string buffer, including occurrences as separate tokens.
      *
      * @param pattern regular expressions pattern
      * @param input   string
-     * @param limit
      * @return tokenized string array
      */
-    public static String[] tokenizeReg(Pattern pattern, CharSequence input, int limit) {
+    public static List<String> tokenizeReg(Pattern pattern, String input) {
         int index = 0;
-        boolean matchLimited = limit > 0;
-        ArrayList<String> matchList = new ArrayList<>();
+        List<String> matchList = new ArrayList<>();
         Matcher m = pattern.matcher(input);
 
         // Add segments before each match found
         while (m.find()) {
-            String match = null;
+            String match = input.subSequence(index, m.start()).toString();
 
-            if (!matchLimited || matchList.size() < limit - 1) {
-                match = input.subSequence(index, m.start()).toString();
-            } else if (matchList.size() == limit - 1) {
-                match = input.subSequence(index, input.length()).toString();
-            }
-
-            if (match != null && !match.trim().isEmpty()) {
+            if (!match.trim().isEmpty()) {
                 matchList.add(match);
             }
+
             if (!m.group().trim().isEmpty()) {
                 matchList.add(m.group());
             }
@@ -356,38 +346,23 @@ public class StringUtils {
 
         // If no match was found, return this
         if (index == 0) {
-            return new String[]{input.toString()};
-        }
-        // Add remaining segment
-        if (!matchLimited || matchList.size() < limit) {
+            matchList.add(input);
+        } else {
+            // Add remaining segment
             matchList.add(input.subSequence(index, input.length()).toString());
-        }
-        // Construct result
-        int resultSize = matchList.size();
-        if (limit == 0) {
+
+            // Construct result
+            int resultSize = matchList.size();
             while (resultSize > 0 && matchList.get(resultSize - 1).isEmpty()) {
                 resultSize--;
             }
         }
-        String[] result = new String[resultSize];
-        return matchList.subList(0, resultSize).toArray(result);
+        return matchList;
     }
 
     /**
-     * Find all regular occurences of search string within string and
-     * return tokenized string buffer, including occurences as separate
-     * tokens.
-     * <p/>
-     * Example:
-     * <p/>
-     * <html>some text<table></table>some text</html>
-     * <p/>
-     * <html>
-     * sometext
-     * <table>
-     * </table>
-     * some text
-     * </html>
+     * Find all regular occurrences of search string within string and
+     * return substrings of the initial string with occurrences in between in a form of separate tokens
      *
      * @param str       source string
      * @param search    string
@@ -395,8 +370,6 @@ public class StringUtils {
      * @return tokenized string array
      */
     public static List<String> tokenizeReg(String str, String search, boolean matchCase) {
-        ArrayList<String> array = new ArrayList<>();
-
         Pattern pattern;
         if (matchCase) {
             pattern = Pattern.compile(search);
@@ -404,7 +377,7 @@ public class StringUtils {
             pattern = Pattern.compile(search, Pattern.CASE_INSENSITIVE);
         }
 
-        return Arrays.asList(pattern.split(str));
+        return tokenizeReg(pattern, str);
     }
 
     /**
