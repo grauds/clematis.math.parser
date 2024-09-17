@@ -272,7 +272,7 @@ public class Decimal extends AbstractMathMLFunction {
                     // add cut zeros to the end - 1 - to zero based place
                     numberString = numberString + ZERO.repeat(place);
                     if (MathUtils.isZero(numberString)) {
-                        return "0";
+                        return ZERO;
                     } else {
                         return (negative ? MINUS_SIGNS : "") + numberString + exp;
                     }
@@ -311,7 +311,7 @@ public class Decimal extends AbstractMathMLFunction {
                         numberString = numberString.substring(0, numberString.length() - 1);
                     }
                     if (MathUtils.isZero(numberString)) {
-                        return "0";
+                        return ZERO;
                     } else {
                         return (negative ? MINUS_SIGNS : "") + numberString + exp;
                     }
