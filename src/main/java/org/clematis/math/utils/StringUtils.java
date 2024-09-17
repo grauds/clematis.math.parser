@@ -348,8 +348,11 @@ public class StringUtils {
         if (index == 0) {
             matchList.add(input);
         } else {
+            CharSequence sub = input.subSequence(index, input.length());
             // Add remaining segment
-            matchList.add(input.subSequence(index, input.length()).toString());
+            if (!sub.toString().trim().isEmpty()) {
+                matchList.add(sub.toString());
+            }
 
             // Construct result
             int resultSize = matchList.size();

@@ -59,7 +59,7 @@ public class Lsu extends AbstractMathMLFunction {
     }
 
     public static double getLSU(String stringDigit, int sigDigits) {
-        String roundedDigit = Sig.formatWithSigDigits(stringDigit, sigDigits);
+        String roundedDigit = Sig.getSigDigits(stringDigit, sigDigits);
         int power = Lsu.getLsuPower(roundedDigit, sigDigits);
         return Math.pow(BigDecimal.TEN.intValue(), power);
     }

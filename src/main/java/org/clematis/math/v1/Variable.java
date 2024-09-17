@@ -92,7 +92,7 @@ public class Variable implements IExpressionItem, Serializable {
                 String arg1 = arr.get(i);
 
                 // number
-                if (MathUtils.isDigit(arg1.charAt(0))) {
+                if (!arg1.isEmpty() && MathUtils.isDigit(arg1.charAt(0))) {
                     try {
                         argItem1 = new Constant(Double.parseDouble(arg1));
                     } catch (NumberFormatException ex) {

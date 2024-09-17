@@ -95,12 +95,21 @@ public class Constant extends AbstractConstant {
     }
 
     /**
+     * Constructor.
+     *
+     * @param value textual representation of the constant's value.
+     */
+    public Constant(double value, int sig) {
+        this(value);
+        this.sdNumber = sig;
+    }
+
+    /**
      * Constructor with formatted input.
      *
      * @param value textual representation of the constant's value.
      */
     public Constant(String value) {
-        super();
         setValue(value);
     }
 
@@ -110,20 +119,10 @@ public class Constant extends AbstractConstant {
      * @param value of big decimal.
      */
     public Constant(BigDecimal value) {
-        super();
+        this(value.toString());
         this.number = value;
     }
 
-    /**
-     * Constructor.
-     *
-     * @param value textual representation of the constant's value.
-     */
-    public Constant(double value, int sig) {
-        super();
-        setValue(value);
-        this.sdNumber = sig;
-    }
     /**
      * Copies the constant.
      *
@@ -171,7 +170,7 @@ public class Constant extends AbstractConstant {
          */
         try {
             if (getSdNumber() > 0 && isSdEnable()) {
-                return Double.parseDouble(Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber()));
+                return Double.parseDouble(Sig.getSigDigits(getExactBigDecimalValue().toString(), getSdNumber()));
             }
         } catch (NumberFormatException ignored) {}
         /*
@@ -202,7 +201,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && isSdEnable()) {
-                result = Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
+                result = Sig.getSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
             } else {
                 /*
                  * Sig digits are not applied
@@ -214,7 +213,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && isSdEnable()) {
-                result = Sig.formatWithSigDigits(value, getSdNumber());
+                result = Sig.getSigDigits(value, getSdNumber());
             } else {
                 /*
                  * If sig digits are not applied - do not change the value (do not round to system precision)
@@ -239,7 +238,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && isSdEnable()) {
-                str = Sig.formatWithSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
+                str = Sig.getSigDigits(getExactBigDecimalValue().toString(), getSdNumber());
             } else {
                 /*
                  * If sig digits are not applied, round to system precision
@@ -253,7 +252,7 @@ public class Constant extends AbstractConstant {
              * Apply significant digits
              */
             if (getSdNumber() > 0 && isSdEnable()) {
-                str = Sig.formatWithSigDigits(value, getSdNumber());
+                str = Sig.getSigDigits(value, getSdNumber());
             } else {
                 /*
                  * If sig digits are not applied - do not change the value (round to system precision)

@@ -19,4 +19,11 @@ public class StringUtilsTest {
         );
         Assertions.assertEquals(5, groups.size());
     }
+
+    @Test
+    public void testOneChar() {
+        List<String> arr = StringUtils.tokenizeReg("A",
+            "[:digit:]+|[:alpha:]+[:alnum:]*", false);
+        Assertions.assertEquals(1, arr.size());
+    }
 }

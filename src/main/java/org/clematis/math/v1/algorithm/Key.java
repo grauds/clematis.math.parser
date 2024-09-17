@@ -3,8 +3,6 @@ package org.clematis.math.v1.algorithm;
 
 import java.io.Serializable;
 
-import org.clematis.math.v2.SimpleParameter;
-
 import lombok.Getter;
 import lombok.Setter;
 

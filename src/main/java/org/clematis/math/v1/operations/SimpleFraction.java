@@ -1,6 +1,10 @@
 // Created: 30.01.2006 T 16:44:39
 package org.clematis.math.v1.operations;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
+import static org.clematis.math.v1.algorithm.Parameter.PRECISION;
 import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.Constant;
@@ -147,10 +151,22 @@ public class SimpleFraction extends AbstractOperation {
         IExpressionItem a = getOperand1().calculate();
         IExpressionItem b = getOperand2().calculate();
 
-        if (a instanceof Constant && b instanceof Constant) {
-            return new Constant(((Constant) a).getNumber() / ((Constant) b).getNumber());
+        if (a instanceof SimpleFraction) {
+            a = ((SimpleFraction) a).getProduct();
         }
-        throw new AlgorithmException("Simple fraction does not contain constants: " + a + " / " + b);
+
+        if (b instanceof SimpleFraction) {
+            b = ((SimpleFraction) b).getProduct();
+        }
+
+        if (a instanceof Constant && b instanceof Constant) {
+            BigDecimal f = new BigDecimal(((Constant) a).getValue());
+            BigDecimal s = new BigDecimal(((Constant) b).getValue());
+            // set the number of significant digits to B used in operation
+            return new Constant(f.divide(s, new MathContext(PRECISION)));
+        } else {
+            return null;
+        }
     }
 
     /**

@@ -21,10 +21,6 @@ import org.clematis.math.v1.utils.AlgorithmUtils;
  * Returns x expressed as a floating point number to n significant digits.
  */
 public class Sig extends AbstractMathMLFunction {
-    /**
-     * Get number format locale
-     */
-    public static final NumberFormat NF = NumberFormat.getNumberInstance(Locale.US);
 
     /**
      * Implementation of <code>calculate()</code> method of the
@@ -273,12 +269,26 @@ public class Sig extends AbstractMathMLFunction {
      * Note: zero number - 0 is considered to have one significant digit
      * and cannot be mutated to have more or less ones.
      *
+     * @param numberString   number string
+     * @param digitsRequired required number of significant digits
+     * @return resulting number string
+     */
+    public static String getSigDigits(String numberString, int digitsRequired) {
+        return _getSigDigits(_getSigDigits(numberString, digitsRequired), digitsRequired);
+    }
+
+    /**
+     * Cut number string to required number of significant digits
+     * <p>
+     * Note: zero number - 0 is considered to have one significant digit
+     * and cannot be mutated to have more or less ones.
+     *
      * @param inputString   number string
      * @param digitsRequired required number of significant digits
      * @return resulting number string
      */
     @SuppressWarnings({"checkstyle:ReturnCount", "checkstyle:NestedIfDepth", "checkstyle:CyclomaticComplexity"})
-    public static String formatWithSigDigits(String inputString, int digitsRequired) {
+    public static String _getSigDigits(String inputString, int digitsRequired) {
 
         /*
          * Validate input
@@ -399,7 +409,7 @@ public class Sig extends AbstractMathMLFunction {
      *
      * @return first argument of Sig function
      */
-    public int formatWithSigDigits() {
+    public int getSigDigits() {
         if (arguments != null && arguments.size() == 2) {
             IExpressionItem sigArg = arguments.get(0);
             if (sigArg instanceof Constant) {

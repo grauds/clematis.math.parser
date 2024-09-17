@@ -2,6 +2,7 @@
 package org.clematis.math.v1.operations;
 
 import static org.clematis.math.XMLConstants.APPLY_ELEMENT_NAME;
+import org.clematis.math.AlgorithmException;
 import org.clematis.math.IExpressionItem;
 import org.clematis.math.v1.Constant;
 import org.jdom2.Element;
@@ -21,6 +22,30 @@ public class Substraction extends Addition {
      */
     public Substraction(IExpressionItem... operand) {
         super(operand);
+    }
+
+    @Override
+    public IExpressionItem calculate() throws AlgorithmException {
+        IExpressionItem a = null;
+        for (IExpressionItem op : this.getOperands()) {
+            if (op != null) {
+                IExpressionItem b = op.calculate();
+                if (a != null) {
+                    b.setMultiplier(-1);
+                    a = a.add(b);
+                } else {
+                    a = b;
+                }
+                if (a == null) {
+                    a = new Substraction(a, b);
+                    break;
+                }
+            }
+        }
+        if (a != null) {
+            a = a.multiply(new Constant(getMultiplier()));
+        }
+        return a;
     }
 
     /**

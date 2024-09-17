@@ -1,8 +1,8 @@
 package org.clematis.math.functions;
 
-import static org.clematis.math.v1.functions.Sig.formatWithSigDigits;
-import org.clematis.math.v2.functions.Lsu;
-import org.clematis.math.v2.functions.Sig;
+import static org.clematis.math.v1.functions.Sig.getSigDigits;
+import org.clematis.math.v1.functions.Lsu;
+import org.clematis.math.v1.functions.Sig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +55,6 @@ public class SigDigitsTest {
     @Test
     public void testNegativeNumbers() {
         Assertions.assertEquals("-1981", Sig.getSigDigits("-1981", 4));
-        Assertions.assertEquals("-1981", formatWithSigDigits("-1981", 4));
+        Assertions.assertEquals("-1981", getSigDigits("-1981", 4));
     }
 }

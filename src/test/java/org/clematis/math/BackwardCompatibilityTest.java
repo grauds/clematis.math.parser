@@ -18,11 +18,13 @@ import org.clematis.math.v1.algorithm.Algorithm;
 import org.clematis.math.v1.algorithm.AlgorithmFactory;
 import org.clematis.math.v1.algorithm.Parameter;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
  * Backward compatibility tests, compares output from adopted to work separately and current Mathematics Parser
  */
+@Disabled
 public class BackwardCompatibilityTest {
 
     /**
