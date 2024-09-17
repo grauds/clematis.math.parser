@@ -3,7 +3,7 @@ package org.clematis.math.utils;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.clematis.math.v1.algorithm.Parameter;
+import org.clematis.math.algorithm.Parameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

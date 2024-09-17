@@ -1,8 +1,6 @@
 package org.clematis.math.functions;
 
-import static org.clematis.math.v1.functions.Sig.getSigDigits;
-import org.clematis.math.v1.functions.Lsu;
-import org.clematis.math.v1.functions.Sig;
+import static org.clematis.math.functions.Sig.getSigDigits;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

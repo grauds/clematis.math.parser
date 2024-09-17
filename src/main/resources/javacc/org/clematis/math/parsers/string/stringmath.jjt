@@ -51,14 +51,14 @@ If index contains only one letter it may not have brackets.
 
 @author Anton Troshin
 ***************************************************************/
-import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.FunctionFactory;
-import org.clematis.math.v1.Variable;
-import org.clematis.math.v1.algorithm.IFunctionProvider;
-import org.clematis.math.v1.algorithm.ISimpleParameterProvider;
-import org.clematis.math.v1.algorithm.IVariableProvider;
-import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.algorithm.ParameterReference;
+import org.clematis.math.AbstractConstant;
+import org.clematis.math.FunctionFactory;
+import org.clematis.math.Variable;
+import org.clematis.math.algorithm.IFunctionProvider;
+import org.clematis.math.algorithm.ISimpleParameterProvider;
+import org.clematis.math.algorithm.IVariableProvider;
+import org.clematis.math.algorithm.Parameter;
+import org.clematis.math.algorithm.ParameterReference;
 
 import lombok.Getter;
 import lombok.Setter;

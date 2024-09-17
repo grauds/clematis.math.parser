@@ -1,10 +1,9 @@
 package org.clematis.math.utils;
 
 import org.clematis.math.AlgorithmException;
-import org.clematis.math.v1.StringConstant;
-import org.clematis.math.v1.algorithm.DefaultParameterProvider;
-import org.clematis.math.v1.algorithm.Parameter;
-import org.clematis.math.v1.utils.AlgorithmUtils;
+import org.clematis.math.StringConstant;
+import org.clematis.math.algorithm.DefaultParameterProvider;
+import org.clematis.math.algorithm.Parameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

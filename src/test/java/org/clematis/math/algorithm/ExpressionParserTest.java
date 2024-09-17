@@ -1,5 +1,6 @@
 package org.clematis.math.algorithm;
 
+import org.clematis.math.AlgorithmReader;
 import org.clematis.math.test.cases.AlgorithmTestCases;
 import org.clematis.math.test.cases.BooleanTestCases;
 import org.clematis.math.test.cases.DecimalTestCases;
@@ -9,8 +10,6 @@ import org.clematis.math.test.cases.ParameterAssignTestCases;
 import org.clematis.math.test.cases.PlainTestCases;
 import org.clematis.math.test.cases.SigDigitsTestCases;
 import org.clematis.math.test.cases.StringsTestCases;
-import org.clematis.math.v1.AlgorithmReader;
-import org.clematis.math.v1.algorithm.Algorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

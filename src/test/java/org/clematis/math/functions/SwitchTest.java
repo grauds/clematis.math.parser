@@ -1,8 +1,8 @@
 package org.clematis.math.functions;
 
-import org.clematis.math.v1.AlgorithmReader;
-import org.clematis.math.v1.algorithm.Algorithm;
-import org.clematis.math.v1.parsers.v2.AdvancedParameterFactory;
+import org.clematis.math.AlgorithmReader;
+import org.clematis.math.algorithm.Algorithm;
+import org.clematis.math.parsers.v2.AdvancedParameterFactory;
 import org.junit.jupiter.api.Test;
 
 public class SwitchTest {
@@ -12,6 +12,7 @@ public class SwitchTest {
      */
     private final AlgorithmReader reader = new AlgorithmReader();
 
+    @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void testIncorrectSwitch() throws Exception {
         String test = "$r=rint(100);"

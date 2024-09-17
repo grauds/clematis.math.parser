@@ -3,7 +3,7 @@
 
 package org.clematis.math;
 
-import org.clematis.math.v1.algorithm.IParameterProvider;
+import org.clematis.math.algorithm.IParameterProvider;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 

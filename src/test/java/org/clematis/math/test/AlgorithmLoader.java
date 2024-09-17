@@ -1,9 +1,9 @@
 // Created: 05.12.2006 T 16:02:35
 package org.clematis.math.test;
 
+import org.clematis.math.algorithm.Algorithm;
+import org.clematis.math.algorithm.AlgorithmFactory;
 import org.clematis.math.io.OutputFormatSettings;
-import org.clematis.math.v1.algorithm.Algorithm;
-import org.clematis.math.v1.algorithm.AlgorithmFactory;
 
 /**
  * Load reference algorithms

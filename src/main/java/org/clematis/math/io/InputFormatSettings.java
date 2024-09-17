@@ -2,9 +2,9 @@
 package org.clematis.math.io;
 
 import static org.clematis.math.utils.MathUtils.DECIMAL_SEPARATOR;
+import org.clematis.math.XMLConstants;
 import org.clematis.math.utils.MathUtils;
 import org.clematis.math.utils.StringUtils;
-import org.clematis.math.XMLConstants;
 
 import lombok.Getter;
 

@@ -1,6 +1,9 @@
 // Created: 07.07.2005 T 10:00:19
 package org.clematis.math;
 
+import org.clematis.math.algorithm.Algorithm;
+import org.clematis.math.algorithm.AlgorithmFactory;
+import org.clematis.math.algorithm.Parameter;
 import org.clematis.math.io.OutputFormatSettings;
 import org.clematis.math.test.AlgorithmLoader;
 import org.clematis.math.test.cases.AlgorithmTestCases;
@@ -12,11 +15,6 @@ import org.clematis.math.test.cases.ParameterAssignTestCases;
 import org.clematis.math.test.cases.PlainTestCases;
 import org.clematis.math.test.cases.SigDigitsTestCases;
 import org.clematis.math.test.cases.StringsTestCases;
-import org.clematis.math.v1.AbstractConstant;
-import org.clematis.math.v1.AlgorithmReader;
-import org.clematis.math.v1.algorithm.Algorithm;
-import org.clematis.math.v1.algorithm.AlgorithmFactory;
-import org.clematis.math.v1.algorithm.Parameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -59,7 +57,7 @@ public class BackwardCompatibilityTest {
 
             /* create reference algorithms */
             AlgorithmLoader loader = new AlgorithmLoader();
-            org.clematis.math.v1.algorithm.Algorithm reference = loader.getAlgorithmReference(alg, save);
+            org.clematis.math.algorithm.Algorithm reference = loader.getAlgorithmReference(alg, save);
 
             /* go through tested algorithm parameters */
             Parameter[] params = algorithm.getParameters();

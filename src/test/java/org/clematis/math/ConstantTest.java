@@ -1,9 +1,8 @@
 package org.clematis.math;
 
+import org.clematis.math.algorithm.Algorithm;
+import org.clematis.math.algorithm.Parameter;
 import org.clematis.math.io.OutputFormatSettings;
-import org.clematis.math.v1.Constant;
-import org.clematis.math.v1.algorithm.Algorithm;
-import org.clematis.math.v1.algorithm.Parameter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

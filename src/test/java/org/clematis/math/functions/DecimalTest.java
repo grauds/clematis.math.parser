@@ -1,7 +1,5 @@
 package org.clematis.math.functions;
 
-import org.clematis.math.v1.functions.Decimal;
-import org.clematis.math.v1.functions.Sig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
