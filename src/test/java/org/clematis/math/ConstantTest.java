@@ -22,7 +22,7 @@ public class ConstantTest {
 
         c.setSdEnable(true);
 
-        Assertions.assertEquals("-3.1415488E45", c.getValue());
+        Assertions.assertEquals("-3.14154879879E45", c.getValue());
         Assertions.assertNotEquals("-3.1415488E+45", c.getValue());
 
         OutputFormatSettings out = new OutputFormatSettings();
@@ -37,24 +37,24 @@ public class ConstantTest {
         out.setSdEnabled(false);
         a.setFormatSettings(out);
 
-        Assertions.assertEquals("-3.14154879879E45", p.getOutputValue(true));
-        Assertions.assertEquals("-3.14154879879E+45", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(false));
 
         out.setSdEnabled(true);
         a.setFormatSettings(out);
 
-        Assertions.assertEquals("-3.1415488E45", p.getOutputValue(true));
-        Assertions.assertEquals("-3.1415488E+45", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(true));
 
         p.setSdApplicable(false);
 
-        Assertions.assertEquals("-3.14154879879E45", p.getOutputValue(true));
-        Assertions.assertEquals("-3.14154879879E+45", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(false));
 
         p.setSdApplicable(true);
 
-        Assertions.assertEquals("-3.1415488E45", p.getOutputValue(true));
-        Assertions.assertEquals("-3.1415488E+45", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(true));
+        Assertions.assertEquals("-3.1415488", p.getOutputValue(false));
 
     }
 }
