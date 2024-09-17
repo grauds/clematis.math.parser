@@ -343,11 +343,8 @@ public class Sig extends AbstractMathMLFunction {
             case 0: {
                 //If the number is decimal only: -1 < n < 1
                 formatted = getSigDigitsDecimal(formatted, digitsRequired);
-                /*
-                 * Restore 0 before .[input number]
-                 */
-                formatted = ZERO_STRING + formatted;
                 formatted = Decimal.addExtraDigit(formatted, inputString) + exp;
+                break;
             }
             case -1: {
                 //If the number is an integer
@@ -389,6 +386,7 @@ public class Sig extends AbstractMathMLFunction {
                         + DECIMAL_SEPARATOR
                         + ZERO_STRING.repeat(digitsRequired - inputString.length());
                 }
+                break;
             }
             default: {
                 formatted = getSigDigitsFloat(formatted, digitsRequired);

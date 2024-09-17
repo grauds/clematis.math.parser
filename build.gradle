@@ -79,7 +79,6 @@ checkstyle {
 
 tasks.withType(Checkstyle).configureEach {
     exclude '**/org/clematis/math/parsers/string/**'
-    exclude '**/org/clematis/math/v2/parsers/**'
 }
 
 // ------------ JaCoCo configuration  ---------
@@ -123,19 +122,11 @@ spotbugsMain {
         }
     }
     onlyAnalyze = [
-        "org.clematis.math.v1.algorithm.*" ,
-        "org.clematis.math.v1.functions.*" ,
-        "org.clematis.math.v1.io.*" ,
-        "org.clematis.math.v1.operators.*" ,
-        "org.clematis.math.v1.utils.*" ,
-        "org.clematis.math.v1.*" ,
-        "org.clematis.math.v2.algorithm.*" ,
-        "org.clematis.math.v2.functions.*" ,
-        "org.clematis.math.v2.io.*" ,
-        "org.clematis.math.v2.operators.*" ,
-        "org.clematis.math.v2.utils.*" ,
-        "org.clematis.math.v2.*" ,
-        "org.clematis.math.*" ,
+        "org.clematis.math.algorithm.*" ,
+        "org.clematis.math.io.*" ,
+        "org.clematis.math.operators.*" ,
+        "org.clematis.math.utils.*" ,
+        "org.clematis.math.*"
     ]
 }
 
@@ -148,4 +139,11 @@ spotbugsTest {
             required = true
         }
     }
+    onlyAnalyze = [
+            "org.clematis.math.algorithm.*" ,
+            "org.clematis.math.io.*" ,
+            "org.clematis.math.operators.*" ,
+            "org.clematis.math.utils.*" ,
+            "org.clematis.math.*"
+    ]
 }

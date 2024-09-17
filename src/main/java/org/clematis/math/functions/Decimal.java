@@ -34,7 +34,7 @@ public class Decimal extends AbstractMathMLFunction {
                 retvalue.setSignature("Decimal");
                 retvalue.addArgument(a1);
                 retvalue.addArgument(a2);
-                retvalue.setMultiplier(retvalue.getMultiplier() * getMultiplier());
+           //     retvalue.setMultiplier(retvalue.getMultiplier() * getMultiplier());
                 return retvalue;
             }
             Constant c1 = AlgorithmUtils.getNumericArgument(a1);
@@ -43,7 +43,7 @@ public class Decimal extends AbstractMathMLFunction {
             // round to -n power of ten
             String formatted = Decimal.round(Double.toString(c2.getNumber()), (-1) * n);
             Constant retvalue = new Constant(formatted);
-            retvalue.setMultiplier(getMultiplier());
+        //    retvalue.setMultiplier(getMultiplier());
             return retvalue;
         } catch (AlgorithmException ex) {
             throw ex;
@@ -186,7 +186,7 @@ public class Decimal extends AbstractMathMLFunction {
             } else {
                 /* get common number notation, without exponent */
                 BigDecimal bd = new BigDecimal(numberString);
-                numberString = bd.toString();
+                numberString = bd.toPlainString();
             }
         }
         /*
@@ -237,7 +237,7 @@ public class Decimal extends AbstractMathMLFunction {
 
                     // cut trailing zeros
                     //numberString = cutTrailingsZeros( numberString );
-                    if (numberString.trim().equals(DECIMAL_SEPARATOR)) {
+                    if (numberString.trim().equals(DECIMAL_SEPARATOR) || MathUtils.isZero(numberString)) {
                         return ZERO;
                     }
                     // is resulting string empty?
@@ -271,7 +271,11 @@ public class Decimal extends AbstractMathMLFunction {
                     }
                     // add cut zeros to the end - 1 - to zero based place
                     numberString = numberString + ZERO.repeat(place);
-                    return (negative ? MINUS_SIGNS : "") + /*cutTrailingsZeros( */numberString /*)*/ + exp;
+                    if (MathUtils.isZero(numberString)) {
+                        return "0";
+                    } else {
+                        return (negative ? MINUS_SIGNS : "") + numberString + exp;
+                    }
                 }
                 break;
             }
@@ -306,7 +310,11 @@ public class Decimal extends AbstractMathMLFunction {
                     if (numberString.endsWith(DECIMAL_SEPARATOR)) {
                         numberString = numberString.substring(0, numberString.length() - 1);
                     }
-                    return (negative ? MINUS_SIGNS : "") + numberString + exp;
+                    if (MathUtils.isZero(numberString)) {
+                        return "0";
+                    } else {
+                        return (negative ? MINUS_SIGNS : "") + numberString + exp;
+                    }
                 }
                 break;
             }

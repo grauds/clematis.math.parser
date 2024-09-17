@@ -55,4 +55,9 @@ public class SigDigitsTest {
         Assertions.assertEquals("-1981", Sig.getSigDigits("-1981", 4));
         Assertions.assertEquals("-1981", getSigDigits("-1981", 4));
     }
+
+    @Test
+    public void testSigCase() {
+        Assertions.assertEquals("0.8", Sig.getSigDigits("0.809430000", 1));
+    }
 }

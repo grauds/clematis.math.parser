@@ -53,5 +53,8 @@ public class DecimalTest {
         Assertions.assertEquals("23000", Sig.getSigDigits("22994.11", 2));
     }
 
-
+    @Test
+    public void testDecimalSmall() {
+        Assertions.assertEquals("0", Decimal.round("2.00E-9", -5));
+    }
 }
