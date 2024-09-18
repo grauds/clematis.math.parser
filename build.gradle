@@ -4,6 +4,7 @@ plugins {
     id 'checkstyle'
     id 'com.github.spotbugs' version '6.0.7'
     id 'org.javacc.javacc' version "3.0.2"
+    id 'maven-publish'
 }
 
 group = 'org.clematis'
@@ -147,4 +148,15 @@ spotbugsTest {
             "org.clematis.math.utils.*" ,
             "org.clematis.math.*"
     ]
+}
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = "https://maven.pkg.github.com/octocat/hello-world"
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("TOKEN")
+        }
+    }
 }
