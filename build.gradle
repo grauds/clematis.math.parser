@@ -163,6 +163,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
+            artifactId 'math-parser'
             from(components.java)
         }
     }
