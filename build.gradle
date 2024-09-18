@@ -150,13 +150,20 @@ spotbugsTest {
     ]
 }
 
-repositories {
-    maven {
-        name = "GitHubPackages"
-        url = "https://maven.pkg.github.com/grauds/clematis.math.parser"
-        credentials {
-            username = System.getenv("USERNAME")
-            password = System.getenv("TOKEN")
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/grauds/clematis.math.parser"
+            credentials {
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
         }
     }
 }
