@@ -44,3 +44,4 @@ bin/
 /.idea/
 !/.idea/
 /.idea/
+/jacoco/

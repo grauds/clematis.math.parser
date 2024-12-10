@@ -744,8 +744,8 @@ public class StringUtils {
 
     /**
      * Makes a formatted string from a given double value.
-     * The delimeter will be a dot. The precision will be 2 digits
-     * after the delimeter.
+     * The delimiter will be a dot. The precision will be 2 digits
+     * after the delimiter.
      *
      * @param value the double value.
      * @return the string representation of the double value.
@@ -773,7 +773,7 @@ public class StringUtils {
      *
      * @param value the double value.
      * @param precision the number of digits after the delimeter.
-     * @param isDot  is delimeter a dot?
+     * @param isDot  is delimiter a dot?
      * @return the string representation of the double value.
      */
     public static String formatDouble(double value, int precision, boolean isDot) {
@@ -787,7 +787,7 @@ public class StringUtils {
      *
      * @param value  the double value.
      * @param precision  the number of digits after the delimeter.
-     * @param isDot   is delimeter a dot?
+     * @param isDot   is delimiter a dot?
      * @param round if true, the value is rounded one half up.
      * @return the string representation of the double value.
      */
@@ -819,10 +819,10 @@ public class StringUtils {
         }
         ret = null;
 
-        // Get delimeter.
+        // Get delimiter.
         String delim = isDot ? "." : ",";
 
-        // Get multiplyer.
+        // Get multiplier.
         long mply = 1L;
         for (int i = 0; i < precision; i++) {
             mply *= 10L;
