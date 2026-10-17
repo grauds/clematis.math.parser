@@ -205,9 +205,9 @@ public class Parameter extends SimpleParameter {
 
     /**
      * Saves parameter calculation results into simple element
-     * <param name="$a">
+     * &gt;param name="$a"&lt;
      * 53.78945643
-     * </param>
+     * &gt;/param&lt;
      *
      * @return <code>Element</code> representing root of calculated algorithm's JDOM.
      */
@@ -224,9 +224,9 @@ public class Parameter extends SimpleParameter {
 
     /**
      * Loads parameter calculation results from simple element
-     * <param name="$a">
+     * &gt;param name="$a"&lt;
      * 53.78945643
-     * </param>
+     * &gt;/param&lt;
      *
      * @param paramElement <code>Element</code> representing root of calculated algorithm's JDOM.
      */

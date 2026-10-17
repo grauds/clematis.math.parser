@@ -9,7 +9,7 @@ import org.clematis.math.IExpressionItem;
 import org.clematis.math.utils.AlgorithmUtils;
 
 /**
- * lti (a, b) returns a <= b ? 1.0 : 0.0
+ * {@code lti (a, b) returns a <= b ? 1.0 : 0.0}
  */
 @SuppressWarnings("checkstyle:TypeName")
 public class lti extends AbstractMathMLFunction {

@@ -2,17 +2,22 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'checkstyle'
-    id 'com.github.spotbugs' version '6.0.7'
+    id 'com.github.spotbugs' version '6.1.6'
     id "org.javacc.javacc" version "4.0.3"
     id 'maven-publish'
 }
 
 group = 'org.clematis'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+    withSourcesJar()
+    withJavadocJar()
 }
 
 repositories {
@@ -26,7 +31,7 @@ dependencies {
     compileOnly (
             'org.projectlombok:lombok:1.18.42',
             "com.github.spotbugs:spotbugs:4.9.8",
-            "com.google.code.findbugs:annotations:3.0.1u2"
+            "com.github.spotbugs:spotbugs-annotations:4.9.8"
     )
 
     implementation "javax.xml.bind:jaxb-api:2.3.0"
@@ -37,7 +42,7 @@ dependencies {
     testCompileOnly(
             'org.projectlombok:lombok:1.18.42',
             "com.github.spotbugs:spotbugs:4.9.8",
-            "com.google.code.findbugs:annotations:3.0.1u2"
+            "com.github.spotbugs:spotbugs-annotations:4.9.8"
     )
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation platform('org.junit:junit-bom:5.11.1')
@@ -154,6 +159,16 @@ spotbugsTest {
             "org.clematis.math.utils.*" ,
             "org.clematis.math.*"
     ]
+}
+
+tasks.named('sourcesJar') {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    dependsOn 'compileJavacc'
+    dependsOn 'compileJjtree'
+
+    from tasks.named('compileJavacc')
+    from tasks.named('compileJjtree')
 }
 
 publishing {

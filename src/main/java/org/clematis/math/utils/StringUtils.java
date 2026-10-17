@@ -84,44 +84,40 @@ public class StringUtils {
     /**
      * Search a string for all instances of a substring and replace
      * it with another string. Uses regular expressions.
-     * <p/>
      * The full regular expression syntax accepted by RE is described here:
-     * <p/>
-     * <pre>
-     * <p/>
-     * <br>
-     * <p/>
+     * <pre>{@code
+     * <p>
      *  <b><font face=times roman>Characters</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    <i>unicodeChar</i>          Matches any identical unicode character
      *    \                    Used to quote a meta-character (like '*')
      *    \\                   Matches a single '\' character
      *    \0nnn                Matches a given octal character
      *    \xhh                 Matches a given 8-bit hexadecimal character
-     *    \\uhhhh               Matches a given 16-bit hexadecimal character
+     *    \\uhhhh              Matches a given 16-bit hexadecimal character
      *    \t                   Matches an ASCII tab character
      *    \n                   Matches an ASCII newline character
      *    \r                   Matches an ASCII return character
      *    \f                   Matches an ASCII form feed character
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Character Classes</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    [abc]                Simple character class
      *    [a-zA-Z]             Character class with ranges
      *    [^abc]               Negated character class
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Standard POSIX Character Classes</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    [:alnum:]            Alphanumeric characters.
      *    [:alpha:]            Alphabetic characters.
      *    [:blank:]            Space and tab characters.
@@ -138,20 +134,20 @@ public class StringUtils {
      *    [:xdigit:]           Characters that are hexadecimal digits.
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Non-standard POSIX-style Character Classes</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    [:javastart:]        Start of a Java identifier
      *    [:javapart:]         Part of a Java identifier
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Predefined Classes</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    .                    Matches any character other than newline
      *    \w                   Matches a "word" character (alphanumeric plus "_")
      *    \W                   Matches a non-word character
@@ -161,22 +157,22 @@ public class StringUtils {
      *    \D                   Matches a non-digit character
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Boundary Matchers</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    ^                    Matches only at the beginning of a line
      *    $                    Matches only at the end of a line
      *    \b                   Matches only at a word boundary
      *    \B                   Matches only at a non-word boundary
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Greedy Closures</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    A*                   Matches A 0 or more times (greedy)
      *    A+                   Matches A 1 or more times (greedy)
      *    A?                   Matches A 1 or 0 times (greedy)
@@ -185,31 +181,31 @@ public class StringUtils {
      *    A{n,m}               Matches A at least n but not more than m times (greedy)
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Reluctant Closures</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    A*?                  Matches A 0 or more times (reluctant)
      *    A+?                  Matches A 1 or more times (reluctant)
      *    A??                  Matches A 0 or 1 times (reluctant)
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Logical Operators</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    AB                   Matches A followed by B
      *    A|B                  Matches either A or B
      *    (A)                  Used for subexpression grouping
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *  <b><font face=times roman>Backreferences</font></b>
      * <p/>
      * <br>
-     * <p/>
+     * <p>
      *    \1                   Backreference to 1st parenthesized subexpression
      *    \2                   Backreference to 2nd parenthesized subexpression
      *    \3                   Backreference to 3rd parenthesized subexpression
@@ -221,8 +217,7 @@ public class StringUtils {
      *    \9                   Backreference to 9th parenthesized subexpression
      * <p/>
      * <br>
-     * <p/>
-     * </pre>
+     * }</pre>
      *
      * @param search          substring to search for (regular expression)
      * @param pattern pattern to replace it with (includes \1, \2, etc to match parens)
@@ -892,10 +887,11 @@ public class StringUtils {
     }
 
     /**
-     * Tokenizes XML formatted string by tag (for example <math> ... </math>)
+     * Tokenizes XML-formatted string by tag
+     * (for example &lt;math&gt; ... &lt;/math&gt;})
      *
      * @param source the input source string.
-     * @param tag    the tag name ( in our example it is "math" ).
+     * @param tag    the tag name (in our example it is "math").
      * @return list containing tokens.
      * @throws Exception if something
      */

@@ -6,7 +6,7 @@ This library can parse and calculate mathematical expressions standalone and org
 
 ## Quick Start
 
-Checkout the code and run the build:
+Check out the code and run the build:
 
 ```
 git 'https://github.com/grauds/clematis.math.parser.git'

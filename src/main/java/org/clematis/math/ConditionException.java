@@ -20,8 +20,8 @@ public class ConditionException extends AlgorithmException {
     /**
      * Returns the detail message string of this throwable.
      *
-     * @return the detail message string of this <tt>Throwable</tt> instance
-     * (which may be <tt>null</tt>).
+     * @return the detail message string of this <code>Throwable</code> instance
+     * (which may be <code>null</code>).
      */
     public String getMessage() {
         return super.getMessage() + "condition: { " + conditionName + " " + conditionCode + " }";

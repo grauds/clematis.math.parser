@@ -31,11 +31,11 @@ public class AlgorithmUtils {
     public static final String IN_LINE_MESSAGE = " in line ";
     private static final String UNDEFINED_VARIABLE_MESSAGE = "Undefined variable: ";
     /**
-     * Algorithm XML may be static, i.e. has only empty <algorithm> elements.
-     * In this case algorithm does nothing and considered empty
+     * Algorithm XML may be static, i.e. has only empty &gt;algorithm/&lt; elements.
+     * In this case the algorithm does nothing and is considered empty
      *
      * @param algorithmXML XML representing the algorithm.
-     * @return true if algorithm is empty
+     * @return true if the algorithm is empty
      */
     public static boolean isEmpty(Element algorithmXML) {
         try {

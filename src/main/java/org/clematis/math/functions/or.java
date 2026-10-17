@@ -10,7 +10,7 @@ import org.clematis.math.utils.AlgorithmUtils;
 /**
  * Returns 1.0 if a is any of arguments is equal to 1.0, otherwise returns 0.0;
  * <p>
- * i.e. it returns a == 0.0 || b == 1.0 ||& ... ? 1.0 : 0.0.
+ * i.e. it returns a == 0.0 || b == 1.0 || ... ? 1.0 : 0.0.
  */
 @SuppressWarnings("checkstyle:TypeName")
 public class or extends AbstractMathMLFunction {

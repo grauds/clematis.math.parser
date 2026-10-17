@@ -22,13 +22,13 @@ public class FunctionFactory implements Serializable, IFunctionProvider {
     private static final Map<String, String> CLASSES = new HashMap<>();
     /**
      * Extended functions codes
-     * <p/>
+     * <p>
      * key -> code
      */
     private final Map<Key, IFunction> functions = new HashMap<>();
     /**
      * Extended functions codes currently in use
-     * <p/>
+     * <p>
      * name -> code
      */
     private final Map<String, IFunction> functionsInUse = new HashMap<>();

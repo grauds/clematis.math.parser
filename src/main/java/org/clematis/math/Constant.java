@@ -332,13 +332,13 @@ public class Constant extends AbstractConstant {
     }
 
     /**
-     * Returns a <tt>Constant</tt> whose value is
-     * <tt>(this<sup>n</sup>)</tt>, The power is computed exactly, to
+     * Returns a <code>Constant</code> whose value is
+     * <code>(this<sup>n</sup>)</code>, The power is computed exactly, to
      * unlimited precision.
      *
      * @param c - constant
-     * @return a <tt>Constant</tt> whose value is
-     * <tt>(this<sup>n</sup>)</tt>
+     * @return a <code>Constant</code> whose value is
+     * <code>(this<sup>n</sup>)</code>
      */
     public IExpressionItem pow(Constant c) {
         IExpressionItem result = null;
@@ -360,11 +360,11 @@ public class Constant extends AbstractConstant {
     }
 
     /**
-     * Returns a <tt>Constant</tt> whose value is <tt>(this / divisor)</tt>, The result is computed exactly, to
+     * Returns a <code>Constant</code> whose value is <code>(this / divisor)</code>, The result is computed exactly, to
      * unlimited precision.
      *
      * @param c - divisor
-     * @return <tt>Constant</tt> whose value is <tt>(this / divisor)</tt>
+     * @return <code>Constant</code> whose value is <code>(this / divisor)</code>
      */
     public IExpressionItem divide(Constant c) {
         IExpressionItem result = null;
