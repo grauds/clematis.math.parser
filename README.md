@@ -1,5 +1,6 @@
 # Clematis Math Parser
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/license/mit-0)
 [![Gradle Package](https://github.com/grauds/clematis.math.parser/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/grauds/clematis.math.parser/actions/workflows/gradle-publish.yml)
 
 This library can parse and calculate mathematical expressions standalone and organized in algorithm sequences.
